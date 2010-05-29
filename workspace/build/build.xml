@@ -1,0 +1,197 @@
+<project name="build">
+	<property name="java.tools.home" value="c:/java" />
+	<property name="maveric.home" value="${java.tools.home}/MavericArcApp-1.0.0" />
+	<property name="dist.home" value="../dist" />
+	<property name="ytex.dist.home" value="../dist/ytex" />
+	<property name="ytex.lib.home" value="../ytex.web/WebContent/WEB-INF/lib"/>
+
+	<path id="cp.maveric">
+		<fileset dir="${maveric.home}/ext">
+			<include name="mavericPipeline-1.0.0.jar" />
+		</fileset>
+		<fileset dir="${maveric.home}/lib">
+			<include name="log4j-1.2.14.jar" />
+			<include name="lvg2008dist.jar" />
+			<include name="opennlp-tools-1.4.0.jar" />
+			<include name="jdom.jar" />
+			<include name="maxent-2.5.0.jar" />
+			<include name="OpenAI_FSM.jar" />
+			<include name="trove.jar" />
+			<include name="lucene-1.4-final.jar" />
+			<include name="uima-cpe.jar" />
+			<include name="uima-core.jar" />
+			<include name="uima-tools.jar" />
+			<include name="uima-document-annotation.jar" />
+		</fileset>
+		<dirset dir="${maveric.home}" includes="dest" />
+		<dirset dir="../maveric" includes="resources" />
+	</path>
+	<path id="cp.system">
+		<fileset dir="../libs.system/sqljdbc_2.0/enu" includes="sqljdbc4.jar" />
+	</path>
+	<path id="cp.ytex">
+		<fileset dir="${ytex.lib.home}" includes="*.jar" />
+	</path>
+	<path id="cp.all">
+		<path refid="cp.ytex" />
+		<path refid="cp.system" />
+		<path refid="cp.maveric" />
+	</path>
+
+	<target name="zipSources">
+		<tstamp>
+			<format property="today" pattern="yyyy-MM-dd" />
+		</tstamp>
+		<delete file="../${today}-ytex-src-all.zip" quiet="yes" />
+		<zip destfile="../${today}-ytex-src-all.zip">
+			<fileset dir="../">
+				<include name="libs.ytex/**/*.*" />
+				<include name="libs.system/**/*.*" />
+				<include name="build/**/*.*" />
+				<exclude name="**/bin/**/*.*" />
+				<exclude name="libs.system/sqljdbc*/**/*.*" />
+			</fileset>
+			<fileset dir="../">
+				<include name="maveric/**/*.*" />
+				<exclude name="**/resources/**/*.*" />
+				<exclude name="**/bin/**/*.*" />
+			</fileset>
+			<fileset dir="../">
+				<include name="data.mssql/**/*.*" />
+				<exclude name="**/*.bcp" />
+				<exclude name="**/bin/**/*.*" />
+			</fileset>
+			<fileset dir="../">
+				<include name="ctakes-patches/**/*.*" />
+				<include name="ytex.uima/**/*.*" />
+				<include name="ytex.model/**/*.*" />
+				<include name="ytex.negex/**/*.*" />
+				<include name="ytex.web/**/*.*" />
+				<exclude name="**/bin/**/*.*" />
+				<exclude name="**/*.class" />
+				<exclude name="**/*.jar" />
+			</fileset>
+			<fileset dir="../">
+				<include name="config/**/*.*" />
+				<exclude name="**/ytex.properties" />
+				<exclude name="**/ytex/search.properties" />
+			</fileset>
+		</zip>
+	</target>
+
+	<target name="clean.dist">
+		<delete dir="${dist.home}" quiet="yes" />
+		<mkdir dir="${ytex.dist.home}/lib" />
+		<mkdir dir="${ytex.dist.home}/config/desc" />
+		<mkdir dir="${ytex.dist.home}/web" />
+	</target>
+	<target name="build.ytex.uima">
+		<path id="cp.ytex.uima">
+			<path refid="cp.all" />
+			<fileset dir="${ytex.dist.home}/lib/" includes="ytex.model.jar" /> 
+		</path>
+		<antcall target="compile">
+			<param name="project.name" value="ytex.uima" />
+			<param name="project.cp" value="cp.ytex.uima"/>
+		</antcall>
+	</target>
+	<target name="build.ytex.negex">
+		<antcall target="compile">
+			<param name="project.name" value="ytex.negex" />
+		</antcall>
+	</target>
+	<target name="build.ytex.model">
+		<antcall target="compile">
+			<param name="project.name" value="ytex.model" />
+		</antcall>
+	</target>
+	<target name="build.ctakes-patches">
+		<!-- todo: clean up generated properties files/templates -->
+		<antcall target="compile">
+			<param name="project.name" value="ctakes-patches" />
+		</antcall>
+	</target>
+	<target name="copy.config">
+		<copy todir="${ytex.dist.home}/config">
+			<fileset dir="../config">
+				<include name="desc/**/*.*" />
+				<exclude name="desc/ytex.properties" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="copy.lib">
+		<copy todir="${ytex.dist.home}/lib">
+			<fileset dir="${ytex.lib.home}">
+				<include name="*.jar" />
+				<exclude name="spring-security*.jar" />
+				<exclude name="jsf*.jar" />
+				<exclude name="icefaces*.jar" />
+				<exclude name="backport-util-concurrent.jar" />
+				<exclude name="FastInfoset.jar" />
+				<exclude name="krysalis*.jar" />
+				<exclude name="jxl.jar" />
+				<exclude name="*commons*fileupload*.jar" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="copy.data.mssql">
+		<copy todir="${ytex.dist.home}">
+			<fileset dir="../">
+				<include name="data.mssql/**/*.*" />
+				<exclude name="**/.classpath" />
+				<exclude name="**/.project" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="copy.scripts">
+		<copy todir="${ytex.dist.home}">
+			<fileset dir=".">
+				<include name="*.cmd" />
+				<include name="build-setup.xml" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="compile">
+		<property name="project.home" value="../${project.name}" />
+		<property name="project.bin.home" value="${project.home}/bin" />
+		<property name="project.src.home" value="${project.home}/src/main/java" />
+		<property name="project.jar.name" value="${project.home}.jar" />
+		<property name="project.classpathref" value="cp.all" />
+		<delete dir="${project.bin.home}/bin" quiet="yes" />
+		<mkdir dir="${project.bin.home}/bin" />
+		<javac srcdir="${project.src.home}" destdir="${project.bin.home}" classpathref="${project.classpathref}" />
+		<copy todir="${project.bin.home}">
+			<fileset dir="${project.src.home}">
+				<exclude name="**/*.java" />
+			</fileset>
+		</copy>
+		<jar destfile="${ytex.dist.home}/lib/${project.name}.jar" basedir="${project.bin.home}" />
+	</target>
+	<target name="build.ytex.web">
+		<delete dir="../ytex.web/build/classes" quiet="yes" />
+		<mkdir dir="../ytex.web/build/classes" />
+		<javac srcdir="../ytex.web/src/main/java" destdir="../ytex.web/build/classes" >
+			<classpath>
+				<fileset dir="${ytex.dist.home}/lib">
+					<include name="ytex*.jar"/>
+				</fileset>
+				<path refid="cp.all"/>
+			</classpath>
+		</javac>
+		<copy todir="../ytex.web/build/classes">
+			<fileset dir="../ytex.web/src/main/java">
+				<exclude name="**/*.java" />
+			</fileset>
+		</copy>
+		<jar destfile="${ytex.dist.home}/web/ytex.web.war">
+			<zipfileset dir="../ytex.web/build" prefix="WEB-INF"/>
+			<zipfileset dir="../ytex.web/WebContent" />
+			<zipfileset dir="${ytex.dist.home}/lib" includes="ytex*.jar" prefix="WEB-INF/lib" />
+		</jar>
+	</target>
+	<target name="zip.dist">
+		<zip destfile="${dist.home}/ytex.zip" basedir="${dist.home}" includes="ytex/**/*.*" />
+		<zip destfile="${dist.home}/ytex-noUMLS.zip" basedir="${dist.home}" includes="ytex/**/*.*" excludes="**/*.bcp"/>
+	</target>
+	<target name="build.all" depends="clean.dist,build.ctakes-patches,build.ytex.model,build.ytex.negex,build.ytex.uima,copy.lib,copy.config,copy.scripts,copy.data.mssql,build.ytex.web,zip.dist" />
+</project>

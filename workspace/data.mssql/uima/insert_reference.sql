@@ -1,0 +1,10 @@
+insert into $(db_schema).ref_uima_type values(1 , 'edu.mayo.bmi.uima.cdt.ae.type.DateAnnotation', 'ytex.uima.mapper.AnnotationMapper');
+insert into $(db_schema).ref_uima_type values(2 , 'edu.mayo.bmi.uima.cdt.ae.type.FractionAnnotation', 'ytex.uima.mapper.AnnotationMapper');
+insert into $(db_schema).ref_uima_type values(3 , 'edu.mayo.bmi.uima.cdt.ae.type.MeasurementAnnotation', 'ytex.uima.mapper.AnnotationMapper');
+insert into $(db_schema).ref_uima_type values(4 , 'edu.mayo.bmi.uima.cdt.ae.type.PersonTitleAnnotation', 'ytex.uima.mapper.AnnotationMapper');
+insert into $(db_schema).ref_uima_type values(5 , 'edu.mayo.bmi.uima.cdt.ae.type.RangeAnnotation', 'ytex.uima.mapper.AnnotationMapper');
+insert into $(db_schema).ref_uima_type values(6 , 'edu.mayo.bmi.uima.cdt.ae.type.RomanNumeralAnnotation', 'ytex.uima.mapper.AnnotationMapper');
+insert into $(db_schema).ref_uima_type values(7 , 'edu.mayo.bmi.uima.cdt.ae.type.TimeAnnotation', 'ytex.uima.mapper.AnnotationMapper');
+insert into $(db_schema).ref_uima_type values(8 , 'edu.mayo.bmi.uima.core.ae.type.NamedEntity', 'ytex.uima.mapper.NamedEntityDocumentAnnotationMapper');
+insert into $(db_schema).ref_uima_type values(9 , 'edu.mayo.bmi.uima.core.sentence.type.Sentence', 'ytex.uima.mapper.AnnotationMapper');
+insert into $(db_schema).ref_uima_type values(12 , 'edu.mayo.bmi.uima.core.ae.type.Segment', 'ytex.uima.mapper.SegmentAnnotationMapper');
