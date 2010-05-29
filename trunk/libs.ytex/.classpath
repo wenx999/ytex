@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry exported="true" kind="lib" path="/ytex.web/WebContent/WEB-INF/lib/com.springsource.antlr-2.7.7.jar"/>
+	<classpathentry exported="true" kind="lib" path="/ytex.web/WebContent/WEB-INF/lib/com.springsource.org.aopalliance-1.0.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="/ytex.web/WebContent/WEB-INF/lib/com.springsource.org.apache.commons.collections-3.2.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="/ytex.web/WebContent/WEB-INF/lib/com.springsource.org.apache.commons.io-1.4.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="/ytex.web/WebContent/WEB-INF/lib/com.springsource.org.apache.commons.lang-2.1.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="/ytex.web/WebContent/WEB-INF/lib/com.springsource.org.apache.commons.logging-1.1.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="/ytex.web/WebContent/WEB-INF/lib/com.springsource.org.aspectj.weaver-1.6.8.RELEASE.jar"/>
+	<classpathentry exported="true" kind="lib" path="/ytex.web/WebContent/WEB-INF/lib/dom4j-1.6.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="/ytex.web/WebContent/WEB-INF/lib/ehcache-1.2.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="/ytex.web/WebContent/WEB-INF/lib/hibernate3.jar"/>
+	<classpathentry exported="true" kind="lib" path="/ytex.web/WebContent/WEB-INF/lib/javassist-3.9.0.GA.jar"/>
+	<classpathentry exported="true" kind="lib" path="/ytex.web/WebContent/WEB-INF/lib/jta-1.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="/ytex.web/WebContent/WEB-INF/lib/org.springframework.aop-3.0.2.RELEASE.jar"/>
+	<classpathentry exported="true" kind="lib" path="/ytex.web/WebContent/WEB-INF/lib/org.springframework.asm-3.0.2.RELEASE.jar"/>
+	<classpathentry exported="true" kind="lib" path="/ytex.web/WebContent/WEB-INF/lib/org.springframework.aspects.jar"/>
+	<classpathentry exported="true" kind="lib" path="/ytex.web/WebContent/WEB-INF/lib/org.springframework.beans-3.0.2.RELEASE.jar"/>
+	<classpathentry exported="true" kind="lib" path="/ytex.web/WebContent/WEB-INF/lib/org.springframework.context-3.0.2.RELEASE.jar"/>
+	<classpathentry exported="true" kind="lib" path="/ytex.web/WebContent/WEB-INF/lib/org.springframework.context.support-3.0.2.RELEASE.jar"/>
+	<classpathentry exported="true" kind="lib" path="/ytex.web/WebContent/WEB-INF/lib/org.springframework.core-3.0.2.RELEASE.jar"/>
+	<classpathentry exported="true" kind="lib" path="/ytex.web/WebContent/WEB-INF/lib/org.springframework.expression-3.0.2.RELEASE.jar"/>
+	<classpathentry exported="true" kind="lib" path="/ytex.web/WebContent/WEB-INF/lib/org.springframework.jdbc-3.0.2.RELEASE.jar"/>
+	<classpathentry exported="true" kind="lib" path="/ytex.web/WebContent/WEB-INF/lib/org.springframework.orm-3.0.2.RELEASE.jar"/>
+	<classpathentry exported="true" kind="lib" path="/ytex.web/WebContent/WEB-INF/lib/org.springframework.transaction-3.0.2.RELEASE.jar"/>
+	<classpathentry exported="true" kind="lib" path="/ytex.web/WebContent/WEB-INF/lib/org.springframework.web-3.0.2.RELEASE.jar"/>
+	<classpathentry exported="true" kind="lib" path="/ytex.web/WebContent/WEB-INF/lib/org.springframework.web.servlet-3.0.2.RELEASE.jar"/>
+	<classpathentry exported="true" kind="lib" path="/ytex.web/WebContent/WEB-INF/lib/slf4j-api-1.5.8.jar"/>
+	<classpathentry exported="true" kind="lib" path="/ytex.web/WebContent/WEB-INF/lib/slf4j-jcl-1.5.8.jar"/>
+	<classpathentry exported="true" kind="lib" path="/ytex.web/WebContent/WEB-INF/lib/weka.jar"/>
+	<classpathentry exported="true" kind="lib" path="/ytex.web/WebContent/WEB-INF/lib/com.springsource.org.apache.commons.dbcp-1.2.2.osgi.jar"/>
+	<classpathentry exported="true" kind="lib" path="/ytex.web/WebContent/WEB-INF/lib/com.springsource.org.apache.commons.pool-1.5.3.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

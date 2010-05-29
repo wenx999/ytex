@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+
+<!DOCTYPE faces-config PUBLIC
+  "-//Sun Microsystems, Inc.//DTD JavaServer Faces Config 1.1//EN"
+  "http://java.sun.com/dtd/web-facesconfig_1_1.dtd">
+
+	<!--
+		=========== FULL CONFIGURATION FILE ==================================
+	-->
+
+<faces-config xmlns="http://java.sun.com/JSF/Configuration">
+	<application>
+		<view-handler>com.icesoft.faces.facelets.D2DFaceletViewHandler</view-handler>
+		<variable-resolver>org.springframework.web.jsf.DelegatingVariableResolver</variable-resolver>
+		<locale-config>
+			<default-locale>en_US</default-locale>
+		</locale-config>
+	</application>
+	<managed-bean>
+		<managed-bean-name>fullTextSearchBean</managed-bean-name>
+		<managed-bean-class>ytex.web.search.FullTextSearchBean</managed-bean-class>
+		<managed-bean-scope>session</managed-bean-scope>
+		<managed-property>
+			<property-name>documentSearchDao</property-name>
+			<value>#{documentSearchDao}</value>
+		</managed-property>
+	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>semanticSearchBean</managed-bean-name>
+		<managed-bean-class>ytex.web.search.SemanticSearchBean</managed-bean-class>
+		<managed-bean-scope>session</managed-bean-scope>
+		<managed-property>
+			<property-name>umlsFirstWordDao</property-name>
+			<value>#{umlsFirstWordDao}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>documentSearchDao</property-name>
+			<value>#{documentSearchDao}</value>
+		</managed-property>
+	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>documentViewBean</managed-bean-name>
+		<managed-bean-class>ytex.web.search.DocumentViewBean</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+		<managed-property>
+			<property-name>documentDao</property-name>
+			<property-class></property-class>
+			<value>#{documentDao}</value>
+		</managed-property>
+	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>fullTextDocumentViewBean</managed-bean-name>
+		<managed-bean-class>ytex.web.search.FullTextDocumentViewBean</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+		<managed-property>
+			<property-name>documentSearchDao</property-name>
+			<property-class></property-class>
+			<value>#{documentSearchDao}</value>
+		</managed-property>
+	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>searchConfigBean</managed-bean-name>
+		<managed-bean-class>ytex.web.search.SearchConfigBean</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+		<managed-property>
+			<property-name>searchProperties</property-name>
+			<property-class></property-class>
+			<value>#{searchProperties}</value>
+		</managed-property>
+	</managed-bean>
+</faces-config>

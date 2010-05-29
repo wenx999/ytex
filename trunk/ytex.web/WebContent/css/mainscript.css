@@ -1,0 +1,55 @@
+#banner	
+{
+	background-color: #0e4d94;
+	border-bottom: 1px solid #fff;
+	width: 100%;
+	color: white;
+	padding-left: 10px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	font-size: 30px;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+
+#mainNav
+{
+	width: 100%;
+	background-color: #c7511f;
+}
+
+			
+#mainNav ul	
+{
+	font-size: 13px;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+	margin: 0px;
+	padding: 5px;
+}
+
+#mainNav ul li	
+{
+	display: inline;
+}
+
+#mainNav ul li a	
+{
+	padding: 9px 12px;
+	color: #fff;
+	text-decoration: none;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
+
+#mainNav li a:hover	
+{
+	color: #fe6;
+}
+
+#docText {
+	padding-left: 10px;
+}
+
