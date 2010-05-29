@@ -1,0 +1,8 @@
+#summary Modifying YTEX
+#labels Phase-Deploy
+
+
+
+==Modifying YTEX==
+===Modifying the YTEX Pipeline===
+===Adding/Modifying UIMA Types===
