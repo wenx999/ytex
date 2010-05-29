@@ -24,6 +24,7 @@
   -Djava.util.logging.config.file=file:///${workspace_loc}/config/desc/Logger.properties 
   -Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager
   -Dorg.apache.el.parser.COERCE_TO_ZERO=false
+  Add libs.system to server classpath
   
 
 
