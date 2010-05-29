@@ -1,24 +1,20 @@
 package edu.mayo.bmi.uima.core.sentence;
 
-import edu.mayo.bmi.uima.core.resource.MaxentModelResource;
-import edu.mayo.bmi.uima.core.sentence.type.Sentence;
-import edu.mayo.bmi.uima.core.util.ParamUtil;
-import gov.va.maveric.uima.section.type.Paragraph;
-
-import java.text.BreakIterator;
-import java.text.ParsePosition;
-import java.util.Locale;
 import java.io.File;
 import java.io.IOException;
+import java.text.BreakIterator;
+import java.text.ParsePosition;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Set;
 
-import org.apache.uima.analysis_component.JCasAnnotator_ImplBase;
-import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
-import org.apache.uima.jcas.JCas;
-import org.apache.uima.jcas.tcas.Annotation;
+import opennlp.maxent.GISModel;
+import opennlp.maxent.io.SuffixSensitiveGISModelWriter;
+import opennlp.tools.sentdetect.DefaultSDContextGenerator;
+import opennlp.tools.sentdetect.SentenceDetectorME;
+
+import org.apache.log4j.Logger;
 import org.apache.uima.analysis_engine.ResultSpecification;
 import org.apache.uima.analysis_engine.annotator.AnnotatorConfigurationException;
 import org.apache.uima.analysis_engine.annotator.AnnotatorContext;
@@ -26,14 +22,14 @@ import org.apache.uima.analysis_engine.annotator.AnnotatorContextException;
 import org.apache.uima.analysis_engine.annotator.AnnotatorInitializationException;
 import org.apache.uima.analysis_engine.annotator.AnnotatorProcessException;
 import org.apache.uima.analysis_engine.annotator.JTextAnnotator_ImplBase;
+import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.JFSIndexRepository;
-import org.apache.log4j.Logger;
+import org.apache.uima.jcas.tcas.Annotation;
 
-import opennlp.maxent.GISModel;
-import opennlp.maxent.io.SuffixSensitiveGISModelWriter;
-import opennlp.tools.sentdetect.DefaultSDContextGenerator;
-import opennlp.tools.sentdetect.SentenceDetectorME;
-//import edu.mayo.bmi.uima.core.type.Segment;
+import edu.mayo.bmi.uima.core.resource.MaxentModelResource;
+import edu.mayo.bmi.uima.core.sentence.type.Sentence;
+import edu.mayo.bmi.uima.core.util.ParamUtil;
+import gov.va.maveric.uima.section.type.Paragraph;
 
 /**
  * An example annotator that annotates Sentences.
