@@ -1,6 +1,7 @@
 <project name="ytex.data.mssql">
 	<taskdef resource="net/sf/antcontrib/antlib.xml" />
-	<property file="../config/desc/ytex.properties" />
+	<property name="ytex.properties" value="${ytex.home}/config/desc/ytex.properties" />
+	<property file="${ytex.properties}" />
 	<property name="sqlcmd.line" value="-d ${db.name} -E -S ${db.host} -v db_schema=${db.schema}" />
 	
 	<target name="all" depends="umls.all,vacs.all,esld.all"/>
