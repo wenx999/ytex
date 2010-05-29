@@ -1,0 +1,18 @@
+<div xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ice="http://www.icesoft.com/icefaces/component">
+<div id="banner">#{contentHeader}</div>
+
+<div id="mainNav"><ice:form>
+	<ice:menuBar>
+		<ice:menuItem id="semanticSearchMenuItem" value="Semantic Search"
+			link="./semanticSearch.iface" />
+		<ice:menuItem id="fullTextSearchMenuItem" value="Full-Text Search"
+			link="./fullTextSearch.iface"
+			rendered="#{! empty searchConfigBean.searchProperties['retrieveDocumentFullText']}" />
+		<ice:menuItem id="aboutMenuItem" value="About" link="./about.iface" />
+	</ice:menuBar>
+</ice:form></div>
+<!-- don't know why the ice faces menu shifts the first form to the right.  workaround by adding a newline -->
+<p><br />
+</p>
+</div>
