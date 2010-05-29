@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <launchConfiguration type="org.eclipse.jdt.junit.launchconfig">
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
-<listEntry value="/ytex.model"/>
+<listEntry value="/ytex.uima"/>
 </listAttribute>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
 <listEntry value="4"/>
 </listAttribute>
 <mapAttribute key="org.eclipse.debug.core.environmentVariables">
-<mapEntry key="PATH" value="${workspace_loc}/libs.system/sqljdbc_2.0/enu/auth/x86"/>
+<mapEntry key="PATH" value="${workspace_loc}/libs.system/sqljdbc_3.0/enu/auth/x86"/>
 </mapAttribute>
 <stringAttribute key="org.eclipse.jdt.junit.CONTAINER" value=""/>
 <booleanAttribute key="org.eclipse.jdt.junit.KEEPRUNNING_ATTR" value="false"/>
@@ -20,5 +20,5 @@
 </listAttribute>
 <booleanAttribute key="org.eclipse.jdt.launching.DEFAULT_CLASSPATH" value="false"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="ytex.dao.UMLSFirstWordDaoTest"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="ytex.model"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="ytex.uima"/>
 </launchConfiguration>
