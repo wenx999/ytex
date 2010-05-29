@@ -1,0 +1,26 @@
+#summary Using YTEX
+#labels Phase-Deploy
+
+=Using YTEX=
+TODO
+==Annotating Documents==
+
+===UIMA Document Analyzer===
+
+===UIMA Collection Processing Engine===
+
+==Retrieving Documents==
+
+==Configuring the Semantic Search Engine==
+TODO
+
+===Document Views===
+
+===YTEX Data Model===
+http://docs.google.com/drawings/pub?id=1BXaby0zAsWdFPPI3qyLfhegbv8oxIW04kzWsBVPT4Mo&w=960&h=720&foo=er.jpg
+
+==Configuring YTEX==
+===Named Entity Lookup Table===
+===Segments (Sections) Regexs===
+===Negation Detection===
+===Named Entity Recognition Regexs===
