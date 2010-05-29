@@ -5,6 +5,7 @@
 	<projects>
 		<project>config</project>
 		<project>ytex.model</project>
+		<project>config.local</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

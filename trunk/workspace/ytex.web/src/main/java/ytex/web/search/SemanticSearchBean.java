@@ -212,7 +212,7 @@ public class SemanticSearchBean {
 		return umlsFWord;
 	}
 
-	public static Comparator umlsFirstWordComparator = new Comparator() {
+	public static Comparator<Object> umlsFirstWordComparator = new Comparator<Object>() {
 
 		// compare method for city entries.
 		public int compare(Object o1, Object o2) {
@@ -258,8 +258,6 @@ public class SemanticSearchBean {
 	private void setMatches(ValueChangeEvent event) {
 
 		Object searchWord = event.getNewValue();
-		// todo add max matches param
-		int maxMatches = ((SelectInputText) event.getComponent()).getRows();
 		String searchString;
 		if (searchWord instanceof SelectItem) {
 			searchString = ((SelectItem) searchWord).getLabel();

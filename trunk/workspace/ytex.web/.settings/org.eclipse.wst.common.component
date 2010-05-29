@@ -9,6 +9,9 @@
         <dependent-module archiveName="ytex.model.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/ytex.model/ytex.model">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="config.local.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/config.local/config.local">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <property name="java-output-path" value="/test/build/classes"/>
         <property name="context-root" value="ytex.web"/>
     </wb-module>

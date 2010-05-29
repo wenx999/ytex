@@ -1,13 +1,16 @@
 .iceMnuBar { 
-    padding: 0px;
+    background-color: #C7511F;
+	padding: 0px;
     white-space: nowrap;
     font-family: Verdana, Arial, Helvetica, sans-serif;
+    width: 100%;
+    padding: 0px;
 }
 
-.iceMnuBarItem, .myHomeMenuItem { 
-    float: left; 
+.iceMnuBarItem { 
     padding: 0px;
     white-space: nowrap;
+    float: none;
 }
 .iceMnuBarItem a { 
     background-color: #C7511F;
@@ -17,11 +20,9 @@
     padding-top: 3px;
     padding-bottom: 3px;
 	color: #fff;
-    font-size: 1.1em;
     margin: 0px;
     border-right: 1px solid #FFFFFF;
     width: auto;
-    float: left; 
     display: block;
     text-decoration: none;
 }
