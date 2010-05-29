@@ -1,0 +1,47 @@
+#summary Installation details
+#labels Phase-Deploy
+
+=Installation=
+
+==Prerequisites==
+The following software must be installed:
+  * MS SQL Server 2008 Tools [http://www.microsoft.com/downloads/details.aspx?familyid=08E52AC2-1D62-45F6-9A4A-4B76A8564A2B&displaylang=en download]
+  This is required to execute SQL Scripts to set up the YTEX database schema.
+  * MS SQL Server JDBC Driver [http://www.microsoft.com/downloads/details.aspx?displaylang=en&FamilyID=a737000d-68d0-4531-b65d-da0f2a735707 download]
+  This is required for connectivity to the SQL Server Database.
+  * Maveric ARC [http://research.maveric.org/mig/arc/arc_v1.0_release_notes.html download]
+  YTEX uses the cTAKES version distributed with Maveric ARC.
+  * JDK 1.6 [http://java.sun.com/javase/downloads/widget/jdk6.jsp download]
+  * Apache Ant [http://ant.apache.org/bindownload.cgi download]
+  The YTEX setup is automated via ant, a java-based scripting language.
+  * Ant Contrib [http://sourceforge.net/projects/ant-contrib/files/ download]
+  * Apache Tomcat (required only for semantic search app) [http://tomcat.apache.org/download-60.cgi download]
+  The YTEX semantic search engine is distributed as a java web application, and can be deployed on Tomcat.
+
+===Maveric ARC Installation===
+As described in the [http://research.maveric.org/mig/arc/configuring_ctakes.html ARC installation guide], ARC requires the setup of LVG and UMLS.  Follow the directions there for the setup of the LVG.
+
+===UMLS Setup===
+ARC is distributed with the UMLS 2009 database tables for MySQL.  YTEX however uses SQL Server 2008.  You have two options for setting up the UMLS 2009 database for YTEX:
+ # Set up database as per ARC instructions, and then copy UMLS tables to your SQL Server database using the Microsoft Data Transformation Services
+ # Contact us (vngarla at gmail.com), and we will provide the SQL Server 2009 database tables.
+
+The YTEX installation assumes that you follow the latter variant (obtain the UMLS from us).
+
+==YTEX installation==
+This assumes a Windows installation.  YTEX should work on unices (tests and instructions pending)
+  * Download and extract the YTEX package to a directory (e.g. c:\java\ytex).  This directory will be referred to as the YTEX_HOME
+  * Edit YTEX_HOME\setenv.cmd
+  Fix the path references to match your environment.
+  * Create YTEX_HOME\config\desc\ytex.properties
+  In this file, you specify the SQL Server connection parameters.  Use YTEX_HOME\config\desc\ytex.properties.example as a template.
+  * Extract UMLS tables
+  We exported the UMLS Tables using the MS SQL Server BCP utility.  Extract these tables from the umls.zip archive to the YTEX_HOME\data.mssql\umls directory.
+  * Execute setup.cmd
+  Open a command prompt, navigate to YTEX_HOME, and execute setup.cmd.  This will call the ant script build-setup.xml, which does the following:
+    * Generates configuration files from templates
+    The SQL Server connection parameters are added.
+    * Copies Maveric ARC Resources to YTEX_HOME\maveric\resources
+    UIMA configuration files reference eachother using either file paths or class paths.  To maintain portability, all UIMA Configuration files distributed with YTEX reference other files using classpaths where posssible; when this is not possible, relative paths are used.  To facilitate the referencing of Maveric ARC Resources via classpaths, we copy them to the YTEX directory.  Note that YTEX references Maveric ARC UIMA Configuration files (they are not copied).
+    * Sets up YTEX Database Objects
+    All YTEX Objects will be dropped and recreated (if this is the initial installation, ignore the errors about objects not existing when they are being dropped). SQL Scripts in the YTEX\data.mssql are executed using the MS SQL Server SQLCMD utility; UMLS tables are imported using the BCP utility.
