@@ -2,18 +2,22 @@
 
 = Introduction =
 
-  * Setup Workspace Preferences: Window -> Preferences
-    ** Server -> Runtime Environment -> Add -> Apache Tomcat v6.0
-    ** Java -> Build Path -> Classpath Variables -> New -> MAVERIC_HOME
-    ** Ant -> Runtime -> Properties -> maveric.home
   * Checkout
     ** Setup Repository 
     ** Right Click on workspace -> find / checkout as 
+  * Setup Workspace Preferences: Window -> Preferences
+    ** Server -> Runtime Environment -> Add -> Apache Tomcat v6.0
+    ** Java -> Build Path -> Classpath Variables -> New -> MAVERIC_HOME
+    ** Ant -> Runtime -> Properties -> 
+       *** maveric.home
+       *** ytex.properties ${workspace_loc}/config.local/src/ytex.properties
+  * create project config.local
+  will hold environment-specific configuration
+    ** Setup ytex.properties
   * Copy sqljdbc_3.0 to libs.system
   * Setup Maveric
     ** Execute setupMavericResources target in build/build-setup.xml
     ** Refresh Maveric
-  * Setup ytex.properties
   * Setup config files: execute templateToConfig in build/build-setup.xml
 
 Everything should work
