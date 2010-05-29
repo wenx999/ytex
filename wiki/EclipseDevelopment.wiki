@@ -19,5 +19,12 @@
     ** Execute setupMavericResources target in build/build-setup.xml
     ** Refresh Maveric
   * Setup config files: execute templateToConfig in build/build-setup.xml
+  * Tomcat
+  PATH=${workspace_loc}/libs.system/sqljdbc_3.0/enu/auth/x86
+  -Djava.util.logging.config.file=file:///${workspace_loc}/config/desc/Logger.properties 
+  -Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager
+  -Dorg.apache.el.parser.COERCE_TO_ZERO=false
+  
+
 
 Everything should work
