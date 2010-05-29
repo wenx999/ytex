@@ -1,6 +1,6 @@
 #summary Modifying YTEX
 #labels Phase-Deploy
-
+#sidebar TableOfContents
 
 
 ==Modifying YTEX==
