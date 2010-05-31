@@ -3,7 +3,6 @@
 	<name>ytex.web</name>
 	<comment></comment>
 	<projects>
-		<project>config</project>
 		<project>ytex.model</project>
 		<project>config.local</project>
 	</projects>
