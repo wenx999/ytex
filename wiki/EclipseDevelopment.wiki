@@ -2,9 +2,10 @@
 
 = Introduction =
 
+== Build ==
   * Checkout
     ** Setup Repository 
-    ** Right Click on workspace -> find / checkout as 
+    ** Right Click on workspace -> find / checkout as -> find projects in the children of the selected resource
   * Setup Workspace Preferences: Window -> Preferences
     ** Server -> Runtime Environment -> Add -> Apache Tomcat v6.0
     ** Java -> Build Path -> Classpath Variables -> New -> MAVERIC_HOME
@@ -19,12 +20,19 @@
     ** Execute setupMavericResources target in build/build-setup.xml
     ** Refresh Maveric
   * Setup config files: execute templateToConfig in build/build-setup.xml
-  * Tomcat
-  PATH=${workspace_loc}/libs.system/sqljdbc_3.0/enu/auth/x86
-  -Djava.util.logging.config.file=file:///${workspace_loc}/config/desc/Logger.properties 
-  -Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager
-  -Dorg.apache.el.parser.COERCE_TO_ZERO=false
-  Add libs.system to server classpath
+  * Select all projects -> Right Click -> Refresh
+  Now everything should compile.
+
+== Tomcat setup ==
+  * Open Servers tab, Add Tomcat Server, Add ytex.web to server
+  * Open Server -> Open Launch Configuration
+    ** Environment: add PATH=${workspace_loc}/libs.system/sqljdbc_3.0/enu/auth/x86
+    ** Arguments: add
+    -Djava.util.logging.config.file=file:///${workspace_loc}/config/desc/Logger.properties 
+    -Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager
+    -Dorg.apache.el.parser.COERCE_TO_ZERO=false
+    ** Classpath: Add libs.system to server classpath
+
   
 
 
