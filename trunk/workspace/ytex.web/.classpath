@@ -8,9 +8,10 @@
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/config"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/libs.system"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/libs.ytex"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/ytex.model"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/config.local"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
