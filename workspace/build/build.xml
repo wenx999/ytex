@@ -26,15 +26,11 @@
 		<dirset dir="${maveric.home}" includes="dest" />
 		<dirset dir="../maveric" includes="resources" />
 	</path>
-	<path id="cp.system">
-		<fileset dir="../libs.system/sqljdbc_2.0/enu" includes="sqljdbc4.jar" />
-	</path>
 	<path id="cp.ytex">
 		<fileset dir="${ytex.lib.home}" includes="*.jar" />
 	</path>
 	<path id="cp.all">
 		<path refid="cp.ytex" />
-		<path refid="cp.system" />
 		<path refid="cp.maveric" />
 	</path>
 
