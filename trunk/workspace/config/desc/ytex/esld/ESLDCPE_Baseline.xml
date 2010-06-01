@@ -3,7 +3,7 @@
     <collectionReader>
         <collectionIterator>
             <descriptor>
-                <import location="DBCollectionReader.xml"/>
+                <import location="../vacs/uima/DBCollectionReader.xml"/>
             </descriptor>
             <configurationParameterSettings>
                 <nameValuePair>
@@ -18,19 +18,7 @@
     <casProcessors casPoolSize="3" processingUnitThreadCount="1">
         <casProcessor deployment="integrated" name="AggregateAllAnnotation">
             <descriptor>
-                <import location="ESLDPipeline.xml"/>
-            </descriptor>
-            <deploymentParameters/>
-            <errorHandling>
-                <errorRateThreshold action="terminate" value="0/1000"/>
-                <maxConsecutiveRestarts action="terminate" value="30"/>
-                <timeout max="100000" default="-1"/>
-            </errorHandling>
-            <checkpoint batch="10000" time="1000ms"/>
-        </casProcessor>
-        <casProcessor deployment="integrated" name="DBConsumer.xml">
-            <descriptor>
-                <import location="annotators/DBConsumer.xml"/>
+                <import location="ESLDPipelineBaseline.xml"/>
             </descriptor>
             <deploymentParameters/>
             <errorHandling>
