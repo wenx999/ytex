@@ -1,20 +1,49 @@
 #summary Using YTEX
 #labels Phase-Deploy
+<wiki:toc max_depth="2" />
 
 =Using YTEX=
-TODO
+
+
+
 ==Annotating Documents==
 
 ===UIMA Document Analyzer===
+ * Execute `YTEX_HOME\ytexDocumentAnalyzer.bat`
+ * Select `YTEX_HOME\config\desc\ytex\esld\ESLDPipelineRich.xml` as the annotation engine
+ * Select `MAVERIC_HOME\docs\examples\collection` as input directory
+ * Create `MAVERIC_HOME\docs\examples\ytexoutput` and set as output directory
+ * Run
 
 ===UIMA Collection Processing Engine===
+ * Execute `YTEX_HOME\ytexCPE.bat`
+ * Specify query to retrieve document keys
+ * Specify query to retrieve individual document
 
 ==Retrieving Documents==
 
+===Using YTEX Views===
+Some simple queries:
+  * View all documents
+{{{
+select * 
+from ytex.v_document
+}}}
+  * View all sentences that contain an affirmed UMLS Concept
+{{{
+select * 
+from ytex.v_document_cui_sent
+where code = 'C000000'
+and certainty = 0
+}}}
+
+===Using YTEX DBAnnotationViewer===
+  * Execute `YTEX_HOME\ytexDBAnnotationViewer.bat`
+  * Select `YTEX_HOME\config\desc\ytex\esld\ESLDPipelineRich.xml` as the annotation engine
+  * Specify document id (e.g. from one of the views)
+
 ==Configuring the Semantic Search Engine==
 TODO
-
-===Document Views===
 
 ===YTEX Data Model===
 http://docs.google.com/drawings/pub?id=1BXaby0zAsWdFPPI3qyLfhegbv8oxIW04kzWsBVPT4Mo&w=960&h=720&foo=er.jpg
