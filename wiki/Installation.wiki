@@ -1,6 +1,7 @@
 #labels Phase-Deploy
-<wiki:toc max_depth="1" />
+<wiki:toc max_depth="2" />
 #summary Installation details
+#sidebar TableOfContents
 
 =Installation=
 
