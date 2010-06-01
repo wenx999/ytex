@@ -1,5 +1,6 @@
-#summary Installation details
 #labels Phase-Deploy
+<wiki:toc max_depth="1" />
+#summary Installation details
 
 =Installation=
 
