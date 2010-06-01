@@ -3,13 +3,11 @@
 #sidebar TableOfContents
 <wiki:toc max_depth="2" />
 
-=Installation=
-
-==Prerequisites==
+=Prerequisites=
 The following software must be installed:
   * MS SQL Server 2008 Tools [http://www.microsoft.com/downloads/details.aspx?familyid=08E52AC2-1D62-45F6-9A4A-4B76A8564A2B&displaylang=en download]
   This is required to execute SQL Scripts to set up the YTEX database schema.
-  * MS SQL Server JDBC Driver [http://www.microsoft.com/downloads/details.aspx?displaylang=en&FamilyID=a737000d-68d0-4531-b65d-da0f2a735707 download]
+  * MS SQL Server JDBC Driver v3.0 [http://www.microsoft.com/downloads/details.aspx?displaylang=en&FamilyID=a737000d-68d0-4531-b65d-da0f2a735707 download]
   This is required for connectivity to the SQL Server Database.
   * Maveric ARC [http://research.maveric.org/mig/arc/arc_v1.0_release_notes.html download]
   YTEX uses the cTAKES version distributed with Maveric ARC.
@@ -20,17 +18,17 @@ The following software must be installed:
   * Apache Tomcat (required only for semantic search app) [http://tomcat.apache.org/download-60.cgi download]
   The YTEX semantic search engine is distributed as a java web application, and can be deployed on Tomcat.
 
-===Maveric ARC Installation===
+==Maveric ARC Installation==
 As described in the [http://research.maveric.org/mig/arc/configuring_ctakes.html ARC installation guide], ARC requires the setup of LVG and UMLS.  Follow the directions there for the setup of the LVG.
 
-===UMLS Setup===
+==UMLS Setup==
 ARC is distributed with the UMLS 2009 database tables for MySQL.  YTEX however uses SQL Server 2008.  You have two options for setting up the UMLS 2009 database for YTEX:
  # Set up database as per ARC instructions, and then copy UMLS tables to your SQL Server database using the Microsoft Data Transformation Services
  # Contact us (vngarla at gmail.com), and we will provide the SQL Server 2009 database tables.
 
 The YTEX installation assumes that you follow the latter variant (obtain the UMLS from us).
 
-==YTEX installation==
+=YTEX installation=
 This assumes a Windows installation.  YTEX should work on unices (tests and instructions pending)
   * Download and extract the YTEX package to a directory (e.g. c:\java\ytex).  This directory will be referred to as the YTEX_HOME
   * Edit YTEX_HOME\setenv.cmd
