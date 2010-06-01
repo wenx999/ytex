@@ -3,22 +3,50 @@
 <wiki:toc max_depth="2" />
 
 =Using YTEX=
-
-
+This document presumes familiarity with [http://uima.apache.org/index.html UIMA] and [http://ohnlp.sourceforge.net/cTAKES/ cTAKES].
 
 ==Annotating Documents==
+YTEX is based on UIMA, and standard UIMA Tools can be used to annotate documents with YTEX: you can annotate documents using the standard UIMA Document Analyzer and Collection Processing Engine..  YTEX is distributed with analysis engine configurations based on the cTAKES/ARC analysis engine, and comes in various flavors:
+  * `ESLDPipelineBaseline.xml` - this contains the basic cTAKES/ARC pipeline with the following modifications:
+    * `SentenceAnnotator`: modified to not break sentences on newlines, and to break sentences at periods.
+    * `SegmentRegexAnnotator`: annotate sections based on regular expressions.
+    * `DictionaryLookup`: Configured to use the SNOMED-CT sub-vocabulary of the UMLS.
+    * `DBConsumer`: Stores annotatations and the XML CAS representation in the database
+  * `ESLDPipelineEnhanced.xml` - this is the baseline (see above), plus:
+    * `NamedEntityRegexAnnotator`: annotate named entities based on regular expressions.
+    * `NegexAnnotator`: this replaces the cTAKES NegationAnnotator.  The NegexAnnotator is based on the Negex negation detection algorithm.
+    * `DictionaryLookup`: Configure to use the SNOMED-CT vocabulary, plus some terms used in the End-Stage liver disease study (see todo).
+
+You are of course welcome to modify/add/remove annotators to the analysis engine and modify configuration parameters.
 
 ===UIMA Document Analyzer===
- * Execute `YTEX_HOME\ytexDocumentAnalyzer.bat`
- * Select `YTEX_HOME\config\desc\ytex\esld\ESLDPipelineRich.xml` as the annotation engine
- * Select `MAVERIC_HOME\docs\examples\collection` as input directory
- * Create `MAVERIC_HOME\docs\examples\ytexoutput` and set as output directory
- * Run
+ * Execute `YTEX_HOME\ytexDocumentAnalyzer.bat` and set the following options:
+   ** Input Directory: `MAVERIC_HOME\docs\examples\collection`
+   ** Output Directory: `MAVERIC_HOME\docs\examples\ytexoutput` (create this directory)
+   ** Analysis Engine: `YTEX_HOME\config\desc\ytex\esld\ESLDPipelineRich.xml`
+ * Click Run
+ * You can then view the anaysis results by double-clicking individual documents.
 
 ===UIMA Collection Processing Engine===
- * Execute `YTEX_HOME\ytexCPE.bat`
- * Specify query to retrieve document keys
- * Specify query to retrieve individual document
+Clinical Documents for the VACS project are stored in a database.  We developed an UIMA CollectionReader that retrieves these documents for annotation (thereby avoiding exporting the documents to the file system).  The DBCollection reader works as follows:
+  # read all document unique ids into an internal list
+  # iterate through each id in the list, and retrieve the document for annotation.
+
+The document key query must return the following fields
+  * `uid`: a numeric document identifier.  This is the only field which cannot be null.
+  * `studyid`: numeric patient identifier.  can be null.
+  * `document_type_id`: a numeric document type id (foreign key to `ref_document_type` table).  can be null.
+  * `site_id`: character site identifier.  can be null.
+
+To configure and execute the CPE, do the following:
+  * Execute `YTEX_HOME\ytexCPE.bat`, 
+  * File->Open CPE Descriptor -> `YTEX_HOME\config\desc\ytex\esld\ESLDCPE_Rich.xml`
+  * specify the following options:
+    ** Descriptor: `YTEX_HOME\config\desc\ytex\vacs\uima\DBCollectionReader.xml`
+    ** Specify query to retrieve document keys
+    ** Specify query to retrieve individual document
+    ** analysis_batch: Documents can be assigned a 'group' or analysis_batch.  specify that here.
+  * Click the 'Play' button
 
 ==Retrieving Documents==
 
@@ -26,18 +54,19 @@
 Some simple queries:
   * View all documents
 {{{
-select * 
+select top 1000 document_id, doc_text
 from ytex.v_document
 }}}
   * View all sentences that contain an affirmed UMLS Concept
 {{{
 select * 
 from ytex.v_document_cui_sent
-where code = 'C000000'
+where code = 'C0024228'
 and certainty = 0
 }}}
 
 ===Using YTEX DBAnnotationViewer===
+For a graphical representation of document annotations, use the DBAnnotationViewer.  This modified viewer retrieves the document CAS from the database (as opposed to the plain-vanilla AnnotationViewer which retrieves the CAS from the file system).
   * Execute `YTEX_HOME\ytexDBAnnotationViewer.bat`
   * Select `YTEX_HOME\config\desc\ytex\esld\ESLDPipelineRich.xml` as the annotation engine
   * Specify document id (e.g. from one of the views)
