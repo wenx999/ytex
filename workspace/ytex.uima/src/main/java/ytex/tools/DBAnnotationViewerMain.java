@@ -106,13 +106,9 @@ public class DBAnnotationViewerMain extends JFrame {
 	 */
 	private CAS casDescriptor = null;
 	/**
-	 * properties loaded from selected jdbc properties file
+	 * properties loaded from ytex.properties file
 	 */
 	private Properties jdbcProperties = null;
-	/**
-	 * name of jdbc properties file. if this changes, then reload jdbcProperties
-	 */
-	private String jdbcPropertiesFileName = null;
 	/**
 	 * style map initialized with descriptor
 	 */
@@ -132,23 +128,18 @@ public class DBAnnotationViewerMain extends JFrame {
 	JTextField documentIDField = null;
 
 	private static final String HELP_MESSAGE = "Instructions for using Annotation Viewer:\n\n"
-			+ "1) Specify the JDBC Properties file.  This is a java properties file in which the following properties are defined:\n"
-			+ "* db.url - jdbc url\n"
-			+ "* db.driver - jdbc driver\n"
-			+ "* db.username - jdbc username (optional)\n"
-			+ "* db.password - jdbc password (optional)\n\n"
-			+ "2) In the \"TypeSystem or AE Descriptor File\" field, either type or use the browse\n"
+			+ "1) In the \"TypeSystem or AE Descriptor File\" field, either type or use the browse\n"
 			+ "button to select the TypeSystem or AE descriptor for the AE that generated the\n"
 			+ "XMI or XCAS files.  (This is needed for type system infornation only.\n"
 			+ "Analysis will not be redone.)\n\n"
-			+ "3) Specify a Document ID.\n\n"
-			+ "4) Click the \"View\" button at the buttom of the window.\n\n"
-			+ "5) Select the view type -- either the Java annotation viewer, HTML,\n"
+			+ "2) Specify a Document ID.\n\n"
+			+ "3) Click the \"View\" button at the buttom of the window.\n\n"
+			+ "4) Select the view type -- either the Java annotation viewer, HTML,\n"
 			+ "or XML.  The Java annotation viewer is recommended.\n\n";
 
 	private File uimaHomeDir;
 
-	private FileSelector jdbcPropertiesFileSelector;
+	// private FileSelector jdbcPropertiesFileSelector;
 
 	private FileSelector taeDescriptorFileSelector;
 
@@ -217,7 +208,7 @@ public class DBAnnotationViewerMain extends JFrame {
 		menuBar.add(helpMenu);
 
 		// Labels to identify the text fields
-		final Caption labelJdbcProps = new Caption("JDBC Properties File: ");
+		// final Caption labelJdbcProps = new Caption("JDBC Properties File: ");
 		final Caption labelStyleMapFile = new Caption(
 				"TypeSystem or AE Descriptor File: ");
 
@@ -231,11 +222,6 @@ public class DBAnnotationViewerMain extends JFrame {
 		// controlPanel.setLayout(new GridLayout(4, 2, 8, 4));
 
 		// // Set default values for input fields
-		File jdbcProperties = new File(System.getProperty("user.home"));
-		jdbcPropertiesFileSelector = new FileSelector("", "Input Directory",
-				JFileChooser.FILES_ONLY, jdbcProperties);
-		jdbcPropertiesFileSelector
-				.setSelected(jdbcProperties.getAbsolutePath());
 
 		taeDescriptorFileSelector = new FileSelector("", "TAE Descriptor File",
 				JFileChooser.FILES_ONLY, uimaHomeDir);
@@ -246,8 +232,6 @@ public class DBAnnotationViewerMain extends JFrame {
 		Caption labelDocumentID = new Caption("Document ID:");
 		this.documentIDField = new JTextField();
 
-		controlPanel.add(labelJdbcProps);
-		controlPanel.add(jdbcPropertiesFileSelector);
 		controlPanel.add(labelStyleMapFile);
 		controlPanel.add(taeDescriptorFileSelector);
 		controlPanel.add(labelDocumentID);
@@ -283,7 +267,7 @@ public class DBAnnotationViewerMain extends JFrame {
 		controlPanel.add(displayFormatPanel);
 		// ------ END copied here
 
-		SpringUtilities.makeCompactGrid(controlPanel, 4, 2, // rows, cols
+		SpringUtilities.makeCompactGrid(controlPanel, 3, 2, // rows, cols
 				4, 4, // initX, initY
 				4, 4); // xPad, yPad
 
@@ -502,8 +486,6 @@ public class DBAnnotationViewerMain extends JFrame {
 		// prefs.put("inDir", inputFileSelector.getSelected());
 		prefs.put("taeDescriptorFile", this.taeDescriptorFileSelector
 				.getSelected());
-		prefs.put("jdbcPropertiesFile", this.jdbcPropertiesFileSelector
-				.getSelected());
 	}
 
 	/**
@@ -515,8 +497,6 @@ public class DBAnnotationViewerMain extends JFrame {
 				"examples/descriptors/analysis_engine/PersonTitleAnnotator.xml");
 
 		// restore preferences
-		this.jdbcPropertiesFileSelector.setSelected(prefs.get(
-				"jdbcPropertiesFile", ""));
 		this.taeDescriptorFileSelector.setSelected(prefs.get(
 				"taeDescriptorFile", defaultTaeDescriptorFile.toString()));
 	}
@@ -592,7 +572,7 @@ public class DBAnnotationViewerMain extends JFrame {
 	 * @see java.awt.Component#getPreferredSize()
 	 */
 	public Dimension getPreferredSize() {
-		return new Dimension(640, 300);
+		return new Dimension(640, 270);
 	}
 
 	/**
@@ -605,16 +585,6 @@ public class DBAnnotationViewerMain extends JFrame {
 			boolean javaViewerUCRBisSelected, boolean xmlRBisSelected,
 			File styleMapFile, File viewerDirectory) {
 		try {
-			/*
-			 * File xcasFile = new File(inputDirPath, fileName); // create a new
-			 * CAS CAS cas = CasCreationUtils.createCas(Collections.EMPTY_LIST,
-			 * typeSystem, UIMAFramework
-			 * .getDefaultPerformanceTuningProperties()); // deserialize XCAS
-			 * into CAS FileInputStream xcasInStream = null; try { xcasInStream
-			 * = new FileInputStream(xcasFile);
-			 * XmlCasDeserializer.deserialize(xcasInStream, cas, true); }
-			 * finally { if (xcasInStream != null) xcasInStream.close(); }
-			 */
 			CAS cas = this.loadDocumentCas(documentID, typeSystem);
 
 			// get the specified view
@@ -846,39 +816,30 @@ public class DBAnnotationViewerMain extends JFrame {
 	}
 
 	private Properties loadJDBCProperties() throws IOException {
-		if (this.jdbcProperties == null
-				|| !this.jdbcPropertiesFileSelector.getSelected().equals(
-						this.jdbcPropertiesFileName)) {
-			this.jdbcPropertiesFileName = null;
+		InputStream is = null;
+		try {
+			is = this.getClass().getResourceAsStream("/ytex.properties");
 			this.jdbcProperties = new Properties();
-			InputStream is = null;
-			try {
-				is = new FileInputStream(new File(
-						this.jdbcPropertiesFileSelector.getSelected()));
-				this.jdbcProperties.load(is);
-				// make sure required properties are specified
-				if (!jdbcProperties.containsKey("db.url")
-						|| !jdbcProperties.containsKey("db.driver")) {
-					// null out properties
-					this.jdbcProperties = null;
-					throw new IOException(
-							"Error: required jdbc properties (db.url / db.driver) not specified");
-				}
-				// set jdbcproperties file name to avoid reloading, return
-				// properties
-				this.jdbcPropertiesFileName = this.jdbcPropertiesFileSelector
-						.getSelected();
-				return jdbcProperties;
-			} finally {
-				if (is != null) {
-					try {
-						is.close();
-					} catch (Exception ignore) {
-					}
+			this.jdbcProperties.load(is);
+			// make sure required properties are specified
+			if (!jdbcProperties.containsKey("db.url")
+					|| !jdbcProperties.containsKey("db.driver")) {
+				// null out properties
+				this.jdbcProperties = null;
+				throw new IOException(
+						"Error: required jdbc properties (db.url / db.driver) not specified");
+			}
+			// set jdbcproperties file name to avoid reloading, return
+			// properties
+			return jdbcProperties;
+		} finally {
+			if (is != null) {
+				try {
+					is.close();
+				} catch (Exception ignore) {
 				}
 			}
 		}
-		return this.jdbcProperties;
 	}
 
 	/**
@@ -903,8 +864,7 @@ public class DBAnnotationViewerMain extends JFrame {
 					.containsKey("db.username") ? jdbcProperties
 					.getProperty("db.username") : null, jdbcProperties
 					.containsKey("db.password") ? jdbcProperties
-					.getProperty("db.password") : null
-			);
+					.getProperty("db.password") : null);
 			String strSQL = jdbcProperties.containsKey("db.schema") ? "select cas from "
 					+ jdbcProperties.getProperty("db.schema")
 					+ ".document where document_id = ?"
