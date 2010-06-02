@@ -5,7 +5,6 @@ CREATE TABLE $(db_schema).[document](
 	[analysis_batch] [varchar](50) NOT NULL,
 	[cas] [varbinary](max) NULL,
 	[doc_text] [nvarchar](max) NULL,
-	[copy_of_document_id] [int] NULL,
  CONSTRAINT [PK_document] PRIMARY KEY CLUSTERED 
 (
 	[document_id]
@@ -29,7 +28,7 @@ PRIMARY KEY CLUSTERED
 (
 	[document_class_id]
 )
-) ON [PRIMARY]
+)
 ;
 
 CREATE UNIQUE NONCLUSTERED INDEX [NK_document_class] ON $(db_schema).[document_class] 
