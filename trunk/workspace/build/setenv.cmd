@@ -26,6 +26,9 @@
 @rem should contain bcp.exe and sqlcmd.exe 
 @set MSSQL_TOOLS=C:\Program Files\Microsoft SQL Server\100\Tools\Binn
 
+@rem tomcat installation directory
+@set CATALINA_HOME=C:\Users\vhacongarlav\java\apache-tomcat-6.0.24
+
 @rem -------------------------------------------
 @rem end customizations.  The following is environment-independent
 @rem -------------------------------------------
@@ -106,3 +109,5 @@
 
 @set TOOLS_OPTIONS=-Xmx1g -Dlog4j.configuration=file:///%YTEX_HOME%/config/desc/log4j.properties -Djava.util.logging.config.file=file:///%YTEX_HOME%/config/desc/logger.properties -DVNS_HOST=localhost
 
+@rem we have a tomcat configuration in this directory
+@set CATALINA_BASE=%YTEX_HOME%\web\catalina

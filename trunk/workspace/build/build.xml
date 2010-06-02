@@ -112,6 +112,7 @@
 			<fileset dir="../config">
 				<include name="desc/**/*.*" />
 				<exclude name="desc/ytex.properties" />
+				<exclude name="**/.svn/**/*.* "/>
 			</fileset>
 		</copy>
 	</target>
@@ -136,6 +137,7 @@
 				<include name="data.mssql/**/*.*" />
 				<exclude name="**/.classpath" />
 				<exclude name="**/.project" />
+				<exclude name="**/.svn/**/*.*"/>
 			</fileset>
 		</copy>
 	</target>
@@ -159,9 +161,10 @@
 		<copy todir="${project.bin.home}">
 			<fileset dir="${project.src.home}">
 				<exclude name="**/*.java" />
+				<exclude name="**/.svn/**/*.*"/>
 			</fileset>
 		</copy>
-		<jar destfile="${ytex.dist.home}/lib/${project.name}.jar" basedir="${project.bin.home}" />
+		<jar destfile="${ytex.dist.home}/lib/${project.name}.jar" basedir="${project.bin.home}" excludes="**/.svn/**/*.*"/>
 	</target>
 	<target name="build.ytex.web">
 		<delete dir="../ytex.web/build/classes" quiet="yes" />
@@ -169,7 +172,7 @@
 		<javac srcdir="../ytex.web/src/main/java" destdir="../ytex.web/build/classes" >
 			<classpath>
 				<fileset dir="${ytex.dist.home}/lib">
-					<include name="ytex*.jar"/>
+					<include name="ytex.model.jar"/>
 				</fileset>
 				<path refid="cp.all"/>
 			</classpath>
@@ -177,6 +180,7 @@
 		<copy todir="../ytex.web/build/classes">
 			<fileset dir="../ytex.web/src/main/java">
 				<exclude name="**/*.java" />
+				<exclude name="**/.svn/**/*.*" />
 			</fileset>
 		</copy>
 		<jar destfile="${ytex.dist.home}/web/ytex.web.war">
@@ -184,6 +188,12 @@
 			<zipfileset dir="../ytex.web/WebContent" />
 			<zipfileset dir="${ytex.dist.home}/lib" includes="ytex*.jar" prefix="WEB-INF/lib" />
 		</jar>
+		<copy todir="${ytex.dist.home}/web">
+			<fileset dir="../ytex.web">
+				<include name="catalina/**/*.*" />
+				<exclude name="**/.svn/**/*.*" />
+			</fileset>
+		</copy>
 	</target>
 	<target name="zip.dist">
 		<zip destfile="${dist.home}/ytex.zip" basedir="${dist.home}" includes="ytex/**/*.*" />

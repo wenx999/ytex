@@ -1,9 +1,16 @@
-<project name="build-setup">
+<project name="build-setup" default="help">
 	<!-- override these variables using eclipse settings/command line -->
 	<property name="maveric.home" value="C:/java/MavericArcApp-1.0.0" />
 	<property name="ytex.home" value="../" />
 	<property name="ytex.properties" value="${ytex.home}/config/desc/ytex.properties" />
-	<target name="all" depends="templateToConfig,setupMavericResources,setupDatabase"/>
+	<target name="help">
+<echo>
+Ant build script to setup ytex.
+Call with option -projecthelp for more info.
+</echo>
+	</target>
+	
+	<target name="all" depends="templateToConfig,setupMavericResources,setupDatabase,setup.ytex.web" />
 	<target name="setupDatabase" description="setup ytex database tables">
 		<ant dir="${ytex.home}/data.mssql" target="all" />
 	</target>
@@ -36,5 +43,27 @@
 			</fileset>
 		</copy>
 	</target>
-
+	<target name="search.templateToConfig" description="setup ytex.web search.properties">
+		<!-- default for development environment -->
+		<property name="search.properties.path" value="../ytex.web/src/main/java/ytex" />
+		<copy file="${search.properties.path}/search.template.properties" tofile="${search.properties.path}/search.properties">
+			<filterset>
+				<filtersfile file="${ytex.properties}" />
+			</filterset>
+		</copy>
+	</target>
+	<target name="setup.ytex.web" description="setup ytex.web application for tomcat">
+		<property name="context.root" value="ytex.web" />
+		<property name="catalina.base" value="${ytex.home}/web/catalina" />
+		<mkdir dir="${catalina.base}/temp" />
+		<mkdir dir="${catalina.base}/webapps" />
+		<unzip src="${ytex.home}/web/ytex.web.war" dest="${catalina.base}/webapps/${context.root}" />
+		<antcall target="search.templateToConfig">
+			<param name="search.properties.path" value="${catalina.base}/webapps/${context.root}/WEB-INF/classes/ytex" />
+		</antcall>
+		<echo>
+Default search.properties set up in ${catalina.base}/webapps/${context.root}/WEB-INF/classes/ytex.
+Modify to match your configuration.
+		</echo>
+	</target>
 </project>
