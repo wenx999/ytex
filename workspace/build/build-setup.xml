@@ -46,7 +46,7 @@ Call with option -projecthelp for more info.
 	<target name="search.templateToConfig" description="setup ytex.web search.properties">
 		<!-- default for development environment -->
 		<property name="search.properties.path" value="../ytex.web/src/main/java/ytex" />
-		<copy file="${search.properties.path}/search.template.properties" tofile="${search.properties.path}/search.properties">
+		<copy file="${search.properties.path}/search.template.properties" tofile="${search.properties.path}/search.properties" overwrite="yes">
 			<filterset>
 				<filtersfile file="${ytex.properties}" />
 			</filterset>
@@ -56,8 +56,6 @@ Call with option -projecthelp for more info.
 		<property name="context.root" value="ytex.web" />
 		<property name="catalina.base" value="${ytex.home}/web/catalina" />
 		<mkdir dir="${catalina.base}/temp" />
-		<mkdir dir="${catalina.base}/webapps" />
-		<unzip src="${ytex.home}/web/ytex.web.war" dest="${catalina.base}/webapps/${context.root}" />
 		<antcall target="search.templateToConfig">
 			<param name="search.properties.path" value="${catalina.base}/webapps/${context.root}/WEB-INF/classes/ytex" />
 		</antcall>
