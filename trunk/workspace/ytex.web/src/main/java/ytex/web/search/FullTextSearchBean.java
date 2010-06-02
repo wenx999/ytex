@@ -5,7 +5,6 @@ import java.util.Map;
 
 import javax.faces.event.ActionEvent;
 
-import ytex.dao.DocumentSearchDao;
 
 /**
  * Jsf bean for full text search.
@@ -17,7 +16,7 @@ import ytex.dao.DocumentSearchDao;
 public class FullTextSearchBean {
 	private String searchTerm;
 	private List<Map<String,Object>> searchResultList;
-	private DocumentSearchDao documentSearchDao;
+	private DocumentSearchService documentSearchService;
 	
 	public String getSearchTerm() {
 		return searchTerm;
@@ -35,16 +34,16 @@ public class FullTextSearchBean {
 		this.searchResultList = searchResultList;
 	}
 
-	public DocumentSearchDao getDocumentSearchDao() {
-		return documentSearchDao;
+	public DocumentSearchService getDocumentSearchService() {
+		return documentSearchService;
 	}
 
-	public void setDocumentSearchDao(DocumentSearchDao documentSearchDao) {
-		this.documentSearchDao = documentSearchDao;
+	public void setDocumentSearchService(DocumentSearchService documentSearchService) {
+		this.documentSearchService = documentSearchService;
 	}
 
 	public void searchListen(ActionEvent event) {
 		if(searchTerm != null && searchTerm.trim().length() > 0)
-			this.searchResultList = documentSearchDao.fullTextSearch(searchTerm);
+			this.searchResultList = documentSearchService.fullTextSearch(searchTerm);
 	}
 }

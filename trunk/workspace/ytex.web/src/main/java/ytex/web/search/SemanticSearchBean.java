@@ -13,8 +13,6 @@ import javax.faces.model.SelectItem;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import ytex.dao.DocumentSearchDao;
-import ytex.dao.UMLSFirstWordDao;
 import ytex.model.DocumentSearchResult;
 import ytex.model.UMLSFirstWord;
 
@@ -30,12 +28,28 @@ import com.icesoft.faces.component.selectinputtext.SelectInputText;
 public class SemanticSearchBean {
 	private static final Log log = LogFactory.getLog(SemanticSearchBean.class);
 
-	private UMLSFirstWordDao umlsFirstWordDao;
-	private DocumentSearchDao documentSearchDao;
+	private UMLSFirstWordService umlsFirstWordService;
+	private DocumentSearchService documentSearchService;
 	private Date dateFrom;
 	private Date dateTo;
 	private Integer patientId;
 	private Boolean negationStatus;
+
+	public UMLSFirstWordService getUmlsFirstWordService() {
+		return umlsFirstWordService;
+	}
+
+	public void setUmlsFirstWordService(UMLSFirstWordService umlsFirstWordService) {
+		this.umlsFirstWordService = umlsFirstWordService;
+	}
+
+	public DocumentSearchService getDocumentSearchService() {
+		return documentSearchService;
+	}
+
+	public void setDocumentSearchService(DocumentSearchService documentSearchService) {
+		this.documentSearchService = documentSearchService;
+	}
 
 	public Date getDateFrom() {
 		return dateFrom;
@@ -95,33 +109,17 @@ public class SemanticSearchBean {
 
 	private List<DocumentSearchResult> searchResultList = new ArrayList<DocumentSearchResult>();
 
-	public UMLSFirstWordDao getUmlsFirstWordDao() {
-		return umlsFirstWordDao;
-	}
-
-	public DocumentSearchDao getDocumentSearchDao() {
-		return documentSearchDao;
-	}
-
-	public void setDocumentSearchDao(DocumentSearchDao documentSearchDao) {
-		this.documentSearchDao = documentSearchDao;
-	}
-
-	public void setUmlsFirstWordDao(UMLSFirstWordDao umlsFirstWordDao) {
-		this.umlsFirstWordDao = umlsFirstWordDao;
-	}
-
 	public void searchListen(ActionEvent event) {
 		this.searchCUI = this.currentCUI;
 		if (this.currentCUI != null) {
 			if (this.getNegationStatus() != null || this.getPatientId() != null
 					|| this.getDateFrom() != null || this.getDateTo() != null) {
-				this.searchResultList = this.documentSearchDao.extendedSearch(
+				this.searchResultList = this.documentSearchService.extendedSearch(
 						this.currentCUI.getCui(), null, this.getDateFrom(),
 						this.getDateTo(), this.getPatientId(), this
 								.getNegationStatus());
 			} else {
-				this.searchResultList = this.documentSearchDao
+				this.searchResultList = this.documentSearchService
 						.searchByCui(this.currentCUI.getCui());
 			}
 			if (log.isDebugEnabled())
@@ -265,7 +263,7 @@ public class SemanticSearchBean {
 			searchString = searchWord.toString();
 		}
 		if (searchString != null && searchString.length() > 2) {
-			List<UMLSFirstWord> cuis = this.umlsFirstWordDao
+			List<UMLSFirstWord> cuis = this.umlsFirstWordService
 					.getUMLSbyFirstWord(searchString);
 			this.matchesList = new ArrayList<SelectItem>(cuis.size());
 			for (UMLSFirstWord cui : cuis) {

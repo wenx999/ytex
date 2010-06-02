@@ -3,5 +3,6 @@
 <beans>
 	<import resource="classpath:/ytex/beans-datasource.xml"/>
 	<import resource="classpath:/ytex/beans.xml"/>
+	<import resource="classpath:/ytex/web/beans-web.xml"/>
 	<import resource="classpath:/ytex/web/beans-security.xml"/>
 </beans>

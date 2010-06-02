@@ -4,7 +4,6 @@ import javax.faces.context.FacesContext;
 
 import org.apache.commons.lang.StringEscapeUtils;
 
-import ytex.dao.DocumentSearchDao;
 
 /**
  * Jsf bean to view results of fullTextSearch.jspx.
@@ -14,7 +13,8 @@ import ytex.dao.DocumentSearchDao;
  */
 public class FullTextDocumentViewBean {
 	private String docText;
-	private DocumentSearchDao documentSearchDao;
+	private DocumentSearchService documentSearchService;
+
 	private int documentID;
 
 	public int getDocumentID() {
@@ -26,13 +26,12 @@ public class FullTextDocumentViewBean {
 		this.loadDocument();
 		return docText;
 	}
-
-	public DocumentSearchDao getDocumentSearchDao() {
-		return documentSearchDao;
+	public DocumentSearchService getDocumentSearchService() {
+		return documentSearchService;
 	}
 
-	public void setDocumentSearchDao(DocumentSearchDao documentSearchDao) {
-		this.documentSearchDao = documentSearchDao;
+	public void setDocumentSearchService(DocumentSearchService documentSearchService) {
+		this.documentSearchService = documentSearchService;
 	}
 
 	public void loadDocument() {
@@ -41,7 +40,7 @@ public class FullTextDocumentViewBean {
 					.getExternalContext().getRequestParameterMap().get(
 							"documentID");
 			documentID = Integer.parseInt(strDocumentID); 
-			String docTextUnformatted = this.documentSearchDao
+			String docTextUnformatted = this.documentSearchService
 					.getFullTextSearchDocument(documentID);
 			this.docText = StringEscapeUtils.escapeXml(docTextUnformatted).replaceAll("\n", "<br>");
 		}

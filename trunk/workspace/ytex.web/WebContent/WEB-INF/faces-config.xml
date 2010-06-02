@@ -23,8 +23,8 @@
 		<managed-bean-class>ytex.web.search.FullTextSearchBean</managed-bean-class>
 		<managed-bean-scope>session</managed-bean-scope>
 		<managed-property>
-			<property-name>documentSearchDao</property-name>
-			<value>#{documentSearchDao}</value>
+			<property-name>documentSearchService</property-name>
+			<value>#{documentSearchService}</value>
 		</managed-property>
 	</managed-bean>
 	<managed-bean>
@@ -32,12 +32,12 @@
 		<managed-bean-class>ytex.web.search.SemanticSearchBean</managed-bean-class>
 		<managed-bean-scope>session</managed-bean-scope>
 		<managed-property>
-			<property-name>umlsFirstWordDao</property-name>
-			<value>#{umlsFirstWordDao}</value>
+			<property-name>umlsFirstWordService</property-name>
+			<value>#{umlsFirstWordService}</value>
 		</managed-property>
 		<managed-property>
-			<property-name>documentSearchDao</property-name>
-			<value>#{documentSearchDao}</value>
+			<property-name>documentSearchService</property-name>
+			<value>#{documentSearchService}</value>
 		</managed-property>
 	</managed-bean>
 	<managed-bean>
@@ -55,9 +55,9 @@
 		<managed-bean-class>ytex.web.search.FullTextDocumentViewBean</managed-bean-class>
 		<managed-bean-scope>request</managed-bean-scope>
 		<managed-property>
-			<property-name>documentSearchDao</property-name>
+			<property-name>documentSearchService</property-name>
 			<property-class></property-class>
-			<value>#{documentSearchDao}</value>
+			<value>#{documentSearchService}</value>
 		</managed-property>
 	</managed-bean>
 	<managed-bean>
