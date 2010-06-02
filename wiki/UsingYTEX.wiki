@@ -5,7 +5,7 @@
 =Using YTEX=
 This document presumes familiarity with [http://uima.apache.org/index.html UIMA] and [http://ohnlp.sourceforge.net/cTAKES/ cTAKES].
 
-==Annotating Documents==
+=Annotating Documents=
 YTEX is based on UIMA, and standard UIMA Tools can be used to annotate documents with YTEX: you can annotate documents using the standard UIMA Document Analyzer and Collection Processing Engine..  YTEX is distributed with analysis engine configurations based on the cTAKES/ARC analysis engine, and comes in various flavors:
   * `ESLDPipelineBaseline.xml` - this contains the basic cTAKES/ARC pipeline with the following modifications:
     * `SentenceAnnotator`: modified to not break sentences on newlines, and to break sentences at periods.
@@ -19,7 +19,7 @@ YTEX is based on UIMA, and standard UIMA Tools can be used to annotate documents
 
 You are of course welcome to modify/add/remove annotators to the analysis engine and modify configuration parameters.
 
-===UIMA Document Analyzer===
+==UIMA Document Analyzer==
  * Execute `YTEX_HOME\ytexDocumentAnalyzer.bat` and set the following options:
    ** Input Directory: `MAVERIC_HOME\docs\examples\collection`
    ** Output Directory: `MAVERIC_HOME\docs\examples\ytexoutput` (create this directory)
@@ -27,7 +27,7 @@ You are of course welcome to modify/add/remove annotators to the analysis engine
  * Click Run
  * You can then view the anaysis results by double-clicking individual documents.
 
-===UIMA Collection Processing Engine===
+==UIMA Collection Processing Engine==
 Clinical Documents for the VACS project are stored in a database.  We developed an UIMA CollectionReader that retrieves these documents for annotation (thereby avoiding exporting the documents to the file system).  The DBCollection reader works as follows:
   # read all document unique ids into an internal list
   # iterate through each id in the list, and retrieve the document for annotation.
@@ -48,9 +48,9 @@ To configure and execute the CPE, do the following:
     ** analysis_batch: Documents can be assigned a 'group' or analysis_batch.  specify that here.
   * Click the 'Play' button
 
-==Retrieving Documents==
+=Retrieving Documents=
 
-===Using YTEX Views===
+==Using YTEX Views==
 Some simple queries:
   * View all documents
 {{{
@@ -65,16 +65,29 @@ where code = 'C0024228'
 and certainty = 0
 }}}
 
-===Using YTEX DBAnnotationViewer===
+==Using YTEX DBAnnotationViewer==
 For a graphical representation of document annotations, use the DBAnnotationViewer.  This modified viewer retrieves the document CAS from the database (as opposed to the plain-vanilla AnnotationViewer which retrieves the CAS from the file system).
   * Execute `YTEX_HOME\ytexDBAnnotationViewer.bat`
   * Select `YTEX_HOME\config\desc\ytex\esld\ESLDPipelineRich.xml` as the annotation engine
   * Specify document id (e.g. from one of the views)
 
-==Configuring the Semantic Search Engine==
-TODO
+=Semantic Search Engine=
+The semantic search engine allows searching by UMLS Concept id, negation status, patient id, and document date.  It is preconfigured to work with the patient id and document date from VACS Annotations, but can be reconfigured to retrieve these annotations from other tables.  The semantic search engine can also be configured to execute full-text searches (the SQL Server Full Text Index must be enabled for this).
 
-===YTEX Data Model===
+==Running==
+  # Open a command prompt
+  # navigate to `YTEX_HOME`
+  # execute the following:
+{{{
+setenv.cmd
+%CATALINA_HOME%\bin\catalina run
+}}}
+
+==Using==
+  # Open a browser and navigate to http://localhsot:8080/ytex.web
+  # login with username 'scott' and password 'wombat'
+
+==YTEX Data Model==
 http://docs.google.com/drawings/pub?id=1BXaby0zAsWdFPPI3qyLfhegbv8oxIW04kzWsBVPT4Mo&w=960&h=720&foo=er.jpg
 
 ==Configuring YTEX==
