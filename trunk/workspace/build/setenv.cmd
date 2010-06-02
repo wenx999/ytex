@@ -17,17 +17,17 @@
 
 @rem where mssql server jdbc drivers were unpacked 
 @rem download from http://www.microsoft.com/downloads/details.aspx?displaylang=en&FamilyID=a737000d-68d0-4531-b65d-da0f2a735707
-@set SQLJDBC_HOME=C:\java\sqljdbc_2.0
+@set SQLJDBC_HOME=C:\java\sqljdbc_3.0
 
 @rem where ytex is intalled 
-@set YTEX_HOME=E:\projects\VA\dist\ytex
+@set YTEX_HOME=C:\java\ytex
 
 @rem where ms sql server tools are installed
 @rem should contain bcp.exe and sqlcmd.exe 
 @set MSSQL_TOOLS=C:\Program Files\Microsoft SQL Server\100\Tools\Binn
 
 @rem tomcat installation directory
-@set CATALINA_HOME=C:\Users\vhacongarlav\java\apache-tomcat-6.0.24
+@set CATALINA_HOME=C:\java\apache-tomcat-6.0.24
 
 @rem -------------------------------------------
 @rem end customizations.  The following is environment-independent

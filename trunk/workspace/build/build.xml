@@ -84,11 +84,11 @@
 	<target name="build.ytex.uima">
 		<path id="cp.ytex.uima">
 			<path refid="cp.all" />
-			<fileset dir="${ytex.dist.home}/lib/" includes="ytex.model.jar" />
+			<fileset dir="${ytex.dist.home}/lib" includes="ytex.model.jar" />
 		</path>
-		<antcall target="compile">
+		<antcall target="compile" inheritRefs="true">
 			<param name="project.name" value="ytex.uima" />
-			<param name="project.cp" value="cp.ytex.uima" />
+			<param name="project.classpathref" value="cp.ytex.uima" />
 		</antcall>
 	</target>
 	<target name="build.ytex.negex">
