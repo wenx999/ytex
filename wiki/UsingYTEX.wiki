@@ -51,16 +51,16 @@ To configure and execute the CPE, do the following:
 =Retrieving Documents=
 
 ==Using YTEX Views==
-Some simple queries:
+Some simple queries (replace schema to match your configuration):
   * View all documents
 {{{
 select top 1000 document_id, doc_text
-from ytex.v_document
+from <schema>.v_document
 }}}
   * View all sentences that contain an affirmed UMLS Concept
 {{{
 select * 
-from ytex.v_document_cui_sent
+from <schema>.v_document_cui_sent
 where code = 'C0024228'
 and certainty = 0
 }}}
