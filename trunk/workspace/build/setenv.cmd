@@ -39,47 +39,52 @@
 @rem if you are using a 64-bit jdk, adjust accordingly
 @set PATH=%PATH%;%SQLJDBC_HOME%\enu\auth\x86
 
+@rem we have a tomcat configuration in this directory
+@set CATALINA_BASE=%YTEX_HOME%\web\catalina
+
+@rem external libraries are in the ytex.web directory
+@set YTEX_LIB_HOME=%YTEX_HOME%\web\catalina\webapps\ytex.web\WEB-INF\lib
+
 @rem add ytex dependencies
-@set YTEX_CP=%YTEX_HOME%\lib\com.springsource.antlr-2.7.7.jar
-@set YTEX_CP=%YTEX_CP%;%YTEX_HOME%\lib\com.springsource.org.aopalliance-1.0.0.jar
-@set YTEX_CP=%YTEX_CP%;%YTEX_HOME%\lib\com.springsource.org.apache.commons.codec-1.3.0.jar
-@set YTEX_CP=%YTEX_CP%;%YTEX_HOME%\lib\com.springsource.org.apache.commons.collections-3.2.1.jar
-@set YTEX_CP=%YTEX_CP%;%YTEX_HOME%\lib\com.springsource.org.apache.commons.dbcp-1.2.2.osgi.jar
-@set YTEX_CP=%YTEX_CP%;%YTEX_HOME%\lib\com.springsource.org.apache.commons.fileupload-1.2.0.jar
-@set YTEX_CP=%YTEX_CP%;%YTEX_HOME%\lib\com.springsource.org.apache.commons.httpclient-3.1.0.jar
-@set YTEX_CP=%YTEX_CP%;%YTEX_HOME%\lib\com.springsource.org.apache.commons.io-1.4.0.jar
-@set YTEX_CP=%YTEX_CP%;%YTEX_HOME%\lib\com.springsource.org.apache.commons.lang-2.1.0.jar
-@set YTEX_CP=%YTEX_CP%;%YTEX_HOME%\lib\com.springsource.org.apache.commons.logging-1.1.1.jar
-@set YTEX_CP=%YTEX_CP%;%YTEX_HOME%\lib\com.springsource.org.apache.commons.pool-1.5.3.jar
-@set YTEX_CP=%YTEX_CP%;%YTEX_HOME%\lib\com.springsource.org.aspectj.weaver-1.6.8.RELEASE.jar
-@set YTEX_CP=%YTEX_CP%;%YTEX_HOME%\lib\dom4j-1.6.1.jar
-@set YTEX_CP=%YTEX_CP%;%YTEX_HOME%\lib\ehcache-1.2.3.jar
-@set YTEX_CP=%YTEX_CP%;%YTEX_HOME%\lib\GeneralNegEx.Java.v.1.2.05092009.jar
-@set YTEX_CP=%YTEX_CP%;%YTEX_HOME%\lib\hibernate3.jar
-@set YTEX_CP=%YTEX_CP%;%YTEX_HOME%\lib\javassist-3.9.0.GA.jar
-@set YTEX_CP=%YTEX_CP%;%YTEX_HOME%\lib\jta-1.1.jar
-@set YTEX_CP=%YTEX_CP%;%YTEX_HOME%\lib\org.springframework.aop-3.0.2.RELEASE.jar
-@set YTEX_CP=%YTEX_CP%;%YTEX_HOME%\lib\org.springframework.asm-3.0.2.RELEASE.jar
-@set YTEX_CP=%YTEX_CP%;%YTEX_HOME%\lib\org.springframework.aspects.jar
-@set YTEX_CP=%YTEX_CP%;%YTEX_HOME%\lib\org.springframework.beans-3.0.2.RELEASE.jar
-@set YTEX_CP=%YTEX_CP%;%YTEX_HOME%\lib\org.springframework.context-3.0.2.RELEASE.jar
-@set YTEX_CP=%YTEX_CP%;%YTEX_HOME%\lib\org.springframework.context.support-3.0.2.RELEASE.jar
-@set YTEX_CP=%YTEX_CP%;%YTEX_HOME%\lib\org.springframework.core-3.0.2.RELEASE.jar
-@set YTEX_CP=%YTEX_CP%;%YTEX_HOME%\lib\org.springframework.expression-3.0.2.RELEASE.jar
-@set YTEX_CP=%YTEX_CP%;%YTEX_HOME%\lib\org.springframework.jdbc-3.0.2.RELEASE.jar
-@set YTEX_CP=%YTEX_CP%;%YTEX_HOME%\lib\org.springframework.orm-3.0.2.RELEASE.jar
-@set YTEX_CP=%YTEX_CP%;%YTEX_HOME%\lib\org.springframework.transaction-3.0.2.RELEASE.jar
-@set YTEX_CP=%YTEX_CP%;%YTEX_HOME%\lib\org.springframework.web-3.0.2.RELEASE.jar
-@set YTEX_CP=%YTEX_CP%;%YTEX_HOME%\lib\org.springframework.web.servlet-3.0.2.RELEASE.jar
-@set YTEX_CP=%YTEX_CP%;%YTEX_HOME%\lib\slf4j-api-1.5.8.jar
-@set YTEX_CP=%YTEX_CP%;%YTEX_HOME%\lib\slf4j-jcl-1.5.8.jar
-@set YTEX_CP=%YTEX_CP%;%YTEX_HOME%\lib\weka.jar
+@set YTEX_CP=%YTEX_LIB_HOME%\com.springsource.antlr-2.7.7.jar
+@set YTEX_CP=%YTEX_CP%;%YTEX_LIB_HOME%\com.springsource.org.aopalliance-1.0.0.jar
+@set YTEX_CP=%YTEX_CP%;%YTEX_LIB_HOME%\com.springsource.org.apache.commons.codec-1.3.0.jar
+@set YTEX_CP=%YTEX_CP%;%YTEX_LIB_HOME%\com.springsource.org.apache.commons.collections-3.2.1.jar
+@set YTEX_CP=%YTEX_CP%;%YTEX_LIB_HOME%\com.springsource.org.apache.commons.dbcp-1.2.2.osgi.jar
+@set YTEX_CP=%YTEX_CP%;%YTEX_LIB_HOME%\com.springsource.org.apache.commons.fileupload-1.2.0.jar
+@set YTEX_CP=%YTEX_CP%;%YTEX_LIB_HOME%\com.springsource.org.apache.commons.httpclient-3.1.0.jar
+@set YTEX_CP=%YTEX_CP%;%YTEX_LIB_HOME%\com.springsource.org.apache.commons.io-1.4.0.jar
+@set YTEX_CP=%YTEX_CP%;%YTEX_LIB_HOME%\com.springsource.org.apache.commons.lang-2.1.0.jar
+@set YTEX_CP=%YTEX_CP%;%YTEX_LIB_HOME%\com.springsource.org.apache.commons.logging-1.1.1.jar
+@set YTEX_CP=%YTEX_CP%;%YTEX_LIB_HOME%\com.springsource.org.apache.commons.pool-1.5.3.jar
+@set YTEX_CP=%YTEX_CP%;%YTEX_LIB_HOME%\com.springsource.org.aspectj.weaver-1.6.8.RELEASE.jar
+@set YTEX_CP=%YTEX_CP%;%YTEX_LIB_HOME%\dom4j-1.6.1.jar
+@set YTEX_CP=%YTEX_CP%;%YTEX_LIB_HOME%\ehcache-1.2.3.jar
+@set YTEX_CP=%YTEX_CP%;%YTEX_LIB_HOME%\hibernate3.jar
+@set YTEX_CP=%YTEX_CP%;%YTEX_LIB_HOME%\javassist-3.9.0.GA.jar
+@set YTEX_CP=%YTEX_CP%;%YTEX_LIB_HOME%\jta-1.1.jar
+@set YTEX_CP=%YTEX_CP%;%YTEX_LIB_HOME%\org.springframework.aop-3.0.2.RELEASE.jar
+@set YTEX_CP=%YTEX_CP%;%YTEX_LIB_HOME%\org.springframework.asm-3.0.2.RELEASE.jar
+@set YTEX_CP=%YTEX_CP%;%YTEX_LIB_HOME%\org.springframework.aspects.jar
+@set YTEX_CP=%YTEX_CP%;%YTEX_LIB_HOME%\org.springframework.beans-3.0.2.RELEASE.jar
+@set YTEX_CP=%YTEX_CP%;%YTEX_LIB_HOME%\org.springframework.context-3.0.2.RELEASE.jar
+@set YTEX_CP=%YTEX_CP%;%YTEX_LIB_HOME%\org.springframework.context.support-3.0.2.RELEASE.jar
+@set YTEX_CP=%YTEX_CP%;%YTEX_LIB_HOME%\org.springframework.core-3.0.2.RELEASE.jar
+@set YTEX_CP=%YTEX_CP%;%YTEX_LIB_HOME%\org.springframework.expression-3.0.2.RELEASE.jar
+@set YTEX_CP=%YTEX_CP%;%YTEX_LIB_HOME%\org.springframework.jdbc-3.0.2.RELEASE.jar
+@set YTEX_CP=%YTEX_CP%;%YTEX_LIB_HOME%\org.springframework.orm-3.0.2.RELEASE.jar
+@set YTEX_CP=%YTEX_CP%;%YTEX_LIB_HOME%\org.springframework.transaction-3.0.2.RELEASE.jar
+@set YTEX_CP=%YTEX_CP%;%YTEX_LIB_HOME%\slf4j-api-1.5.8.jar
+@set YTEX_CP=%YTEX_CP%;%YTEX_LIB_HOME%\slf4j-jcl-1.5.8.jar
+@set YTEX_CP=%YTEX_CP%;%YTEX_LIB_HOME%\weka.jar
 @set YTEX_CP=%YTEX_CP%;%YTEX_HOME%\lib\ytex.model.jar
 @set YTEX_CP=%YTEX_CP%;%YTEX_HOME%\lib\ytex.negex.jar
 @set YTEX_CP=%YTEX_CP%;%YTEX_HOME%\lib\ytex.uima.jar
 
 @rem add JDBC dependencies
 @set SYSTEM_CP=%SQLJDBC_HOME%\enu\sqljdbc4.jar
+
+@rem add configuration dependencies
 @set SYSTEM_CP=%SYSTEM_CP%;%YTEX_HOME%\config\desc
 @set SYSTEM_CP=%SYSTEM_CP%;%MAVERIC_HOME%\dest
 @set SYSTEM_CP=%SYSTEM_CP%;%YTEX_HOME%\maveric\resources
@@ -108,6 +113,3 @@
 @set TOOLS_CP=%YTEX_CP%;%SYSTEM_CP%
 
 @set TOOLS_OPTIONS=-Xmx1g -Dlog4j.configuration=file:///%YTEX_HOME%/config/desc/log4j.properties -Djava.util.logging.config.file=file:///%YTEX_HOME%/config/desc/logger.properties -DVNS_HOST=localhost
-
-@rem we have a tomcat configuration in this directory
-@set CATALINA_BASE=%YTEX_HOME%\web\catalina

@@ -3,7 +3,7 @@
 	<property name="maveric.home" value="${java.tools.home}/MavericArcApp-1.0.0" />
 	<property name="dist.home" value="../dist" />
 	<property name="ytex.dist.home" value="../dist/ytex" />
-	<property name="ytex.lib.home" value="../ytex.web/WebContent/WEB-INF/lib"/>
+	<property name="ytex.lib.home" value="../ytex.web/WebContent/WEB-INF/lib" />
 
 	<path id="cp.maveric">
 		<fileset dir="${maveric.home}/ext">
@@ -84,11 +84,11 @@
 	<target name="build.ytex.uima">
 		<path id="cp.ytex.uima">
 			<path refid="cp.all" />
-			<fileset dir="${ytex.dist.home}/lib/" includes="ytex.model.jar" /> 
+			<fileset dir="${ytex.dist.home}/lib/" includes="ytex.model.jar" />
 		</path>
 		<antcall target="compile">
 			<param name="project.name" value="ytex.uima" />
-			<param name="project.cp" value="cp.ytex.uima"/>
+			<param name="project.cp" value="cp.ytex.uima" />
 		</antcall>
 	</target>
 	<target name="build.ytex.negex">
@@ -112,10 +112,11 @@
 			<fileset dir="../config">
 				<include name="desc/**/*.*" />
 				<exclude name="desc/ytex.properties" />
-				<exclude name="**/.svn/**/*.* "/>
+				<exclude name="**/.svn/**/*.* " />
 			</fileset>
 		</copy>
 	</target>
+	<!--
 	<target name="copy.lib">
 		<copy todir="${ytex.dist.home}/lib">
 			<fileset dir="${ytex.lib.home}">
@@ -131,13 +132,14 @@
 			</fileset>
 		</copy>
 	</target>
+	-->
 	<target name="copy.data.mssql">
 		<copy todir="${ytex.dist.home}">
 			<fileset dir="../">
 				<include name="data.mssql/**/*.*" />
 				<exclude name="**/.classpath" />
 				<exclude name="**/.project" />
-				<exclude name="**/.svn/**/*.*"/>
+				<exclude name="**/.svn/**/*.*" />
 			</fileset>
 		</copy>
 	</target>
@@ -161,43 +163,51 @@
 		<copy todir="${project.bin.home}">
 			<fileset dir="${project.src.home}">
 				<exclude name="**/*.java" />
-				<exclude name="**/.svn/**/*.*"/>
-			</fileset>
-		</copy>
-		<jar destfile="${ytex.dist.home}/lib/${project.name}.jar" basedir="${project.bin.home}" excludes="**/.svn/**/*.*"/>
-	</target>
-	<target name="build.ytex.web">
-		<delete dir="../ytex.web/build/classes" quiet="yes" />
-		<mkdir dir="../ytex.web/build/classes" />
-		<javac srcdir="../ytex.web/src/main/java" destdir="../ytex.web/build/classes" >
-			<classpath>
-				<fileset dir="${ytex.dist.home}/lib">
-					<include name="ytex.model.jar"/>
-				</fileset>
-				<path refid="cp.all"/>
-			</classpath>
-		</javac>
-		<copy todir="../ytex.web/build/classes">
-			<fileset dir="../ytex.web/src/main/java">
-				<exclude name="**/*.java" />
 				<exclude name="**/.svn/**/*.*" />
 			</fileset>
 		</copy>
-		<jar destfile="${ytex.dist.home}/web/ytex.web.war">
-			<zipfileset dir="../ytex.web/build" prefix="WEB-INF"/>
-			<zipfileset dir="../ytex.web/WebContent" />
-			<zipfileset dir="${ytex.dist.home}/lib" includes="ytex*.jar" prefix="WEB-INF/lib" />
-		</jar>
+		<jar destfile="${ytex.dist.home}/lib/${project.name}.jar" basedir="${project.bin.home}" excludes="**/.svn/**/*.*" />
+	</target>
+	<target name="build.ytex.web">
+		<property name="ytex.web.dir" value="${ytex.dist.home}/web/catalina/webapps/ytex.web" />
+		<property name="ytex.web.classes.dir" value="${ytex.dist.home}/web/catalina/webapps/ytex.web/WEB-INF/classes" />
+
+		<delete dir="${ytex.dist.home}/web" quiet="yes" />
 		<copy todir="${ytex.dist.home}/web">
 			<fileset dir="../ytex.web">
 				<include name="catalina/**/*.*" />
 				<exclude name="**/.svn/**/*.*" />
 			</fileset>
 		</copy>
+		<mkdir dir="${ytex.web.classes.dir}" />
+		<javac srcdir="../ytex.web/src/main/java" destdir="${ytex.web.classes.dir}">
+			<classpath>
+				<fileset dir="${ytex.dist.home}/lib">
+					<include name="ytex.model.jar" />
+				</fileset>
+				<path refid="cp.ytex" />
+			</classpath>
+		</javac>
+		<copy todir="${ytex.web.classes.dir}">
+			<fileset dir="../ytex.web/src/main/java">
+				<exclude name="**/*.java" />
+				<exclude name="**/.svn/**/*.*" />
+			</fileset>
+		</copy>
+		<copy todir="${ytex.web.dir}">
+			<fileset dir="../ytex.web/WebContent">
+				<exclude name="**/.svn/**/*.*" />
+			</fileset>
+		</copy>
+		<copy todir="${ytex.web.dir}/WEB-INF/lib">
+			<fileset dir="${ytex.dist.home}/lib">
+				<include name="ytex.model.jar" />
+			</fileset>
+		</copy>
 	</target>
 	<target name="zip.dist">
 		<zip destfile="${dist.home}/ytex.zip" basedir="${dist.home}" includes="ytex/**/*.*" />
-		<zip destfile="${dist.home}/ytex-noUMLS.zip" basedir="${dist.home}" includes="ytex/**/*.*" excludes="**/*.bcp"/>
+		<zip destfile="${dist.home}/ytex-noUMLS.zip" basedir="${dist.home}" includes="ytex/**/*.*" excludes="**/*.bcp" />
 	</target>
-	<target name="build.all" depends="clean.dist,build.ctakes-patches,build.ytex.model,build.ytex.negex,build.ytex.uima,copy.lib,copy.config,copy.scripts,copy.data.mssql,build.ytex.web,zip.dist" />
+	<target name="build.all" depends="clean.dist,build.ctakes-patches,build.ytex.model,build.ytex.negex,build.ytex.uima,copy.config,copy.scripts,copy.data.mssql,build.ytex.web,zip.dist" />
 </project>
