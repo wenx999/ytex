@@ -1,5 +1,4 @@
 #summary Installation details
-#labels Phase-Deploy
 #sidebar TableOfContents
 <wiki:toc max_depth="2" />
 
@@ -30,18 +29,20 @@ The YTEX installation assumes that you follow the latter variant (obtain the UML
 
 =YTEX installation=
 This assumes a Windows installation.  YTEX should work on unices (tests and instructions pending)
-  * Download and extract the YTEX package to a directory (e.g. c:\java\ytex).  This directory will be referred to as the YTEX_HOME
-  * Edit YTEX_HOME\setenv.cmd
+  * Download and extract the YTEX package to a directory (e.g. `c:\java\ytex`).  This directory will be referred to as the YTEX_HOME
+  * Edit `YTEX_HOME\setenv.cmd`
   Fix the path references to match your environment.
-  * Create YTEX_HOME\config\desc\ytex.properties
-  In this file, you specify the SQL Server connection parameters.  Use YTEX_HOME\config\desc\ytex.properties.example as a template.
+  * Create `YTEX_HOME\config\desc\ytex.properties`
+  In this file, you specify the SQL Server connection parameters.  Use `YTEX_HOME\config\desc\ytex.properties.example` as a template.
   * Extract UMLS tables
-  We exported the UMLS Tables using the MS SQL Server BCP utility.  Extract these tables from the umls.zip archive to the YTEX_HOME\data.mssql\umls directory.
+  We exported the UMLS Tables using the MS SQL Server BCP utility.  Extract these tables from the umls.zip archive to the `YTEX_HOME\data.mssql\umls` directory.
   * Execute setup.cmd
-  Open a command prompt, navigate to YTEX_HOME, and execute setup.cmd.  This will call the ant script build-setup.xml, which does the following:
+  Open a command prompt, navigate to `YTEX_HOME`, and execute `setup.cmd all`.  This will call the ant script build-setup.xml, which does the following:
     * Generates configuration files from templates
     The SQL Server connection parameters are added.
-    * Copies Maveric ARC Resources to YTEX_HOME\maveric\resources
+    * Copies Maveric ARC Resources to `YTEX_HOME\maveric\resources`
     UIMA configuration files reference eachother using either file paths or class paths.  To maintain portability, all UIMA Configuration files distributed with YTEX reference other files using classpaths where posssible; when this is not possible, relative paths are used.  To facilitate the referencing of Maveric ARC Resources via classpaths, we copy them to the YTEX directory.  Note that YTEX references Maveric ARC UIMA Configuration files (they are not copied).
     * Sets up YTEX Database Objects
     All YTEX Objects will be dropped and recreated (if this is the initial installation, ignore the errors about objects not existing when they are being dropped). SQL Scripts in the YTEX\data.mssql are executed using the MS SQL Server SQLCMD utility; UMLS tables are imported using the BCP utility.
+    * Sets up Semantic Search Web Application
+    The semantic search web application will be deployted to a tomcat server under `YTEX_HOME\web\catalina`.
