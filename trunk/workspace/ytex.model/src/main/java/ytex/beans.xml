@@ -29,10 +29,6 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="locations" value="classpath:ytex.properties" />
 	</bean>
-	<bean id="searchProperties"
-		class="org.springframework.beans.factory.config.PropertiesFactoryBean">
-		<property name="location" value="classpath:/ytex/search.properties" />
-	</bean>
 	<bean id="hibernateProperties"
 		class="org.springframework.beans.factory.config.PropertiesFactoryBean">
 		<property name="properties">
@@ -74,13 +70,5 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
 	</bean>
 	<bean id="segmentRegexDao" class="ytex.dao.SegmentRegexDaoImpl">
 		<property name="sessionFactory" ref="sessionFactory" />
-	</bean>
-	<bean id="umlsFirstWordDao" class="ytex.dao.UMLSFirstWordDaoImpl">
-		<property name="dataSource" ref="dataSource" />
-		<property name="searchProperties" ref="searchProperties" />
-	</bean>
-	<bean id="documentSearchDao" class="ytex.dao.DocumentSearchDaoImpl">
-		<property name="dataSource" ref="dataSource" />
-		<property name="searchProperties" ref="searchProperties" />
 	</bean>
 </beans>
