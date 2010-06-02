@@ -57,41 +57,34 @@ Some simple queries (replace schema to match your configuration):
 select top 1000 document_id, doc_text
 from <schema>.v_document
 }}}
-  * View all sentences that contain an affirmed UMLS Concept
+  * View all sentences that contain a negated UMLS Concept
 {{{
 select * 
 from <schema>.v_document_cui_sent
 where code = 'C0024228'
-and certainty = 0
+and certainty = -1
 }}}
 
 ==Using YTEX DBAnnotationViewer==
 For a graphical representation of document annotations, use the DBAnnotationViewer.  This modified viewer retrieves the document CAS from the database (as opposed to the plain-vanilla AnnotationViewer which retrieves the CAS from the file system).
   * Execute `YTEX_HOME\ytexDBAnnotationViewer.bat`
-  * Select `YTEX_HOME\config\desc\ytex\esld\ESLDPipelineRich.xml` as the annotation engine
+  * Select `YTEX_HOME\config\desc\ytex\esld\ESLDPipelineEnhanced.xml` as the annotation engine
   * Specify document id (e.g. from one of the views)
 
 =Semantic Search Engine=
 The semantic search engine allows searching by UMLS Concept id, negation status, patient id, and document date.  It is preconfigured to work with the patient id and document date from VACS Annotations, but can be reconfigured to retrieve these annotations from other tables.  The semantic search engine can also be configured to execute full-text searches (the SQL Server Full Text Index must be enabled for this).
 
-==Running==
-  # Open a command prompt
-  # navigate to `YTEX_HOME`
-  # execute the following:
-{{{
-setenv.cmd
-%CATALINA_HOME%\bin\catalina run
-}}}
+To start the semantic search web app, execute `YTEX_HOME\ytexWeb.cmd`
 
-==Using==
-  # Open a browser and navigate to http://localhsot:8080/ytex.web
+To use the semantic search web app,
+  # Open a browser and navigate to http://localhost:8080/ytex.web
   # login with username 'scott' and password 'wombat'
 
-==YTEX Data Model==
+=YTEX Data Model=
 http://docs.google.com/drawings/pub?id=1BXaby0zAsWdFPPI3qyLfhegbv8oxIW04kzWsBVPT4Mo&w=960&h=720&foo=er.jpg
 
-==Configuring YTEX==
-===Named Entity Lookup Table===
-===Segments (Sections) Regexs===
-===Negation Detection===
-===Named Entity Recognition Regexs===
+=Configuring YTEX=
+==Named Entity Lookup Table==
+==Segments (Sections) Regexs==
+==Negation Detection==
+==Named Entity Recognition Regexs==
