@@ -71,6 +71,30 @@
 				type="ytex.vacs.model.DocumentTypeUserType" />
 			<property name="siteID" column="site_id" />
 		</joined-subclass>
+		<joined-subclass name="SourceDocumentInformation" table="anno_source_doc_info">
+			<key column="document_annotation_id" />
+			<property name="uri" column="uri"/>
+			<property name="offsetInSource" column="offset_in_source"/>
+			<property name="documentSize" column="document_size"/>
+			<property name="lastSegment" column="last_segment"/>
+		</joined-subclass>
+		<joined-subclass name="BaseToken" table="anno_base_token">
+			<key column="document_annotation_id" />
+			<property name="tokenNumber" column="token_number"/>
+			<property name="normalizedForm" column="normalized_form"/>
+			<property name="partOfSpeech" column="part_of_speech"/>
+			<joined-subclass name="NumToken" table="anno_num_token">
+				<key column="document_annotation_id" />
+				<property name="numType" column="num_type"/>
+			</joined-subclass>
+			<joined-subclass name="WordToken" table="anno_word_token">
+				<key column="document_annotation_id" />
+				<property name="capitalization" column="capitalization"/>
+				<property name="numPosition" column="num_position"/>
+				<property name="suggestion" column="suggestion"/>
+				<property name="canonicalForm" column="canonical_form"/>
+			</joined-subclass>
+		</joined-subclass>
 	</class>
 	<class name="OntologyConceptAnnotation" table="ontology_concept_annotation">
 		<id name="ontologyConceptAnnotationID" column="ontology_concept_annotation_id">
@@ -86,6 +110,7 @@
 			<property name="cui" column="cui" />
 		</joined-subclass>
 	</class>
+
 	<class name="UimaType" table="ref_uima_type">
 		<cache usage="read-only" />
 		<id name="uimaTypeID" column="uima_type_id" />
