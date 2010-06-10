@@ -26,7 +26,8 @@ import ytex.model.UimaType;
  * @param <T>
  *            uima annotation class.
  */
-public class AbstractDocumentAnnotationMapper<D extends DocumentAnnotation, T extends Annotation> {
+public class AbstractDocumentAnnotationMapper<D extends DocumentAnnotation, T extends Annotation>
+		implements DocumentAnnotationMapper<D, T> {
 	private static final Log log = LogFactory
 			.getLog(AbstractDocumentAnnotationMapper.class);
 	Class<D> classDocumentAnnotation;
@@ -53,6 +54,16 @@ public class AbstractDocumentAnnotationMapper<D extends DocumentAnnotation, T ex
 	 */
 	D mapAnnotation(Annotation annotation, Document doc,
 			SessionFactory sessionFactory) {
+		D anno = createAnnotation(annotation, doc, sessionFactory);
+		if (anno != null) {
+			this.mapAnnotationProperties(anno, annotation, doc);
+			sessionFactory.getCurrentSession().save(anno);
+		}
+		return anno;
+	}
+
+	protected D createAnnotation(Annotation annotation, Document doc,
+			SessionFactory sessionFactory) {
 		try {
 			Constructor<D> ctor = classDocumentAnnotation.getConstructor(
 					UimaType.class, Document.class);
@@ -60,8 +71,6 @@ public class AbstractDocumentAnnotationMapper<D extends DocumentAnnotation, T ex
 					.getName(), sessionFactory);
 			D anno = ctor.newInstance(uimaType, doc);
 			doc.getDocumentAnnotations().add(anno);
-			this.mapAnnotationProperties(anno, annotation, doc);
-			sessionFactory.getCurrentSession().save(anno);
 			return anno;
 		} catch (NoSuchMethodException e) {
 			log.error("error mapping annotation", e);
@@ -77,13 +86,11 @@ public class AbstractDocumentAnnotationMapper<D extends DocumentAnnotation, T ex
 		return null;
 	}
 
-	/**
-	 * Default implementation for mapping uima annotation to db annotation:
-	 * simply copy whatever properties have the same name.
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @param anno
-	 * @param uimaAnno
-	 * @param doc
+	 * @see ytex.uima.mapper.DocumentAnnotationMapper#mapAnnotationProperties(D,
+	 * org.apache.uima.jcas.tcas.Annotation, ytex.model.Document)
 	 */
 	public void mapAnnotationProperties(D anno, Annotation uimaAnno,
 			Document doc) {
@@ -91,12 +98,14 @@ public class AbstractDocumentAnnotationMapper<D extends DocumentAnnotation, T ex
 	}
 
 	/**
+	 * Get uima type id from database (not the uima type id from the type system
+	 * registry which is not fixed)
 	 * 
 	 * @param strName
 	 * @param sessionFactory
 	 * @return
 	 */
-	public UimaType getUimaTypeByName(String strName,
+	protected UimaType getUimaTypeByName(String strName,
 			SessionFactory sessionFactory) {
 		Query q = sessionFactory.getCurrentSession().getNamedQuery(
 				"getUimaTypeByName");
