@@ -1,6 +1,6 @@
 create view $(db_schema).[V_DOCUMENT_ANNOTATION]
 AS
-SELECT anno.*, ur.uima_type_name, substring(doc.doc_text, anno.span_begin+1, anno.span_end-anno.span_begin) anno_text
+SELECT anno.*, ur.uima_type_name, substring(doc.doc_text, anno.span_begin+1, anno.span_end-anno.span_begin) anno_text, doc.analysis_batch
 FROM $(db_schema).document_annotation AS anno 
 INNER JOIN $(db_schema).document AS doc ON doc.document_id = anno.document_id
 INNER JOIN $(db_schema).REF_UIMA_TYPE AS ur on ur.uima_type_id = anno.uima_type_id
@@ -13,7 +13,8 @@ SELECT da.document_id,
 ne.certainty, 
 o.code, 
 substring(d.doc_text, da.span_begin+1, da.span_end-da.span_begin) cui_text, 
-substring(d.doc_text, sentence.span_begin+1, sentence.span_end-sentence.span_begin) sentence_text
+substring(d.doc_text, sentence.span_begin+1, sentence.span_end-sentence.span_begin) sentence_text,
+d.analysis_batch
 FROM 
 $(db_schema).document_annotation AS da 
 INNER JOIN $(db_schema).named_entity_annotation AS ne ON da.document_annotation_id = ne.document_annotation_id 
@@ -47,7 +48,7 @@ GO
 
 CREATE VIEW $(db_schema).[V_DOCUMENT_ONTOANNO]
 AS
-SELECT d.document_id, da.span_begin, da.span_end, ne.certainty, o.coding_scheme, o.code
+SELECT d.document_id, da.span_begin, da.span_end, ne.certainty, o.coding_scheme, o.code, d.analysis_batch
 FROM $(db_schema).document AS d INNER JOIN
 $(db_schema).document_annotation AS da ON d.document_id = da.document_id INNER JOIN
 $(db_schema).named_entity_annotation AS ne ON da.document_annotation_id = ne.document_annotation_id INNER JOIN

@@ -1,6 +1,6 @@
 create table $(db_schema).named_entity_regex (
 	named_entity_regex_id int IDENTITY(1,1) NOT NULL,
-	regex varchar(64) not null,
+	regex varchar(256) not null,
 	coding_scheme varchar(20) not null,
 	code varchar(20) not null,
 	oid varchar(10),
@@ -10,7 +10,7 @@ create table $(db_schema).named_entity_regex (
 
 create table $(db_schema).segment_regex (
 	segment_regex_id int IDENTITY(1,1) NOT NULL,
-	regex varchar(64) not null,
+	regex varchar(256) not null,
 	segment_id varchar(256),
 	primary key (segment_regex_id)
 );

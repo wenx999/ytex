@@ -1,8 +1,0 @@
-10.0
-6
-1       SQLINT              0       4       ""   1     named_entity_regex_id                          ""
-2       SQLCHAR             2       64      ""   2     regex                                          Latin1_General_CI_AS
-3       SQLCHAR             2       20      ""   3     coding_scheme                                  Latin1_General_CI_AS
-4       SQLCHAR             2       20      ""   4     code                                           Latin1_General_CI_AS
-5       SQLCHAR             2       10      ""   5     oid                                            Latin1_General_CI_AS
-6       SQLCHAR             2       256     ""   6     context                                        Latin1_General_CI_AS
