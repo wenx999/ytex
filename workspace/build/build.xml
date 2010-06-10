@@ -151,6 +151,16 @@
 			</fileset>
 		</copy>
 	</target>
+	<target name="copy.examples">
+		<copy todir="${ytex.dist.home}">
+			<fileset dir="../">
+				<include name="examples/**/*.*" />
+				<exclude name="**/.classpath" />
+				<exclude name="**/.project" />
+				<exclude name="**/.svn/**/*.*" />
+			</fileset>
+		</copy>
+	</target>
 	<target name="compile">
 		<property name="project.home" value="../${project.name}" />
 		<property name="project.bin.home" value="${project.home}/bin" />
@@ -209,5 +219,5 @@
 		<zip destfile="${dist.home}/ytex.zip" basedir="${dist.home}" includes="ytex/**/*.*" />
 		<zip destfile="${dist.home}/ytex-noUMLS.zip" basedir="${dist.home}" includes="ytex/**/*.*" excludes="**/*.bcp" />
 	</target>
-	<target name="build.all" depends="clean.dist,build.ctakes-patches,build.ytex.model,build.ytex.negex,build.ytex.uima,copy.config,copy.scripts,copy.data.mssql,build.ytex.web,zip.dist" />
+	<target name="build.all" depends="clean.dist,build.ctakes-patches,build.ytex.model,build.ytex.negex,build.ytex.uima,copy.config,copy.scripts,copy.data.mssql,copy.examples,build.ytex.web,zip.dist" />
 </project>

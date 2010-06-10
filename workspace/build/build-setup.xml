@@ -10,14 +10,21 @@ Call with option -projecthelp for more info.
 </echo>
 	</target>
 	
-	<target name="all" depends="templateToConfig,setupMavericResources,setupDatabase,setup.ytex.web" />
+	<target name="all" depends="templateToConfig,setupMavericResources,setupDatabase,setup.ytex.web" description="calls templateToConfig, setupMavericResources, setupDatabase, and setup.ytex.web "/>
 	<target name="setupDatabase" description="setup ytex database tables">
 		<ant dir="${ytex.home}/data.mssql" target="all" />
 	</target>
 	<target name="templateToConfig" description="generate config files from templates using values specified in ytex.properties">
-		<copy todir="${ytex.home}/config/desc" overwrite="yes">
-			<fileset dir="${ytex.home}/config/desc" includes="**/*.template.xml" />
+		<copy todir="${ytex.home}" overwrite="yes">
+			<fileset dir="${ytex.home}" includes="config/desc/**/*.template.xml,examples/**/*.template.xml" />
 			<globmapper from="*.template.xml" to="*.xml" />
+			<filterset>
+				<filtersfile file="${ytex.properties}" />
+			</filterset>
+		</copy>
+		<copy todir="${ytex.home}" overwrite="yes">
+			<fileset dir="${ytex.home}" includes="examples/**/*.template.props" />
+			<globmapper from="*.template.props" to="*.props" />
 			<filterset>
 				<filtersfile file="${ytex.properties}" />
 			</filterset>
