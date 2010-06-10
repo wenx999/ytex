@@ -114,4 +114,88 @@ CREATE NONCLUSTERED INDEX [IX_segment_anno_seg] ON $(db_schema).[segment_annotat
 )
 ;
 
+/*
+ * mapped to SourceDocumentInformation
+ */
+create table $(db_schema).anno_source_doc_info (
+	[document_annotation_id] [int] NOT NULL,
+	uri varchar(256),
+	offset_in_source int,
+	document_size int,
+	last_segment bit,
+	PRIMARY KEY CLUSTERED 
+	(
+		[document_annotation_id] ASC
+	),
+	foreign key (document_annotation_id) references $(db_schema).document_annotation(document_annotation_id)  ON DELETE CASCADE
+);
+
+
+/**
+ * mapped to BaseToken
+ */
+create table $(db_schema).anno_base_token (
+	[document_annotation_id] [int] NOT NULL,
+	token_number int,
+	normalized_form varchar(256),
+	part_of_speech varchar(5),
+	PRIMARY KEY CLUSTERED 
+	(
+		[document_annotation_id] ASC
+	),
+	foreign key (document_annotation_id) 
+		references $(db_schema).document_annotation(document_annotation_id)  
+		ON DELETE CASCADE
+);
+
+/**
+ * BaseToken.lemmaEntries
+create table $(db_schema).anno_lemma (
+	anno_lemma_id [int] IDENTITY(1,1) NOT NULL,
+	document_annotation_id int not null,
+	lemma_key varchar(10),
+	pos_tag varchar(5),
+	PRIMARY KEY CLUSTERED 
+	(
+		[anno_lemma_id] ASC
+	),
+	foreign key (document_annotation_id) 
+		references $(db_schema).anno_base_token(document_annotation_id)  
+		ON DELETE CASCADE
+
+);
+ */
+
+/**
+ * mapped to NumToken
+ */
+create table $(db_schema).anno_num_token (
+	[document_annotation_id] [int] NOT NULL,
+	num_type int,
+	PRIMARY KEY CLUSTERED 
+	(
+		[document_annotation_id] ASC
+	),
+	foreign key (document_annotation_id) 
+		references $(db_schema).anno_base_token(document_annotation_id)  
+		ON DELETE CASCADE
+)
+
+/**
+ * mapped to WordToken
+ */
+create table $(db_schema).anno_word_token (
+	[document_annotation_id] [int] NOT NULL,
+	capitalization [int],
+	num_position [int],
+	suggestion [int],
+	canonical_form varchar(256),
+	PRIMARY KEY CLUSTERED 
+	(
+		[document_annotation_id] ASC
+	),
+	foreign key (document_annotation_id) 
+		references $(db_schema).anno_base_token(document_annotation_id)  
+		ON DELETE CASCADE
+);
 

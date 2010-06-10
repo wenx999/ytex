@@ -8,3 +8,13 @@ insert into $(db_schema).ref_uima_type values(7 , 'edu.mayo.bmi.uima.cdt.ae.type
 insert into $(db_schema).ref_uima_type values(8 , 'edu.mayo.bmi.uima.core.ae.type.NamedEntity', 'ytex.uima.mapper.NamedEntityDocumentAnnotationMapper');
 insert into $(db_schema).ref_uima_type values(9 , 'edu.mayo.bmi.uima.core.sentence.type.Sentence', 'ytex.uima.mapper.AnnotationMapper');
 insert into $(db_schema).ref_uima_type values(12 , 'edu.mayo.bmi.uima.core.ae.type.Segment', 'ytex.uima.mapper.SegmentAnnotationMapper');
+insert into $(db_schema).ref_uima_type values(13 , 'org.apache.uima.examples.SourceDocumentInformation', 'ytex.uima.mapper.SourceDocumentInformationMapper');
+
+/* tokens */
+insert into $(db_schema).ref_uima_type values(20, 'edu.mayo.bmi.uima.core.ae.type.ContractionToken', 'ytex.uima.mapper.BaseTokenMapper');
+insert into $(db_schema).ref_uima_type values(21, 'edu.mayo.bmi.uima.core.ae.type.NewlineToken', 'ytex.uima.mapper.BaseTokenMapper');
+insert into $(db_schema).ref_uima_type values(22, 'edu.mayo.bmi.uima.core.ae.type.NumToken', 'ytex.uima.mapper.NumTokenMapper');
+insert into $(db_schema).ref_uima_type values(23, 'edu.mayo.bmi.uima.core.ae.type.PunctuationToken', 'ytex.uima.mapper.BaseTokenMapper');
+insert into $(db_schema).ref_uima_type values(24, 'edu.mayo.bmi.uima.core.ae.type.SymbolToken', 'ytex.uima.mapper.BaseTokenMapper');
+insert into $(db_schema).ref_uima_type values(25, 'edu.mayo.bmi.uima.core.ae.type.WordToken', 'ytex.uima.mapper.WordTokenMapper');
+
