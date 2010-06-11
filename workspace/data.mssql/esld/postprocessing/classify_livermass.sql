@@ -62,12 +62,12 @@ from
 			select da.document_id, 
 			sum(case when ne.certainty <> -1 then 1 else 0 end) LIVER_MASSES_p, 
 			sum(case when ne.certainty = -1 then 1 else 0 end) LIVER_MASSES_n
-			FROM ESLD.document_annotation AS da 
-			INNER JOIN ESLD.named_entity_annotation AS ne ON da.document_annotation_id = ne.document_annotation_id 
-			INNER JOIN ESLD.ontology_concept_annotation AS o ON o.document_annotation_id = ne.document_annotation_id
-			inner join esld.document_annotation sda on sda.document_id = da.document_id
-			inner join esld.segment_annotation s 
-				on sda.document_annotation_id = s.document_annotation_id 
+			FROM ESLD.anno_base AS da 
+			INNER JOIN ESLD.anno_named_entity AS ne ON da.anno_base_id = ne.anno_base_id 
+			INNER JOIN ESLD.anno_ontology_concept AS o ON o.anno_base_id = ne.anno_base_id
+			inner join esld.anno_base sda on sda.document_id = da.document_id
+			inner join esld.anno_segment s 
+				on sda.anno_base_id = s.anno_base_id 
 				and s.segment_id = 'REPORT'
 			where o.code in ('C0240225' /*, 'C0019204', 'C0023903' */)
 			and da.span_begin >= sda.span_begin
@@ -81,10 +81,10 @@ from
 			from
 			(
 				-- select distinct to avoid duplicate counts due to joins
-				select distinct s.document_id, s.document_annotation_id,
+				select distinct s.document_id, s.anno_base_id,
 					(case when mass.certainty <> -1 then 1 else 0 end) LIVER_MASSES_p, 
 					(case when mass.certainty = -1 then 1 else 0 end) LIVER_MASSES_n
-				from esld.v_document_annotation s
+				from esld.v_annotation s
 				inner join esld.v_document_ontoanno liv
 					on liv.document_id = s.document_id
 					and liv.span_begin >= s.span_begin
@@ -93,9 +93,9 @@ from
 					on mass.document_id = s.document_id
 					and mass.span_begin >= s.span_begin
 					and mass.span_end <= s.span_end
-				inner join esld.document_annotation sda on sda.document_id = s.document_id
-				inner join esld.segment_annotation seg
-					on sda.document_annotation_id = seg.document_annotation_id 
+				inner join esld.anno_base sda on sda.document_id = s.document_id
+				inner join esld.anno_segment seg
+					on sda.anno_base_id = seg.anno_base_id 
 					and seg.segment_id = 'REPORT'
 				where s.uima_type_id in 
 					(select uima_type_id 

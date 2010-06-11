@@ -23,8 +23,8 @@ from
 (
 select d.document_id, d.study_id, d.doc_date, d.document_type_id,  d.analysis_batch, sum(s.span_end - s.span_begin) rep_size
 from esld.v_document d
-inner join esld.document_annotation s on d.document_id = s.document_id
-inner join esld.sentence_annotation s2 on s2.document_annotation_id = s.document_annotation_id
+inner join esld.anno_base s on d.document_id = s.document_id
+inner join esld.anno_sentence s2 on s2.anno_base_id = s.anno_base_id
 where s.span_begin > charindex('Report:', d.doc_text)
 group by d.document_id, d.study_id, d.doc_date, d.document_type_id,  d.analysis_batch
 ) d1
@@ -32,8 +32,8 @@ inner join
 (
 select d.document_id, d.study_id, d.doc_date, d.document_type_id, d.analysis_batch, sum(s.span_end - s.span_begin) rep_size
 from esld.v_document d
-inner join esld.document_annotation s on d.document_id = s.document_id
-inner join esld.sentence_annotation s2 on s2.document_annotation_id = s.document_annotation_id
+inner join esld.anno_base s on d.document_id = s.document_id
+inner join esld.anno_sentence s2 on s2.anno_base_id = s.anno_base_id
 where s.span_begin > charindex('Report:', d.doc_text)
 group by d.document_id, d.study_id, d.doc_date, d.document_type_id,  d.analysis_batch
 ) d2

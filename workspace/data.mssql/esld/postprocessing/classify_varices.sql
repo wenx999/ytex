@@ -57,8 +57,8 @@ from
 					case when o.certainty = -1 then 1 else 0 end varices_n
 				from esld.v_document_ontoanno o
 				-- limit to terms in the report section and after
-				inner join esld.document_annotation segda on segda.document_id = o.document_id
-				inner join esld.segment_annotation seg on seg.document_annotation_id = segda.document_annotation_id
+				inner join esld.anno_base segda on segda.document_id = o.document_id
+				inner join esld.anno_segment seg on seg.anno_base_id = segda.anno_base_id
 				where o.code in ('C0042345')
 				and not exists (
 					-- filter out varices terms contained in more specific varices terms
@@ -83,8 +83,8 @@ from
 				sum(case when code = 'C0014867' and certainty = -1 then 1 else 0 end) evarices_n
 			from esld.v_document_ontoanno o
 			-- limit to terms in the report section and after
-			inner join esld.document_annotation segda on segda.document_id = o.document_id
-			inner join esld.segment_annotation seg on seg.document_annotation_id = segda.document_annotation_id
+			inner join esld.anno_base segda on segda.document_id = o.document_id
+			inner join esld.anno_segment seg on seg.anno_base_id = segda.anno_base_id
 			where o.code in ('C0267791', 'C0014867')
 			and seg.segment_id = 'REPORT'
 			and o.span_begin >= segda.span_begin

@@ -1,4 +1,4 @@
-drop view $(db_schema).[V_DOCUMENT_ANNOTATION];
+drop view $(db_schema).[V_ANNOTATION];
 go
 
 drop view $(db_schema).v_document_cui_sent
