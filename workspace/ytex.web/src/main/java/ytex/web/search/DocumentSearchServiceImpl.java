@@ -15,7 +15,6 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 
-import ytex.model.DocumentSearchResult;
 
 public class DocumentSearchServiceImpl implements DocumentSearchService {
 	static final Log log = LogFactory.getLog(DocumentSearchServiceImpl.class);

@@ -3,7 +3,6 @@ package ytex.web.search;
 
 import java.util.List;
 
-import ytex.model.UMLSFirstWord;
 
 /**
  * Dao to get Concepts corresponding to the given text

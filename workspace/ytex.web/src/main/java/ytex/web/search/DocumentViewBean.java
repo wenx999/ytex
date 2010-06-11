@@ -30,8 +30,8 @@ public class DocumentViewBean {
 	}
 	
 	public void loadDocument() {
-		if(this.document == null) {
-			String strDocumentID = (String)FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("documentID");
+		String strDocumentID = (String)FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("documentID");
+		if(this.document == null || (strDocumentID != null && !this.document.getDocumentID().equals(Integer.parseInt(strDocumentID)))) {
 			this.document = this.documentDao.getDocument(Integer.parseInt(strDocumentID));
 			this.docText = StringEscapeUtils.escapeXml(document.getDocText()).replaceAll("\n", "<br>");
 		}
