@@ -1,8 +1,5 @@
 package ytex.uima.mapper;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.uima.cas.FeatureStructure;

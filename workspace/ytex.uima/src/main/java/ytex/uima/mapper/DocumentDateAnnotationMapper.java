@@ -18,6 +18,7 @@ public class DocumentDateAnnotationMapper extends
 	@Override
 	public void mapAnnotationProperties(DocumentDateAnnotation anno,
 			Annotation uimaAnno, Document doc) {
+		super.mapAnnotationProperties(anno, uimaAnno, doc);
 		DocumentDate docDate = (DocumentDate)uimaAnno;
 		if (docDate.getDate() > 0) {
 			anno.setDocumentDate(new Date(docDate.getDate()));
