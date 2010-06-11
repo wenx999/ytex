@@ -9,6 +9,11 @@ import org.apache.uima.jcas.tcas.Annotation;
 import edu.mayo.bmi.uima.context.ContextHit;
 import edu.mayo.bmi.uima.core.ae.type.NewlineToken;
 
+/**
+ * Modified cTAKES NegationContextAnalyzer to filter out newline tokens.
+ * @author vijay
+ *
+ */
 public class NegationContextAnalyzer extends
 		edu.mayo.bmi.uima.context.negation.NegationContextAnalyzer {
 	

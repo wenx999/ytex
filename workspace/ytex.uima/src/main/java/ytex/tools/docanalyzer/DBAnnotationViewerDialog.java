@@ -75,6 +75,9 @@ import org.xml.sax.SAXException;
  * using the Java-based CAS viewer or a web browser, in either an HTML/Javascript format or in the
  * inline XML format.
  * 
+ * copied from AnnotationViewerDialog.
+ * Modified to load CAS from database.
+ * 
  */
 public class DBAnnotationViewerDialog extends JDialog implements ActionListener {
 

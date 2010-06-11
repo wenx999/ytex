@@ -90,7 +90,8 @@ import org.xml.sax.SAXException;
  * Main Annotation Viewer GUI. Allows user to choose directory of XCAS or XMI
  * files, then launches the AnnotationViewerDialog.
  * 
- * 
+ * copied from AnnotationViewerMain.
+ * Modified to load CAS from database.
  */
 public class DBAnnotationViewerMain extends JFrame {
 	private static final long serialVersionUID = -3201723535833938833L;

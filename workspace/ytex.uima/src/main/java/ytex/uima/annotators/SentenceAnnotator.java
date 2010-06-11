@@ -35,6 +35,7 @@ import gov.va.maveric.uima.section.type.Paragraph;
 
 /**
  * An example annotator that annotates Sentences.
+ * @TODO make the regexs for splitting configurable
  */
 public class SentenceAnnotator extends JTextAnnotator_ImplBase{
   static abstract class Maker {

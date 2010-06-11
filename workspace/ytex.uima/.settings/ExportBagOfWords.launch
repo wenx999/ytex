@@ -7,10 +7,10 @@
 <listEntry value="1"/>
 </listAttribute>
 <mapAttribute key="org.eclipse.debug.core.environmentVariables">
-<mapEntry key="PATH" value="${workspace_loc}/libs/sqljdbc_2.0/enu/auth/x86"/>
+<mapEntry key="PATH" value="${workspace_loc}/libs.system/sqljdbc_3.0/enu/auth/x86"/>
 </mapAttribute>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="ytex.weka.ExportBagOfWords"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="ascites-nominal-test.properties"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="fracture-cui.xml"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="ytex.uima"/>
-<stringAttribute key="org.eclipse.jdt.launching.WORKING_DIRECTORY" value="${workspace_loc:weka/ascites/nominal}"/>
+<stringAttribute key="org.eclipse.jdt.launching.WORKING_DIRECTORY" value="${workspace_loc:examples/weka-fracture}"/>
 </launchConfiguration>

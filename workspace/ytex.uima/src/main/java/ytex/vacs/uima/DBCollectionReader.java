@@ -29,6 +29,13 @@ import org.springframework.jdbc.support.lob.LobHandler;
 import ytex.uima.ApplicationContextHolder;
 import ytex.vacs.uima.types.DocumentKey;
 
+/**
+ * 
+ * Read documents from db.
+ * @TODO more doc
+ * @author vijay
+ *
+ */
 public class DBCollectionReader extends CollectionReader_ImplBase {
 	private static final Log log = LogFactory.getLog(DBCollectionReader.class);
 
