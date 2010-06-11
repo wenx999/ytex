@@ -16,6 +16,7 @@ public class SegmentAnnotationMapper extends
 	@Override
 	public void mapAnnotationProperties(SegmentAnnotation anno,
 			Annotation uimaAnno, Document doc) {
+		super.mapAnnotationProperties(anno, uimaAnno, doc);
 		anno.setSegmentID(((Segment) uimaAnno).getId());
 	}
 
