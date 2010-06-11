@@ -7,6 +7,11 @@ import ytex.model.Document;
 import ytex.model.DocumentAnnotation;
 import ytex.model.UimaType;
 
+/**
+ * Mapped to vacs DocumentKeyAnnotation
+ * @author vijay
+ *
+ */
 public class DocumentKeyAnnotation extends DocumentAnnotation {
 	private static final Log log = LogFactory.getLog(DocumentKeyAnnotation.class);
 

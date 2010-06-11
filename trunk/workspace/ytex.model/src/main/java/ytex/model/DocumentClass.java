@@ -2,6 +2,12 @@ package ytex.model;
 
 import java.io.Serializable;
 
+/**
+ * Mapped to document_class.
+ * Used to store gold standard document class and predicted document class.
+ * @author vijay
+ *
+ */
 public class DocumentClass implements Serializable {
 
 	/**

@@ -2,6 +2,11 @@ package ytex.model;
 
 import java.io.Serializable;
 
+/**
+ * Mapped to cTAKES Segment
+ * @author vijay
+ *
+ */
 public class SegmentAnnotation extends DocumentAnnotation implements
 		Serializable {
 

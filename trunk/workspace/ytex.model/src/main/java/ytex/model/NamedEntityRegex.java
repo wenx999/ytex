@@ -2,6 +2,11 @@ package ytex.model;
 
 import java.io.Serializable;
 
+/**
+ * Mapped to ref_named_entity_regex.
+ * @author vijay
+ *
+ */
 public class NamedEntityRegex implements Serializable {
 	/**
 	 * 

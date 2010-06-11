@@ -1,5 +1,10 @@
 package ytex.model;
 
+/**
+ * Mapped to cTAKES UmlsConcept
+ * @author vijay
+ *
+ */
 public class UmlsConceptAnnotation extends OntologyConceptAnnotation {
 	/**
 	 * 

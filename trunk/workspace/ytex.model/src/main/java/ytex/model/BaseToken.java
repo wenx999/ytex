@@ -1,5 +1,10 @@
 package ytex.model;
 
+/**
+ * Mapped to cTAKES BaseToken
+ * @author vijay
+ *
+ */
 public class BaseToken extends DocumentAnnotation {
 
 	/**

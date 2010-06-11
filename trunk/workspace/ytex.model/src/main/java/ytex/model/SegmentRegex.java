@@ -2,6 +2,11 @@ package ytex.model;
 
 import java.io.Serializable;
 
+/**
+ * Mapped to ref_segment_regex
+ * @author vijay
+ *
+ */
 public class SegmentRegex implements Serializable {
 	
 	/**
