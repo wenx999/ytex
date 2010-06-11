@@ -18,6 +18,13 @@ import org.xml.sax.SAXException;
 import ytex.uima.ApplicationContextHolder;
 import ytex.uima.mapper.DocumentMapperService;
 
+/**
+ * Store the document text, cas, and annotations in the database.
+ * Delegates to DocumentMapperService.
+ * This is an annotator and not a consumer because according to the uima docs the Consumer interface is deprecated.
+ * @author vijay
+ *
+ */
 public class DBConsumer extends JCasAnnotator_ImplBase {
 	private static final Log log = LogFactory.getLog(DBConsumer.class);
 	private DocumentMapperService documentMapperService;

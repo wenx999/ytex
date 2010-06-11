@@ -25,6 +25,13 @@ import ytex.dao.NamedEntityRegexDao;
 import ytex.model.NamedEntityRegex;
 import ytex.uima.ApplicationContextHolder;
 
+/**
+ * Create NamedEntity annotations.
+ * Use regex to identify the Named Entities.
+ * Read the named entity regex - concept id map from the db.
+ * @author vijay
+ *
+ */
 public class NamedEntityRegexAnnotator extends JCasAnnotator_ImplBase {
 	private static final Log log = LogFactory
 			.getLog(NamedEntityRegexAnnotator.class);

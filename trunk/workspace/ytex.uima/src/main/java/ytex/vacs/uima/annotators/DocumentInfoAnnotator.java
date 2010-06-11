@@ -23,6 +23,18 @@ import ytex.vacs.uima.types.DocumentDate;
 import ytex.vacs.uima.types.DocumentTitle;
 import edu.mayo.bmi.uima.core.ae.type.NewlineToken;
 
+/**
+ * annotate the document date and title.
+ * Configuration Parameters:
+ * <li>regexDocumentTitle list of regular expressions to identify title
+ * <li>regexDocumentDate list of regular expressions to identify date
+ * <li>lineMax maximum number of lines into the document to look for title and date
+ * 
+ * Create a DocumentDate annotation for the date.
+ * todo: Instead of new type, create a Segment annotation for the title with id TITLE? Would this be better?
+ * @author vijay
+ *
+ */
 public class DocumentInfoAnnotator extends JCasAnnotator_ImplBase {
 	private static final Log log = LogFactory
 			.getLog(DocumentInfoAnnotator.class);
@@ -112,6 +124,7 @@ public class DocumentInfoAnnotator extends JCasAnnotator_ImplBase {
 					title.setBegin(matcher.start(1));
 					title.setEnd(matcher.end(1));
 					title.addToIndexes();
+					return title;
 				}
 			}
 		}
@@ -133,6 +146,7 @@ public class DocumentInfoAnnotator extends JCasAnnotator_ImplBase {
 							docDateAnno.setBegin(matcher.start(1));
 							docDateAnno.setEnd(matcher.end(1));
 							docDateAnno.addToIndexes();
+							return docDateAnno;
 						}
 					} catch (ParseException e) {
 						log.warn("error parsing date: " + strDate, e);

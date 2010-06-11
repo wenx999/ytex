@@ -29,6 +29,13 @@ import ytex.model.Document;
 import ytex.model.DocumentAnnotation;
 import ytex.model.UimaType;
 
+/**
+ * Map document annotations to the database.
+ * Delegates to AnnotationMapper implementations.
+ * AnnotationMappers are configured in the database (REF_UIMA_TYPE).
+ * @author vijay
+ *
+ */
 public class DocumentMapperServiceImpl implements DocumentMapperService,
 		InitializingBean {
 	private static final Log log = LogFactory
@@ -62,10 +69,10 @@ public class DocumentMapperServiceImpl implements DocumentMapperService,
 	 * don't run into trouble with trying to access Uima Annotations that are
 	 * not in the type system.
 	 */
-	private static final ThreadLocal<Map<String, AbstractDocumentAnnotationMapper<? extends DocumentAnnotation, ? extends Annotation>>> mappers = new ThreadLocal<Map<String, AbstractDocumentAnnotationMapper<? extends DocumentAnnotation, ? extends Annotation>>>() {
+	private static final ThreadLocal<Map<String, DocumentAnnotationMapper<? extends DocumentAnnotation>>> mappers = new ThreadLocal<Map<String, DocumentAnnotationMapper<? extends DocumentAnnotation>>>() {
 		@Override
-		protected Map<String, AbstractDocumentAnnotationMapper<? extends DocumentAnnotation, ? extends Annotation>> initialValue() {
-			return new HashMap<String, AbstractDocumentAnnotationMapper<? extends DocumentAnnotation, ? extends Annotation>>();
+		protected Map<String, DocumentAnnotationMapper<? extends DocumentAnnotation>> initialValue() {
+			return new HashMap<String, DocumentAnnotationMapper<? extends DocumentAnnotation>>();
 		}
 	};
 
@@ -131,7 +138,7 @@ public class DocumentMapperServiceImpl implements DocumentMapperService,
 	 */
 	private DocumentAnnotation saveDocumentAnnotation(Annotation annotation,
 			Document document) {
-		AbstractDocumentAnnotationMapper<? extends DocumentAnnotation, ? extends Annotation> mapper = this
+		DocumentAnnotationMapper<? extends DocumentAnnotation> mapper = this
 				.getMapperForAnnotation(annotation.getClass().getName());
 		if (mapper != null) {
 			DocumentAnnotation docAnno = (DocumentAnnotation) mapper
@@ -151,16 +158,16 @@ public class DocumentMapperServiceImpl implements DocumentMapperService,
 	 * @return mapper or null if not mapped
 	 */
 	@SuppressWarnings("unchecked")
-	private AbstractDocumentAnnotationMapper<? extends DocumentAnnotation, ? extends Annotation> getMapperForAnnotation(
+	private DocumentAnnotationMapper<? extends DocumentAnnotation> getMapperForAnnotation(
 			String uimaClassName) {
-		AbstractDocumentAnnotationMapper<? extends DocumentAnnotation, ? extends Annotation> mapper = null;
+		DocumentAnnotationMapper<? extends DocumentAnnotation> mapper = null;
 		String mapperClassName = this.documentAnnotationMappers
 				.get(uimaClassName);
 		if (mapperClassName != null) {
 			mapper = mappers.get().get(mapperClassName);
 			if (mapper == null) {
 				try {
-					mapper = (AbstractDocumentAnnotationMapper<? extends DocumentAnnotation, ? extends Annotation>) Class
+					mapper = (DocumentAnnotationMapper<? extends DocumentAnnotation>) Class
 							.forName(mapperClassName).newInstance();
 					mappers.get().put(mapperClassName, mapper);
 				} catch (Exception e) {
@@ -205,54 +212,6 @@ public class DocumentMapperServiceImpl implements DocumentMapperService,
 				return null;
 			}
 		});
-		//		
-		// documentAnnotationMappers.put(Sentence.type,
-		// new DocumentAnnotationMapper<SentenceAnnotation, Sentence>(
-		// SentenceAnnotation.class, Sentence.class));
-		// documentAnnotationMappers.put(Segment.type,
-		// new DocumentAnnotationMapper<SegmentAnnotation, Segment>(
-		// SegmentAnnotation.class, Segment.class));
-		// documentAnnotationMappers
-		// .put(
-		// DocumentKey.type,
-		// new DocumentAnnotationMapper<DocumentKeyAnnotation, DocumentKey>(
-		// DocumentKeyAnnotation.class, DocumentKey.class));
-		// documentAnnotationMappers
-		// .put(
-		// DocumentDate.type,
-		// new DocumentAnnotationMapper<DocumentDateAnnotation, DocumentDate>(
-		// DocumentDateAnnotation.class,
-		// DocumentDate.class));
-		// documentAnnotationMappers.put(NamedEntity.type,
-		// new NamedEntityDocumentAnnotationMapper());
-		// // the context-dependent types do not specify any attributes beyond
-		// // those of the
-		// // plain-vanilla Annotation
-		// // use DocumentAnnotation class to persist these annotations
-		// documentAnnotationMappers.put(RomanNumeralAnnotation.type,
-		// new DocumentAnnotationMapper<DocumentAnnotation, Annotation>(
-		// DocumentAnnotation.class, Annotation.class));
-		// documentAnnotationMappers.put(FractionAnnotation.type,
-		// new DocumentAnnotationMapper<DocumentAnnotation, Annotation>(
-		// DocumentAnnotation.class, Annotation.class));
-		// documentAnnotationMappers.put(DateAnnotation.type,
-		// new DocumentAnnotationMapper<DocumentAnnotation, Annotation>(
-		// DocumentAnnotation.class, Annotation.class));
-		// documentAnnotationMappers.put(TimeAnnotation.type,
-		// new DocumentAnnotationMapper<DocumentAnnotation, Annotation>(
-		// DocumentAnnotation.class, Annotation.class));
-		// documentAnnotationMappers.put(RangeAnnotation.type,
-		// new DocumentAnnotationMapper<DocumentAnnotation, Annotation>(
-		// DocumentAnnotation.class, Annotation.class));
-		// documentAnnotationMappers.put(MeasurementAnnotation.type,
-		// new DocumentAnnotationMapper<DocumentAnnotation, Annotation>(
-		// DocumentAnnotation.class, Annotation.class));
-		// documentAnnotationMappers.put(PersonTitleAnnotation.type,
-		// new DocumentAnnotationMapper<DocumentAnnotation, Annotation>(
-		// DocumentAnnotation.class, Annotation.class));
-		// documentAnnotationMappers.put(DocumentTitle.type,
-		// new DocumentAnnotationMapper<DocumentAnnotation, Annotation>(
-		// DocumentAnnotation.class, Annotation.class));
 	}
 
 }

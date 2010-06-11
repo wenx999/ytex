@@ -27,7 +27,7 @@ import ytex.model.UimaType;
  *            uima annotation class.
  */
 public class AbstractDocumentAnnotationMapper<D extends DocumentAnnotation, T extends Annotation>
-		implements DocumentAnnotationMapper<D, T> {
+		implements DocumentAnnotationMapper<D> {
 	private static final Log log = LogFactory
 			.getLog(AbstractDocumentAnnotationMapper.class);
 	Class<D> classDocumentAnnotation;
@@ -52,7 +52,7 @@ public class AbstractDocumentAnnotationMapper<D extends DocumentAnnotation, T ex
 	 *            hibernate session factory for persisting
 	 * @return db DocumentAnnotation
 	 */
-	D mapAnnotation(Annotation annotation, Document doc,
+	public D mapAnnotation(Annotation annotation, Document doc,
 			SessionFactory sessionFactory) {
 		D anno = createAnnotation(annotation, doc, sessionFactory);
 		if (anno != null) {
@@ -86,13 +86,15 @@ public class AbstractDocumentAnnotationMapper<D extends DocumentAnnotation, T ex
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * Default implementation for mapping uima annotation to db annotation:
+	 * simply copy whatever properties have the same name.
 	 * 
-	 * @see ytex.uima.mapper.DocumentAnnotationMapper#mapAnnotationProperties(D,
-	 * org.apache.uima.jcas.tcas.Annotation, ytex.model.Document)
+	 * @param anno
+	 * @param uimaAnno
+	 * @param doc
 	 */
-	public void mapAnnotationProperties(D anno, Annotation uimaAnno,
+	protected void mapAnnotationProperties(D anno, Annotation uimaAnno,
 			Document doc) {
 		BeanUtils.copyProperties(uimaAnno, anno);
 	}
