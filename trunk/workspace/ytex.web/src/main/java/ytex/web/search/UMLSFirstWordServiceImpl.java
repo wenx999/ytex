@@ -10,7 +10,6 @@ import javax.sql.DataSource;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 
-import ytex.model.UMLSFirstWord;
 
 public class UMLSFirstWordServiceImpl implements UMLSFirstWordService {
 	private SimpleJdbcTemplate jdbcTemplate;
