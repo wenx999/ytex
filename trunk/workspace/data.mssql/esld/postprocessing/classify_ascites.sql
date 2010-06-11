@@ -45,8 +45,8 @@ from
 			sum(case when certainty = -1 then 1 else 0 end) ascites_n
 		from esld.v_document_ontoanno o
 		-- limit to terms in the report section and after
-		inner join esld.document_annotation segda on segda.document_id = o.document_id
-		inner join esld.segment_annotation seg on seg.document_annotation_id = segda.document_annotation_id
+		inner join esld.anno_base segda on segda.document_id = o.document_id
+		inner join esld.anno_segment seg on seg.anno_base_id = segda.anno_base_id
 		where code in ('C0003962', 'C0003964', 'C0401020')
 		and seg.segment_id = 'REPORT'
 		and o.span_begin >= segda.span_begin

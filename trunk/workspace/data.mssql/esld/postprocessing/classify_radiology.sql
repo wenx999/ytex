@@ -89,9 +89,9 @@ from
 						then 1 else 0 end abds,
 					case when oa.code in ('C0005560')
 						then 1 else 0 end biopsy
-				from esld.document_annotation oda 
-				inner join esld.ontology_concept_annotation oa on oda.document_annotation_id = oa.document_annotation_id
-				inner join esld.document_annotation tda 
+				from esld.anno_base oda 
+				inner join esld.anno_ontology_concept oa on oda.anno_base_id = oa.anno_base_id
+				inner join esld.anno_base tda 
 					on oda.document_id = tda.document_id
 					and oda.span_begin >= tda.span_begin 
 					and oda.span_end <= tda.span_end
@@ -124,16 +124,16 @@ from
 					case when oa.code in ('C0040405') then 1 else 0 end ct
 				from 
 				-- radiology annotion
-				esld.document_annotation oda 
-				inner join esld.ontology_concept_annotation oa on oda.document_annotation_id = oa.document_annotation_id
+				esld.anno_base oda 
+				inner join esld.anno_ontology_concept oa on oda.anno_base_id = oa.anno_base_id
 				-- abdomen annotation
-				inner join esld.document_annotation oda_abd on oda_abd.document_id = oda.document_id
-				inner join esld.ontology_concept_annotation oa_abd on oda_abd.document_annotation_id = oa_abd.document_annotation_id
+				inner join esld.anno_base oda_abd on oda_abd.document_id = oda.document_id
+				inner join esld.anno_ontology_concept oa_abd on oda_abd.anno_base_id = oa_abd.anno_base_id
 				-- segment annotation
-				inner join esld.document_annotation segda on segda.document_id = oda.document_id
-				inner join esld.segment_annotation seg on seg.document_annotation_id = segda.document_annotation_id 
+				inner join esld.anno_base segda on segda.document_id = oda.document_id
+				inner join esld.anno_segment seg on seg.anno_base_id = segda.anno_base_id 
 				-- sentence annotation
-				inner join esld.document_annotation s on oda.document_id = s.document_id
+				inner join esld.anno_base s on oda.document_id = s.document_id
 				inner join esld.ref_uima_type ut on s.uima_type_id = ut.uima_type_id
 				where ut.uima_type_name = 'edu.mayo.bmi.uima.core.sentence.type.Sentence'
 				-- get the report section
@@ -173,11 +173,11 @@ from
 					case when oa.code in ('C0024485', 'C0994163', 'C0243032') then 1 else 0 end mri,
 					case when oa.code in ('C0040405') then 1 else 0 end ct,
 					case when oa.code in ('DOCREF') then 1 else 0 end docref
-				from esld.document_annotation oda 
-				inner join esld.ontology_concept_annotation oa on oda.document_annotation_id = oa.document_annotation_id
+				from esld.anno_base oda 
+				inner join esld.anno_ontology_concept oa on oda.anno_base_id = oa.anno_base_id
 				-- segment annotation
-				inner join esld.document_annotation segda on segda.document_id = oda.document_id
-				inner join esld.segment_annotation seg on seg.document_annotation_id = segda.document_annotation_id 
+				inner join esld.anno_base segda on segda.document_id = oda.document_id
+				inner join esld.anno_segment seg on seg.anno_base_id = segda.anno_base_id 
 				where oa.code in 
 					( 
 					'C0041618', /* ultrasound */ 
@@ -195,11 +195,11 @@ from
 		(
 			select oda.document_id, 
 				count(*) abds_count
-			from esld.document_annotation oda 
-			inner join esld.ontology_concept_annotation oa on oda.document_annotation_id = oa.document_annotation_id
+			from esld.anno_base oda 
+			inner join esld.anno_ontology_concept oa on oda.anno_base_id = oa.anno_base_id
 			-- segment annotation
-			inner join esld.document_annotation segda on segda.document_id = oda.document_id
-			inner join esld.segment_annotation seg on seg.document_annotation_id = segda.document_annotation_id 
+			inner join esld.anno_base segda on segda.document_id = oda.document_id
+			inner join esld.anno_segment seg on seg.anno_base_id = segda.anno_base_id 
 			where oa.code in 
 				( 
 				'C0000726', 'C0023884', 'C0230165', 'C0439734', /* abdomen/liver terms */

@@ -42,24 +42,24 @@ insert into $(db_schema).umls_ms_2009 (  cui, fword, text, code, sourcetype, tui
 values ('C0227481','right','right lobe','ESLD_MASS','ESLD','T060');
 
 /* 
- * named_entity_regex
+ * ref_named_entity_regex
  */
-insert into $(db_schema).named_entity_regex (regex, coding_scheme, code, context)
+insert into $(db_schema).ref_named_entity_regex (regex, coding_scheme, code, context)
 values ('\(US\)','UMLS','C0041618','gov.va.vacs.esld.uima.types.DocumentTitle')
 ;
 
-insert into $(db_schema).named_entity_regex (regex, coding_scheme, code, context)
+insert into $(db_schema).ref_named_entity_regex (regex, coding_scheme, code, context)
 values ('\bCT\b','UMLS','C0040405','gov.va.vacs.esld.uima.types.DocumentTitle')
 ;
 
-insert into $(db_schema).named_entity_regex (regex, coding_scheme, code)
+insert into $(db_schema).ref_named_entity_regex (regex, coding_scheme, code)
 values ('(?i)\bSEE\s+.*#{0,1}+\s*\d+','ESLD','DOCREF')
 ;
 
-insert into $(db_schema).named_entity_regex (regex, coding_scheme, code)
+insert into $(db_schema).ref_named_entity_regex (regex, coding_scheme, code)
 values ('(?i)\bREFER\s+TO\s+.*#{0,1}+\s*\d+','ESLD','DOCREF')
 ;
 
-insert into $(db_schema).named_entity_regex (regex, coding_scheme, code)
+insert into $(db_schema).ref_named_entity_regex (regex, coding_scheme, code)
 values ('(?i)\bfluid\b[^\p{Punct}]*\bliver\b|\bfluid\b[^\p{Punct}]*\babdomen\b|\bfluid\b[^\p{Punct}]*abdominal\b|\bfluid\b[^\p{Punct}]*hepatic\b|abdominal\s+fluid','UMLS','C0401020')
 ;

@@ -1,4 +1,7 @@
-
+delete from esld.document
+where analysis_batch='$(analysis_batch)'
+;
+/*
 delete from esld.document_class
 where document_id in (select document_id from esld.document where analysis_batch='$(analysis_batch)')
 ;
@@ -75,6 +78,4 @@ where document_annotation_id in
 	where analysis_batch='$(analysis_batch)'
 	)
 ;
-delete from esld.document
-where analysis_batch='$(analysis_batch)'
-;
+*/
