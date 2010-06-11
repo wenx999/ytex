@@ -23,7 +23,7 @@ You are of course welcome to modify/add/remove annotators to the analysis engine
  * Execute `YTEX_HOME\ytexDocumentAnalyzer.bat` and set the following options:
    ** Input Directory: `MAVERIC_HOME\docs\examples\collection`
    ** Output Directory: `MAVERIC_HOME\docs\examples\ytexoutput` (create this directory)
-   ** Analysis Engine: `YTEX_HOME\config\desc\ytex\esld\ESLDPipelineRich.xml`
+   ** Analysis Engine: `YTEX_HOME\config\desc\ytex\uima\YTEXPipeline.xml`
  * Click Run
  * You can then view the anaysis results by double-clicking individual documents.
 
