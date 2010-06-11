@@ -2,7 +2,7 @@ package ytex.model;
 
 
 /**
- * 
+ * Mapped to cTAKES Sentence.
  * @author vijay
  * @see Sentence
  *

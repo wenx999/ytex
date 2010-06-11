@@ -2,6 +2,12 @@ package ytex.model;
 
 import java.io.Serializable;
 
+/**
+ * Mapped to uima Annotation.
+ * Base class for all annotations.
+ * @author vijay
+ *
+ */
 public class DocumentAnnotation implements Serializable {
 	/**
 	 * 

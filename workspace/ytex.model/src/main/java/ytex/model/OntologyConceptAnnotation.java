@@ -2,6 +2,11 @@ package ytex.model;
 
 import java.io.Serializable;
 
+/**
+ * Mapped to cTAKES OntologyConcept
+ * @author vijay
+ *
+ */
 public class OntologyConceptAnnotation implements Serializable {
 	/**
 	 * 

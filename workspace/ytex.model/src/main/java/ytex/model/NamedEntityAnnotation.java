@@ -3,6 +3,11 @@ package ytex.model;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * mapped to cTAKES NamedEntityAnnotation
+ * @author vijay
+ *
+ */
 public class NamedEntityAnnotation extends DocumentAnnotation {
 	/**
 	 * 

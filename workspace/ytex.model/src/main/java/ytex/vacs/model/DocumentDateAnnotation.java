@@ -6,6 +6,11 @@ import ytex.model.Document;
 import ytex.model.DocumentAnnotation;
 import ytex.model.UimaType;
 
+/**
+ * Mapped to vacs DocumentDateAnnotation.
+ * @author vijay
+ *
+ */
 public class DocumentDateAnnotation extends DocumentAnnotation {
 
 	/**

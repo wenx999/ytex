@@ -1,5 +1,10 @@
 package ytex.model;
 
+/**
+ * Mapped to cTAKES WordToken
+ * @author vijay
+ *
+ */
 public class WordToken extends BaseToken {
 
 	/**

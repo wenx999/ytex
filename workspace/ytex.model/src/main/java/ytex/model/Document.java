@@ -4,6 +4,13 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Mapped to document table.
+ * Contains document text (from JCas.getDocumentText()).
+ * Contains gzipped xmi CAS.
+ * @author vijay
+ *
+ */
 public class Document implements Serializable {
 
 	/**

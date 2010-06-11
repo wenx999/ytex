@@ -6,6 +6,7 @@ import java.io.Serializable;
  * Reference data.  Defines YTEX uimaTypeID, uimaTypeName (Class name), and mapperName (Class Name).
  * We need our own uima Type ID because the typeID field in the annotation is generated dynamically -
  * it can change.  The mapper maps the uima type to a class.
+ * Mapped to ref_uima_type.
  * 
  * @author vijay
  *

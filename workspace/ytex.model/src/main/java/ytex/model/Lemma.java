@@ -3,7 +3,8 @@ package ytex.model;
 import java.io.Serializable;
 
 /**
- * Mapped to Lemma
+ * Mapped to Lemma.
+ * @TODO map this
  * @author vijay
  *
  */
