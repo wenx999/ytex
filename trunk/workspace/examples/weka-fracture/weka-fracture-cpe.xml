@@ -9,7 +9,7 @@
                 <nameValuePair>
                     <name>InputDirectory</name>
                     <value>
-                        <string>C:\java\MavericArcApp-1.0.0\docs\examples\reference set</string>
+                        <string>.\reference set</string>
                     </value>
                 </nameValuePair>
             </configurationParameterSettings>
