@@ -9,7 +9,7 @@
 @set MSSQL_TOOLS=C:\Program Files\Microsoft SQL Server\100\Tools\Binn
 
 @rem where ytex is intalled 
-@set YTEX_HOME=C:\java\ytex
+@set YTEX_HOME=C:\java\clinicalnlp\ytex
 
 @rem where ant is installed
 @rem download from http://ant.apache.org/bindownload.cgi
@@ -20,7 +20,7 @@
 @set SQLJDBC_HOME=%YTEX_HOME%\..\sqljdbc_3.0
 
 @rem tomcat installation directory
-@set CATALINA_HOME=%YTEX_HOME%\..\apache-tomcat-6.0.24
+@set CATALINA_HOME=%YTEX_HOME%\..\apache-tomcat-6.0.26
 
 @rem -------------------------------------------
 @rem end customizations.  The following is environment-independent
