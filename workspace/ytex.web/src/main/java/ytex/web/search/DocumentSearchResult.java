@@ -2,6 +2,11 @@ package ytex.web.search;
 
 import java.util.Date;
 
+/**
+ * Encapsulates document search results
+ * @author vijay
+ *
+ */
 public class DocumentSearchResult {
 	@Override
 	public String toString() {

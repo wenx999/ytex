@@ -7,7 +7,7 @@ import java.util.Map;
 
 
 /**
- * Dao for searching documents.
+ * Service for searching documents.
  * Executes queries defined in ytex/search.properties.
  * @author vijay
  *
