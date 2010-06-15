@@ -1,11 +1,15 @@
+# database name
 db.name=VACS_TEST
+# host name of database server
 db.host=localhost
 
-#schema. default is dbo
+# schema. default is dbo
 db.schema=test
 
-#jdbc url for
+# jdbc url for database.  Replace localhost and VACS_TEST 
+# with the values of db.host and db.name repsectively
 db.url=jdbc:sqlserver://localhost;databaseName=VACS_TEST;integratedSecurity=true
-db.driver=com.microsoft.sqlserver.jdbc.SQLServerDriver
 
+# you should not have to modify anything below
+db.driver=com.microsoft.sqlserver.jdbc.SQLServerDriver
 ytex.beanRefContext=classpath*:beanRefContext.xml
