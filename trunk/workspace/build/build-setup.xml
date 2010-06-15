@@ -1,16 +1,23 @@
 <project name="build-setup" default="help">
+	<taskdef resource="net/sf/antcontrib/antlib.xml" />
 	<!-- override these variables using eclipse settings/command line -->
-	<property name="maveric.home" value="C:/java/MavericArcApp-1.0.0" />
+	<!-- <property name="maveric.home" value="C:/java/MavericArcApp-1.0.0" /> -->
 	<property name="ytex.home" value="../" />
 	<property name="ytex.properties" value="${ytex.home}/config/desc/ytex.properties" />
+	<property name="lvg.download.dir" value="${ytex.home}/.." />
+	<property name="lvg.basename" value="lvg2010lite" />
+	<property name="lvg.filename" value="${lvg.basename}.tgz" />
+	<property name="lvg.tgz" value="${lvg.download.dir}/${lvg.filename}" />
+	<property name="umls.zip" value="${ytex.home}/../umls.zip" />
+
 	<target name="help">
-<echo>
+		<echo>
 Ant build script to setup ytex.
 Call with option -projecthelp for more info.
 </echo>
 	</target>
-	
-	<target name="all" depends="templateToConfig,setupMavericResources,setupDatabase,setup.ytex.web" description="calls templateToConfig, setupMavericResources, setupDatabase, and setup.ytex.web "/>
+
+	<target name="all" depends="unpack.umls,setup.lvg,templateToConfig,setupDatabase,setup.ytex.web" description="calls unpack.umls, setup.lvg, templateToConfig, setupDatabase, and setup.ytex.web " />
 	<target name="setupDatabase" description="setup ytex database tables">
 		<ant dir="${ytex.home}/data.mssql" target="all" />
 	</target>
@@ -37,6 +44,7 @@ Call with option -projecthelp for more info.
 			</filterset>
 		</copy>
 	</target>
+	<!--
 	<target name="setupMavericResources" description="copy resources from maveric to ytex">
 		<delete dir="${ytex.home}/maveric/resources" quiet="yes" />
 		<mkdir dir="${ytex.home}/maveric/resources" />
@@ -50,6 +58,7 @@ Call with option -projecthelp for more info.
 			</fileset>
 		</copy>
 	</target>
+	-->
 	<target name="search.templateToConfig" description="setup ytex.web search.properties">
 		<!-- default for development environment -->
 		<property name="search.properties.path" value="../ytex.web/src/main/java/ytex" />
@@ -61,7 +70,7 @@ Call with option -projecthelp for more info.
 	</target>
 	<target name="setup.ytex.web" description="setup ytex.web application for tomcat">
 		<property name="context.root" value="ytex.web" />
-		<property name="catalina.base" value="${ytex.home}/web/catalina" />
+		<property name="catalina.base" value="${ytex.home}/web" />
 		<mkdir dir="${catalina.base}/temp" />
 		<antcall target="search.templateToConfig">
 			<param name="search.properties.path" value="${catalina.base}/webapps/${context.root}/WEB-INF/classes/ytex" />
@@ -70,5 +79,37 @@ Call with option -projecthelp for more info.
 Default search.properties set up in ${catalina.base}/webapps/${context.root}/WEB-INF/classes/ytex.
 Modify to match your configuration.
 		</echo>
+	</target>
+	<target name="unpack.umls" description="unpack the umls.zip to the correct data directory">
+		<unzip src="${umls.zip}" dest="${ytex.home}/data.mssql/umls" />
+	</target>
+	<target name="download.lvg" description="download lvg2010lite.tgz from nlm">
+		<echo>Downloading ${lvg.filename} to ${lvg.download.dir}.  this may take a while!</echo>
+		<copy todir="${lvg.download.dir}" flatten="true">
+			<resources>
+				<url url="http://lexsrv3.nlm.nih.gov/LexSysGroup/Projects/lvg/2010/release/${lvg.filename}" />
+			</resources>
+		</copy>
+	</target>
+	<target name="setup.lvg" description="unpack lvg data directory to resources folder">
+		<if>
+			<available file="${lvg.tgz}" />
+			<then>
+				<untar src="${lvg.tgz}" compression="gzip" dest="${ytex.home}/maveric/resources/lvg">
+					<patternset>
+						<include name="${lvg.basename}/data/**/*.*" />
+						<exclude name="${lvg.basename}/data/**/lvg.properties" />
+					</patternset>
+				</untar>
+				<move file="${ytex.home}/maveric/resources/lvg/${lvg.basename}/data" todir="${ytex.home}/maveric/resources/lvg" />
+				<delete dir="${ytex.home}/maveric/resources/lvg/${lvg.basename}" />
+			</then>
+			<else>
+				<echo>${lvg.tgz} not available - please secute the setup.lvg.all to download and setup lvg</echo>
+			</else>
+		</if>
+	</target>
+	<target name="setup.lvg.all" description="download and unpack lvg" depends="download.lvg,setup.lvg">
+		<echo>LVG setup complete.  You can remove ${lvg.tgz}</echo>
 	</target>
 </project>

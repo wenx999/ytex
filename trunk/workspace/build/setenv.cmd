@@ -4,30 +4,23 @@
 @rem where java is installed
 @set JAVA_HOME=C:\java\jdk-6u17-windows-x32
 
-@rem where ant is installed
-@rem download from http://ant.apache.org/bindownload.cgi
-@set ANT_HOME=C:\java\apache-ant-1.8.0
-
-@rem where ant-contrib is installed
-@rem download from http://sourceforge.net/projects/ant-contrib/files/
-@set ANT_CONTRIB_HOME=C:\java\ant-contrib
-
-@rem where maveric arc is installed
-@set MAVERIC_HOME=C:\java\MavericArcApp-1.0.0
-
-@rem where mssql server jdbc drivers were unpacked 
-@rem download from http://www.microsoft.com/downloads/details.aspx?displaylang=en&FamilyID=a737000d-68d0-4531-b65d-da0f2a735707
-@set SQLJDBC_HOME=C:\java\sqljdbc_3.0
-
-@rem where ytex is intalled 
-@set YTEX_HOME=C:\java\ytex
-
 @rem where ms sql server tools are installed
 @rem should contain bcp.exe and sqlcmd.exe 
 @set MSSQL_TOOLS=C:\Program Files\Microsoft SQL Server\100\Tools\Binn
 
+@rem where ytex is intalled 
+@set YTEX_HOME=C:\java\ytex
+
+@rem where ant is installed
+@rem download from http://ant.apache.org/bindownload.cgi
+@set ANT_HOME=%YTEX_HOME%\..\apache-ant-1.8.0
+
+@rem where mssql server jdbc drivers were unpacked 
+@rem download from http://www.microsoft.com/downloads/details.aspx?displaylang=en&FamilyID=a737000d-68d0-4531-b65d-da0f2a735707
+@set SQLJDBC_HOME=%YTEX_HOME%\..\sqljdbc_3.0
+
 @rem tomcat installation directory
-@set CATALINA_HOME=C:\java\apache-tomcat-6.0.24
+@set CATALINA_HOME=%YTEX_HOME%\..\apache-tomcat-6.0.24
 
 @rem -------------------------------------------
 @rem end customizations.  The following is environment-independent
@@ -40,10 +33,12 @@
 @set PATH=%PATH%;%SQLJDBC_HOME%\enu\auth\x86
 
 @rem we have a tomcat configuration in this directory
-@set CATALINA_BASE=%YTEX_HOME%\web\catalina
+@set CATALINA_BASE=%YTEX_HOME%\web
 
 @rem external libraries are in the ytex.web directory
-@set YTEX_LIB_HOME=%YTEX_HOME%\web\catalina\webapps\ytex.web\WEB-INF\lib
+@set YTEX_LIB_HOME=%YTEX_HOME%\web\webapps\ytex.web\WEB-INF\lib
+
+@set YTEX_MAVERIC_HOME=%YTEX_HOME%\maveric
 
 @rem add ytex dependencies
 @set YTEX_CP=%YTEX_LIB_HOME%\com.springsource.antlr-2.7.7.jar
@@ -86,28 +81,28 @@
 
 @rem add configuration dependencies
 @set SYSTEM_CP=%SYSTEM_CP%;%YTEX_HOME%\config\desc
-@set SYSTEM_CP=%SYSTEM_CP%;%MAVERIC_HOME%\dest
+@set SYSTEM_CP=%SYSTEM_CP%;%YTEX_MAVERIC_HOME%\dest
 @set SYSTEM_CP=%SYSTEM_CP%;%YTEX_HOME%\maveric\resources
 
 @rem add maveric and other dependencies
 @rem add patches before the rest of the maveric/ctakes libraries
 @set SYSTEM_CP=%SYSTEM_CP%;%YTEX_HOME%\lib\ctakes-patches.jar
-@set SYSTEM_CP=%SYSTEM_CP%;%MAVERIC_HOME%\lib\log4j-1.2.14.jar
-@set SYSTEM_CP=%SYSTEM_CP%;%MAVERIC_HOME%\lib\lvg2008dist.jar
-@set SYSTEM_CP=%SYSTEM_CP%;%MAVERIC_HOME%\lib\opennlp-tools-1.4.0.jar
-@set SYSTEM_CP=%SYSTEM_CP%;%MAVERIC_HOME%\ext\mavericPipeline-1.0.0.jar
-@set SYSTEM_CP=%SYSTEM_CP%;%MAVERIC_HOME%\lib\jdom.jar
-@set SYSTEM_CP=%SYSTEM_CP%;%MAVERIC_HOME%\lib\maxent-2.5.0.jar
-@set SYSTEM_CP=%SYSTEM_CP%;%MAVERIC_HOME%\lib\OpenAI_FSM.jar
-@set SYSTEM_CP=%SYSTEM_CP%;%MAVERIC_HOME%\lib\trove.jar
-@set SYSTEM_CP=%SYSTEM_CP%;%MAVERIC_HOME%\lib\lucene-1.4-final.jar
-@set SYSTEM_CP=%SYSTEM_CP%;%MAVERIC_HOME%\lib\uima-adapter-soap.jar
-@set SYSTEM_CP=%SYSTEM_CP%;%MAVERIC_HOME%\lib\uima-adapter-vinci.jar
-@set SYSTEM_CP=%SYSTEM_CP%;%MAVERIC_HOME%\lib\uima-core.jar
-@set SYSTEM_CP=%SYSTEM_CP%;%MAVERIC_HOME%\lib\uima-cpe.jar
-@set SYSTEM_CP=%SYSTEM_CP%;%MAVERIC_HOME%\lib\uima-document-annotation.jar
-@set SYSTEM_CP=%SYSTEM_CP%;%MAVERIC_HOME%\lib\uima-tools.jar
-@set SYSTEM_CP=%SYSTEM_CP%;%MAVERIC_HOME%\lib\uima-cpe.jar
+@set SYSTEM_CP=%SYSTEM_CP%;%YTEX_MAVERIC_HOME%\lib\log4j-1.2.14.jar
+@set SYSTEM_CP=%SYSTEM_CP%;%YTEX_MAVERIC_HOME%\lib\lvg2010dist.jar
+@set SYSTEM_CP=%SYSTEM_CP%;%YTEX_MAVERIC_HOME%\lib\opennlp-tools-1.4.0.jar
+@set SYSTEM_CP=%SYSTEM_CP%;%YTEX_MAVERIC_HOME%\ext\mavericPipeline-1.0.0.jar
+@set SYSTEM_CP=%SYSTEM_CP%;%YTEX_MAVERIC_HOME%\lib\jdom.jar
+@set SYSTEM_CP=%SYSTEM_CP%;%YTEX_MAVERIC_HOME%\lib\maxent-2.5.0.jar
+@set SYSTEM_CP=%SYSTEM_CP%;%YTEX_MAVERIC_HOME%\lib\OpenAI_FSM.jar
+@set SYSTEM_CP=%SYSTEM_CP%;%YTEX_MAVERIC_HOME%\lib\trove.jar
+@set SYSTEM_CP=%SYSTEM_CP%;%YTEX_MAVERIC_HOME%\lib\lucene-1.4-final.jar
+@set SYSTEM_CP=%SYSTEM_CP%;%YTEX_MAVERIC_HOME%\lib\uima-adapter-soap.jar
+@set SYSTEM_CP=%SYSTEM_CP%;%YTEX_MAVERIC_HOME%\lib\uima-adapter-vinci.jar
+@set SYSTEM_CP=%SYSTEM_CP%;%YTEX_MAVERIC_HOME%\lib\uima-core.jar
+@set SYSTEM_CP=%SYSTEM_CP%;%YTEX_MAVERIC_HOME%\lib\uima-cpe.jar
+@set SYSTEM_CP=%SYSTEM_CP%;%YTEX_MAVERIC_HOME%\lib\uima-document-annotation.jar
+@set SYSTEM_CP=%SYSTEM_CP%;%YTEX_MAVERIC_HOME%\lib\uima-tools.jar
+@set SYSTEM_CP=%SYSTEM_CP%;%YTEX_MAVERIC_HOME%\lib\uima-cpe.jar
 
 @rem TOOLS_CP is for running uima tools
 @set TOOLS_CP=%YTEX_CP%;%SYSTEM_CP%
