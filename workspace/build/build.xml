@@ -1,9 +1,18 @@
 <project name="build">
 	<property name="java.tools.home" value="c:/java" />
+	<!--
 	<property name="maveric.home" value="${java.tools.home}/MavericArcApp-1.0.0" />
+	-->
+	<property name="maveric.home" value="../maveric" />
 	<property name="dist.home" value="../dist" />
 	<property name="ytex.dist.home" value="../dist/ytex" />
 	<property name="ytex.lib.home" value="../ytex.web/WebContent/WEB-INF/lib" />
+
+	<property name="nlp.home" value="c:/java" />
+	<property name="tomcat.dir" value="apache-tomcat-6.0.26" />
+	<property name="ant.dir" value="apache-ant-1.8.0" />
+	<property name="sqljdbc.dir" value="sqljdbc_3.0" />
+
 
 	<path id="cp.maveric">
 		<fileset dir="${maveric.home}/ext">
@@ -11,7 +20,7 @@
 		</fileset>
 		<fileset dir="${maveric.home}/lib">
 			<include name="log4j-1.2.14.jar" />
-			<include name="lvg2008dist.jar" />
+			<include name="lvg2010dist.jar" />
 			<include name="opennlp-tools-1.4.0.jar" />
 			<include name="jdom.jar" />
 			<include name="maxent-2.5.0.jar" />
@@ -24,7 +33,7 @@
 			<include name="uima-document-annotation.jar" />
 		</fileset>
 		<dirset dir="${maveric.home}" includes="dest" />
-		<dirset dir="../maveric" includes="resources" />
+		<dirset dir="${maveric.home}" includes="resources" />
 	</path>
 	<path id="cp.ytex">
 		<fileset dir="${ytex.lib.home}" includes="*.jar" />
@@ -161,6 +170,22 @@
 			</fileset>
 		</copy>
 	</target>
+	<target name="copy.maveric">
+		<copy todir="${ytex.dist.home}" includeEmptyDirs="false">
+			<fileset dir="../">
+				<include name="maveric/**/*.*" />
+				<exclude name="**/data/**/*.*" />
+				<exclude name="**/src/**/*.*" />
+				<exclude name="**/.settings/**/*.*" />
+				<exclude name="**/.classpath" />
+				<exclude name="**/.project" />
+				<exclude name="**/.svn/**/*.*" />
+			</fileset>
+			<fileset dir="../">
+				<include name="maveric/resources/lvg/data/config/*.*" />
+			</fileset>
+		</copy>
+	</target>
 	<target name="compile">
 		<property name="project.home" value="../${project.name}" />
 		<property name="project.bin.home" value="${project.home}/bin" />
@@ -179,13 +204,12 @@
 		<jar destfile="${ytex.dist.home}/lib/${project.name}.jar" basedir="${project.bin.home}" excludes="**/.svn/**/*.*" />
 	</target>
 	<target name="build.ytex.web">
-		<property name="ytex.web.dir" value="${ytex.dist.home}/web/catalina/webapps/ytex.web" />
-		<property name="ytex.web.classes.dir" value="${ytex.dist.home}/web/catalina/webapps/ytex.web/WEB-INF/classes" />
+		<property name="ytex.web.dir" value="${ytex.dist.home}/web/webapps/ytex.web" />
+		<property name="ytex.web.classes.dir" value="${ytex.dist.home}/web/webapps/ytex.web/WEB-INF/classes" />
 
 		<delete dir="${ytex.dist.home}/web" quiet="yes" />
 		<copy todir="${ytex.dist.home}/web">
-			<fileset dir="../ytex.web">
-				<include name="catalina/**/*.*" />
+			<fileset dir="../ytex.web/catalina">
 				<exclude name="**/.svn/**/*.*" />
 			</fileset>
 		</copy>
@@ -217,7 +241,15 @@
 	</target>
 	<target name="zip.dist">
 		<zip destfile="${dist.home}/ytex.zip" basedir="${dist.home}" includes="ytex/**/*.*" />
-		<zip destfile="${dist.home}/ytex-noUMLS.zip" basedir="${dist.home}" includes="ytex/**/*.*" excludes="**/*.bcp" />
+		<zip destfile="${dist.home}/ytex-with-dependencies.zip">
+			<fileset dir="${dist.home}" includes="ytex/**/*.*" />
+			<fileset dir="${nlp.home}" includes="${tomcat.dir}/**/*.*" 
+				excludes="${tomcat.dir}/webapps/**/*.*" />
+			<fileset dir="${nlp.home}" includes="${ant.dir}/**/*.*" 
+				excludes="${ant.dir}/docs/**/*.*" />
+			<fileset dir="${nlp.home}" includes="${sqljdbc.dir}/**/*.*" 
+				excludes="${sqljdbc.dir}/enu/help/**/*.*,${sqljdbc.dir}/enu/xa/**/*.*" />
+		</zip>
 	</target>
-	<target name="build.all" depends="clean.dist,build.ctakes-patches,build.ytex.model,build.ytex.negex,build.ytex.uima,copy.config,copy.scripts,copy.data.mssql,copy.examples,build.ytex.web,zip.dist" />
+	<target name="build.all" depends="clean.dist,build.ctakes-patches,build.ytex.model,build.ytex.negex,build.ytex.uima,copy.config,copy.scripts,copy.data.mssql,copy.examples,build.ytex.web,copy.maveric,zip.dist" />
 </project>
