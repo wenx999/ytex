@@ -11,46 +11,42 @@ The following software must be installed:
   * Atleast 1 GB of free disk space
 
 =Installation=
-  # Create a directory where ytex and its dependencies will be installed, e.g. {{{c:\java\clinicalnlp}}}
-  # Download the following archives to the installation directory:
-    * YTEX Archive: {{{ytex-with-dependencies.zip}}}
-    Download from this site
-    * LVG 2010 Archive: {{{lvg2010lite.tgz}}} 
-    ([http://lexsrv3.nlm.nih.gov/LexSysGroup/Projects/lvg/2010/release/lvg2010lite.tgz download]).  Make sure you save this file as {{{lvg2010lite.tgz}}} (Internet Explorer may rename this).
-    * UMLS Database Export: {{{umls.zip}}}.  
-    You must have a valid [https://login.nlm.nih.gov/cas/login?service=http://umlsks.nlm.nih.gov/uPortal/Login UMLS License], available free of charge.  Send us (vngarla at gmail.com) your UMLS license confirmation, and we will send you the {{{umls.zip}}} file.
-  # Extract {{{ytex-with-dependencies.zip}}} to the installation directory; this will create a {{{ytex}}} subdirectory, e.g. {{{c:\java\clinicalnlp\ytex}}}, referred to subsequently as {{{YTEX_HOME}}}
-  The YTEX archive contains apache tomcat ({{{.\apache-tomcat-6.0.26}}}), apache ant ({{{.\apache-ant-1.8.0}}}), the SQL Server JDBC Driver 3.0 ({{{.\sqljdbc_3.0}}}), ytex ({{{.\ytex}}}), and the maveric arc and cTAKES pipelines ({{{.\ytex\maveric}}}).
-  # 
-
-=YTEX installation=
 This assumes a Windows installation.  YTEX should work on unices (tests and instructions pending)
-  * Download and extract the YTEX package to a directory (e.g. `c:\java\ytex`).  This directory will be referred to as the YTEX_HOME
-  * Edit `YTEX_HOME\setenv.cmd`
+  # Create a directory where ytex and its dependencies will be installed, e.g. `c:\java\clinicalnlp`
+  # Download the following archives to the installation directory:
+    * YTEX Archive: `ytex-with-dependencies.zip`
+    Download from this site
+    * LVG 2010 Archive: `lvg2010lite.tgz`
+    ([http://lexsrv3.nlm.nih.gov/LexSysGroup/Projects/lvg/2010/release/lvg2010lite.tgz download]).  Make sure you save this file as `lvg2010lite.tgz` (Internet Explorer may rename this).
+    * UMLS Database Export: `umls.zip`.  
+    You must have a valid [https://login.nlm.nih.gov/cas/login?service=http://umlsks.nlm.nih.gov/uPortal/Login UMLS License], available free of charge.  Send us (vngarla at gmail.com) your UMLS license confirmation, and we will send you the `umls.zip` file.
+  # Extract `ytex-with-dependencies.zip` to the installation directory; this will create a `ytex` subdirectory, e.g. `c:\java\clinicalnlp\ytex`, referred to subsequently as `YTEX_HOME`
+  The YTEX archive contains apache tomcat (`.\apache-tomcat-6.0.26`), apache ant (`.\apache-ant-1.8.0`), the SQL Server JDBC Driver 3.0 (`.\sqljdbc_3.0`), ytex (`.\ytex`), and the maveric arc and cTAKES pipelines (`.\ytex\maveric`).
+  # Edit `YTEX_HOME\setenv.cmd`
   Fix the path references to match your environment.
-  * Create `YTEX_HOME\config\desc\ytex.properties`
+  # Create `YTEX_HOME\config\desc\ytex.properties`
   In this file, you specify the SQL Server connection parameters.  Use `YTEX_HOME\config\desc\ytex.properties.example` as a template.
-  * Extract UMLS tables
-  We exported the UMLS Tables using the MS SQL Server BCP utility.  Extract these tables from the umls.zip archive to the `YTEX_HOME\data.mssql\umls` directory.
-  * Execute setup.cmd
-  Open a command prompt, navigate to `YTEX_HOME`, and execute `setup.cmd all`.  This will call the ant script build-setup.xml, which does the following:
+  # Execute setup.cmd
+  Open a command prompt, navigate to `YTEX_HOME`, and execute `setup.cmd all`.  This will call the ant script `build-setup.xml`, which does the following:
     * Generates configuration files from templates
     The SQL Server connection parameters are added.
-    * Copies Maveric ARC Resources to `YTEX_HOME\maveric\resources`
-    UIMA configuration files reference eachother using either file paths or class paths.  To maintain portability, all UIMA Configuration files distributed with YTEX reference other files using classpaths where posssible; when this is not possible, relative paths are used.  To facilitate the referencing of Maveric ARC Resources via classpaths, we copy them to the YTEX directory.  Note that YTEX references Maveric ARC UIMA Configuration files (they are not copied).
+    * Unpacks and sets up UMLS Tables
     * Sets up YTEX Database Objects
     All YTEX Objects will be dropped and recreated (if this is the initial installation, ignore the errors about objects not existing when they are being dropped). SQL Scripts in the YTEX\data.mssql are executed using the MS SQL Server SQLCMD utility; UMLS tables are imported using the BCP utility.
+    * Unpacks lvg data files
     * Sets up Semantic Search Web Application
     The semantic search web application will be deployed to a tomcat server under `YTEX_HOME\web\catalina`.
 
-== YTEX Dependencies ==
+= YTEX Dependencies =
 YTEX is distributed with the following software:
-  * MS SQL Server JDBC Driver v3.0 [http://www.microsoft.com/downloads/details.aspx?displaylang=en&FamilyID=a737000d-68d0-4531-b65d-da0f2a735707 download]
+  * [http://www.microsoft.com/downloads/details.aspx?displaylang=en&FamilyID=a737000d-68d0-4531-b65d-da0f2a735707 MS SQL Server JDBC Driver v3.0]
   This is required for connectivity to the SQL Server Database.
-  * Maveric ARC [http://research.maveric.org/mig/arc/arc_v1.0_release_notes.html download]
+  * [http://research.maveric.org/mig/arc/arc_v1.0_release_notes.html Maveric ARC Pipeline]
   YTEX uses the cTAKES version distributed with Maveric ARC.
-  * Apache Ant [http://ant.apache.org/bindownload.cgi download]
+  * [http://ant.apache.org/bindownload.cgi Apache Ant]
   The YTEX setup is automated via ant, a java-based scripting language.
-  * Ant Contrib [http://sourceforge.net/projects/ant-contrib/files/ download]
-  * Apache Tomcat (required only for semantic search app) [http://tomcat.apache.org/download-60.cgi download]
+  * [http://sourceforge.net/projects/ant-contrib/files/ Ant Contrib]
+  * [http://tomcat.apache.org/download-60.cgi Apache Tomcat]
   The YTEX semantic search engine is distributed as a java web application, and can be deployed on Tomcat.
+  
+If you have already installed this software, you can install the YTEX using `ytex.zip` archive, which only contains YTEX and Maveric ARC.
