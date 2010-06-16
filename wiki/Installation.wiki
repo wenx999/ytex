@@ -11,12 +11,17 @@ The following software must be installed:
   * Atleast 1 GB of free disk space
 
 =Installation=
-  # Create a directory where all files will be placed:
-  e.g. c:\java\clinicalnlp
-  # Download the following packages to the installation directory:
-    * YTEX Archive: ytex-with-dependencies.zip from this site
-    * LVG 2010 Archive: [http://lexsrv3.nlm.nih.gov/LexSysGroup/Projects/lvg/2010/release/lvg2010lite.tgz lvg2010lite.tgz].  Make sure you save this file as lvg2010lite.tgz (Internet Explorere may rename this to lvg2010lite.gz]
-    * UMLS Database Export: umls.zip.  You must have a valid [https://login.nlm.nih.gov/cas/login?service=http://umlsks.nlm.nih.gov/uPortal/Login UMLS License] (available free of charge).  Send us (vngarla at gmail.com) your UMLS license confirmation, and we will send you the umls.zip file.
+  # Create a directory where ytex and its dependencies will be installed, e.g. {{{c:\java\clinicalnlp}}}
+  # Download the following archives to the installation directory:
+    * YTEX Archive: {{{ytex-with-dependencies.zip}}}
+    Download from this site
+    * LVG 2010 Archive: {{{lvg2010lite.tgz}}} 
+    ([http://lexsrv3.nlm.nih.gov/LexSysGroup/Projects/lvg/2010/release/lvg2010lite.tgz download]).  Make sure you save this file as {{{lvg2010lite.tgz}}} (Internet Explorer may rename this).
+    * UMLS Database Export: {{{umls.zip}}}.  
+    You must have a valid [https://login.nlm.nih.gov/cas/login?service=http://umlsks.nlm.nih.gov/uPortal/Login UMLS License], available free of charge.  Send us (vngarla at gmail.com) your UMLS license confirmation, and we will send you the {{{umls.zip}}} file.
+  # Extract {{{ytex-with-dependencies.zip}}} to the installation directory; this will create a {{{ytex}}} subdirectory, e.g. {{{c:\java\clinicalnlp\ytex}}}, referred to subsequently as {{{YTEX_HOME}}}
+  The YTEX archive contains apache tomcat ({{{.\apache-tomcat-6.0.26}}}), apache ant ({{{.\apache-ant-1.8.0}}}), the SQL Server JDBC Driver 3.0 ({{{.\sqljdbc_3.0}}}), ytex ({{{.\ytex}}}), and the maveric arc and cTAKES pipelines ({{{.\ytex\maveric}}}).
+  # 
 
 =YTEX installation=
 This assumes a Windows installation.  YTEX should work on unices (tests and instructions pending)
