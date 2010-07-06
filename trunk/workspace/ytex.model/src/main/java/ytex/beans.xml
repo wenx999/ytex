@@ -38,8 +38,6 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
 				<prop key="hibernate.show_sql">true</prop>
 				-->
 				<prop key="hibernate.default_schema">${db.schema}</prop>
-				<!--  
-				-->
 				<prop key="hibernate.cache.provider_class">org.hibernate.cache.EhCacheProvider</prop>
 				<prop key="hibernate.cache.use_query_cache">true</prop>
 			</props>
