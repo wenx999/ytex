@@ -7,7 +7,7 @@ http://www.springframework.org/schema/beans http://www.springframework.org/schem
 http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
 http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
 	<aop:config>
-		<aop:pointcut id="ytexSearchOperation" expression="execution(* ytex.search.*Service.*(..))" />
+		<aop:pointcut id="ytexSearchOperation" expression="execution(* ytex.web.search.*Service.*(..))" />
 		<aop:advisor advice-ref="txAdvice" pointcut-ref="ytexSearchOperation" />
 	</aop:config>
 	<bean id="searchProperties"
@@ -17,6 +17,7 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
 	<bean id="documentSearchService" class="ytex.web.search.DocumentSearchServiceImpl">
 		<property name="dataSource" ref="dataSource" />
 		<property name="searchProperties" ref="searchProperties" />
+		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 	<bean id="umlsFirstWordService" class="ytex.web.search.UMLSFirstWordServiceImpl">
 		<property name="dataSource" ref="dataSource" />
