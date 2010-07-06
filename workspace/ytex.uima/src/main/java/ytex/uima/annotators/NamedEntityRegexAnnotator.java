@@ -1,9 +1,5 @@
 package ytex.uima.annotators;
 
-import edu.mayo.bmi.uima.core.ae.type.NamedEntity;
-import edu.mayo.bmi.uima.core.ae.type.OntologyConcept;
-
-import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -24,6 +20,9 @@ import org.apache.uima.resource.ResourceInitializationException;
 import ytex.dao.NamedEntityRegexDao;
 import ytex.model.NamedEntityRegex;
 import ytex.uima.ApplicationContextHolder;
+import edu.mayo.bmi.uima.core.ae.type.NamedEntity;
+import edu.mayo.bmi.uima.core.ae.type.OntologyConcept;
+import edu.mayo.bmi.uima.core.ae.type.Segment;
 
 /**
  * Create NamedEntity annotations.
@@ -39,17 +38,17 @@ public class NamedEntityRegexAnnotator extends JCasAnnotator_ImplBase {
 	private NamedEntityRegexDao neRegexDao;
 	private Map<NamedEntityRegex, Pattern> regexMap;
 
-	private Integer getTypeIdForClassName(String strClassName) {
-		try {
-			Class<?> clazz = Class.forName(strClassName);
-			Field field = clazz.getDeclaredField("typeIndexID");
-			return field.getInt(clazz);
-		} catch (Exception e) {
-			log.error("config error, could not get type id for class: "
-					+ strClassName, e);
-			return null;
-		}
-	}
+//	private Integer getTypeIdForClassName(String strClassName) {
+//		try {
+//			Class<?> clazz = Class.forName(strClassName);
+//			Field field = clazz.getDeclaredField("typeIndexID");
+//			return field.getInt(clazz);
+//		} catch (Exception e) {
+//			log.error("config error, could not get type id for class: "
+//					+ strClassName, e);
+//			return null;
+//		}
+//	}
 
 	public void initialize(UimaContext aContext)
 			throws ResourceInitializationException {
@@ -70,15 +69,23 @@ public class NamedEntityRegexAnnotator extends JCasAnnotator_ImplBase {
 			if (entry.getKey().getContext() != null) {
 				// if a context is specified, look only in instances of the
 				// given context
-				Integer nTypeId = getTypeIdForClassName(entry.getKey()
-						.getContext());
-				if (nTypeId != null) {
-					AnnotationIndex idx = aJCas.getAnnotationIndex(nTypeId);
-					FSIterator iter = idx.iterator();
-					while (iter.hasNext()) {
-						Annotation anno = (Annotation) iter.next();
-						processRegex(aJCas, anno, entry.getKey(), entry
-								.getValue());
+//				Integer nTypeId = getTypeIdForClassName(entry.getKey()
+//						.getContext());
+//				if (nTypeId != null) {
+//					AnnotationIndex idx = aJCas.getAnnotationIndex(nTypeId);
+//					FSIterator iter = idx.iterator();
+//					while (iter.hasNext()) {
+//						Annotation anno = (Annotation) iter.next();
+//						processRegex(aJCas, anno, entry.getKey(), entry
+//								.getValue());
+//					}
+//				}
+				AnnotationIndex idx = aJCas.getAnnotationIndex(Segment.typeIndexID);
+				FSIterator iter = idx.iterator();
+				while(iter.hasNext()) {
+					Segment segment = (Segment)iter.next();
+					if(entry.getKey().getContext().equals(segment.getId())) {
+						processRegex(aJCas, segment, entry.getKey(), entry.getValue());
 					}
 				}
 			} else {
