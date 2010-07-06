@@ -45,11 +45,11 @@ values ('C0227481','right','right lobe','ESLD_MASS','ESLD','T060');
  * ref_named_entity_regex
  */
 insert into $(db_schema).ref_named_entity_regex (regex, coding_scheme, code, context)
-values ('\(US\)','UMLS','C0041618','gov.va.vacs.esld.uima.types.DocumentTitle')
+values ('\(US\)','UMLS','C0041618','TITLE')
 ;
 
 insert into $(db_schema).ref_named_entity_regex (regex, coding_scheme, code, context)
-values ('\bCT\b','UMLS','C0040405','gov.va.vacs.esld.uima.types.DocumentTitle')
+values ('\bCT\b','UMLS','C0040405','TITLE')
 ;
 
 insert into $(db_schema).ref_named_entity_regex (regex, coding_scheme, code)

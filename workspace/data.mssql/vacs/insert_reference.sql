@@ -1,11 +1,14 @@
 insert into $(db_schema).ref_document_type (document_type_id, document_type_name)
-values (0, 'PROGRESS_NOTE');
+values (0, 'NOTE');
 
 insert into $(db_schema).ref_document_type (document_type_id, document_type_name)
-values (1, 'RADIOLOGY');
+values (1, 'PROGRESS_NOTE');
 
 insert into $(db_schema).ref_document_type (document_type_id, document_type_name)
-values (2, 'PATHOLOGY');
+values (2, 'RADIOLOGY');
+
+insert into $(db_schema).ref_document_type (document_type_id, document_type_name)
+values (3, 'PATHOLOGY');
 
 insert into $(db_schema).ref_uima_type values(100 , 'ytex.vacs.uima.types.DocumentDate', 'ytex.uima.mapper.DocumentDateAnnotationMapper' );
 insert into $(db_schema).ref_uima_type values(101 , 'ytex.vacs.uima.types.DocumentTitle', 'ytex.uima.mapper.AnnotationMapper');
