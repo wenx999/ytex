@@ -71,6 +71,7 @@
       <imports>
         <import name="ytex.vacs.uima.types.DocumentInfoTypeSystem"/>
         <import name="tokenizer.NewlineToken"/>
+        <import name="tokenizer.Segment"/>
       </imports>
     </typeSystemDescription>
     <typePriorities/>

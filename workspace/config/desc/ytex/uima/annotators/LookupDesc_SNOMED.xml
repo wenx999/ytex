@@ -3,6 +3,9 @@
 Removed RXNorm and Orange Book lookups
 Modified to use a view that filters on snomed and desired tuis
 Modified to use NamedEntityLookupConsumerImpl to just store CUI - don't need snomed code
+
+TODO: views on mysql have terrible performance.
+Maybe we can enter a query in the tableName attribute?
  -->
 <lookupSpecification>
 	<!--  Defines what dictionaries will be used in terms of implementation specifics and metaField configuration. -->
@@ -10,7 +13,7 @@ Modified to use NamedEntityLookupConsumerImpl to just store CUI - don't need sno
 	
 		<dictionary id="DICT_UMLS_MS" externalResourceKey="DbConnection" caseSensitive="false">
 			<implementation>
-				<jdbcImpl tableName="test.V_SNOMED_FWORD_LOOKUP" cacheSize="500"/>
+				<jdbcImpl tableName="ytex.V_SNOMED_FWORD_LOOKUP" cacheSize="500"/>
 			</implementation>
 			<lookupField fieldName="fword"/>
 			<metaFields>

@@ -13,6 +13,7 @@
     <typeSystemDescription>
       <imports>
         <import name="tokenizer.NamedEntity"/>
+        <import name="tokenizer.Segment"/>
       </imports>
     </typeSystemDescription>
     <typePriorities/>
