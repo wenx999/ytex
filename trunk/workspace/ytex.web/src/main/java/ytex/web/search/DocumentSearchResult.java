@@ -55,4 +55,20 @@ public class DocumentSearchResult {
 	public void setCuiText(String cuiText) {
 		this.cuiText = cuiText;
 	}
+	public DocumentSearchResult(int documentID, String sentenceText,
+			Date documentDate, String documentTitle, String documentTypeName,
+			String cuiText) {
+		super();
+		this.documentID = documentID;
+		this.sentenceText = sentenceText;
+		this.documentDate = documentDate;
+		this.documentTitle = documentTitle;
+		this.documentTypeName = documentTypeName;
+		this.cuiText = cuiText;
+	}
+	public DocumentSearchResult() {
+		super();
+	}
+	
+	
 }

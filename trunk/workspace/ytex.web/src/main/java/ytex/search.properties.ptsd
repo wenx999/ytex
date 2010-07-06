@@ -1,3 +1,5 @@
+# contains example for full-text search
+
 retrieveCUIByFword=\
 select distinct top 30 fword, cui, SUBSTRING([text], 1, 30) [text] \
 from PTSD.v_SNOMED_fword_lookup \
@@ -39,3 +41,18 @@ where contains(NOTES, ?)
 
 retrieveFullTextSearchDocument=\
 select top 1 NOTES from [VISTA_NOTES].[dbo].[tALLPROGNOTES_DEINDEN] where unq_id = ?
+
+retrieveDocumentByCUIHql=\
+select new ytex.web.search.DocumentSearchResult(\
+  d.documentID, \
+  substring(d.docText, 1,10), \
+  current_timestamp(), \
+  substring(d.docText, 1,10), \
+  substring(d.docText, 1,10), \
+  substring(d.docText, ne.begin+1,ne.end-ne.begin)) \
+from OntologyConceptAnnotation o \
+inner join o.namedEntityAnnotation ne \
+inner join o.namedEntityAnnotation.document d, \
+DocumentKeyAnnotation k inner join k.document dk \
+where d.documentID = dk.documentID \
+and o.code = :code

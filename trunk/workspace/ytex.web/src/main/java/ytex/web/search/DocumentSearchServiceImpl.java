@@ -12,16 +12,26 @@ import javax.sql.DataSource;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.SessionFactory;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 
-
 public class DocumentSearchServiceImpl implements DocumentSearchService {
-	static final Log log = LogFactory.getLog(DocumentSearchServiceImpl.class);
-	SimpleJdbcTemplate jdbcTemplate;
+	private static final Log log = LogFactory
+			.getLog(DocumentSearchServiceImpl.class);
+	private SimpleJdbcTemplate jdbcTemplate;
 	private DataSource dataSource;
-	Properties searchProperties;
-	String query;
+	private Properties searchProperties;
+	private String query;
+	private SessionFactory sessionFactory;
+
+	public SessionFactory getSessionFactory() {
+		return sessionFactory;
+	}
+
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
 
 	public void setDataSource(DataSource dataSource) {
 		this.dataSource = dataSource;
@@ -34,7 +44,8 @@ public class DocumentSearchServiceImpl implements DocumentSearchService {
 
 	public void setSearchProperties(Properties searchProperties) {
 		this.searchProperties = searchProperties;
-		this.query = searchProperties.getProperty("retrieveDocumentByCUI");
+		this.query = searchProperties.getProperty("retrieveDocumentByCUI")
+				+ searchProperties.getProperty("retrieveDocumentEndClause");
 	}
 
 	public Properties getSearchProperties() {
@@ -67,6 +78,13 @@ public class DocumentSearchServiceImpl implements DocumentSearchService {
 		mapArgs.put("code", code);
 		return this.jdbcTemplate.query(query, new DocumentSearchResultMapper(),
 				mapArgs);
+		// String query =
+		// "select new ytex.web.search.DocumentSearchResult(d.documentID, substring(d.docText, 1,10), current_timestamp(), substring(d.docText, 1,10), substring(d.docText, 1,10), substring(d.docText, ne.begin+1,ne.end-ne.begin)) from OntologyConceptAnnotation o inner join o.namedEntityAnnotation ne inner join o.namedEntityAnnotation.document d";
+		// Query q =
+		// this.getSessionFactory().getCurrentSession().createQuery(searchProperties.getProperty("retrieveDocumentByCUIHql"));
+		// q.setParameter("code", code);
+		// q.setMaxResults(100);
+		// return q.list();
 	}
 
 	/**
@@ -89,7 +107,7 @@ public class DocumentSearchServiceImpl implements DocumentSearchService {
 	public List<DocumentSearchResult> extendedSearch(String code,
 			String documentTypeName, Date dateFrom, Date dateTo,
 			Integer patientId, Boolean negationStatus) {
-		StringBuilder queryBuilder = new StringBuilder(query);
+		StringBuilder queryBuilder = new StringBuilder(searchProperties.getProperty("retrieveDocumentByCUI"));
 		Map<String, Object> mapArgs = new HashMap<String, Object>(1);
 		mapArgs.put("code", code);
 		if (documentTypeName != null) {
@@ -121,6 +139,8 @@ public class DocumentSearchServiceImpl implements DocumentSearchService {
 					searchProperties.getProperty("retrieveDocumentNegClause"));
 			mapArgs.put("certainty", negationStatus ? 0 : -1);
 		}
+		queryBuilder.append(searchProperties
+				.getProperty("retrieveDocumentEndClause"));
 		String extendedSearchQuery = queryBuilder.toString();
 		if (log.isDebugEnabled()) {
 			log.debug("executing query, query=" + extendedSearchQuery
@@ -132,8 +152,11 @@ public class DocumentSearchServiceImpl implements DocumentSearchService {
 
 	/**
 	 * perform full text search
+	 * 
 	 * @param searchTerm
-	 * @return list of maps for each record.  map keys correspond to search query headings.  map (i.e. query) must contain DOCUMENT_ID (integer) and NOTE (string) fields.
+	 * @return list of maps for each record. map keys correspond to search query
+	 *         headings. map (i.e. query) must contain DOCUMENT_ID (integer) and
+	 *         NOTE (string) fields.
 	 */
 	public List<Map<String, Object>> fullTextSearch(String searchTerm) {
 		return this.jdbcTemplate.queryForList(this.searchProperties
@@ -142,6 +165,7 @@ public class DocumentSearchServiceImpl implements DocumentSearchService {
 
 	/**
 	 * retrieve note for specified document id, retrieved via full text search
+	 * 
 	 * @param documentId
 	 * @return note text.
 	 */
