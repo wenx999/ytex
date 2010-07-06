@@ -2,22 +2,37 @@
 @rem customize these variables to match your environment
 @rem -------------------------------------------
 @rem where java is installed
+@rem please use the 32-bit jdk unless you know what you're doing
 @set JAVA_HOME=C:\java\jdk-6u17-windows-x32
 
 @rem where ms sql server tools are installed
-@rem should contain bcp.exe and sqlcmd.exe 
+@rem should contain bcp.exe and sqlcmd.exe
+@rem you can ignore this if you are using mysql 
 @set MSSQL_TOOLS=C:\Program Files\Microsoft SQL Server\100\Tools\Binn
+
+@rem where mysql is installed
+@rem should contain mysql.exe
+@rem you can ignore this if you are using ms sql server
+@set MYSQL_HOME=C:\Program Files\MySQL\MySQL Server 5.1\bin
 
 @rem where ytex is intalled 
 @set YTEX_HOME=C:\java\clinicalnlp\ytex
 
+@rem -------------------------------------------
+@rem if you installed ytex with dependencies, 
+@rem you should not have to change anything below this line
+@rem -------------------------------------------
+
 @rem where ant is installed
-@rem download from http://ant.apache.org/bindownload.cgi
+@rem downloaded from http://ant.apache.org/bindownload.cgi
 @set ANT_HOME=%YTEX_HOME%\..\apache-ant-1.8.0
 
-@rem where mssql server jdbc drivers were unpacked 
-@rem download from http://www.microsoft.com/downloads/details.aspx?displaylang=en&FamilyID=a737000d-68d0-4531-b65d-da0f2a735707
+@rem mssql server jdbc driver directory
+@rem downloaded from http://www.microsoft.com/downloads/details.aspx?displaylang=en&FamilyID=a737000d-68d0-4531-b65d-da0f2a735707
 @set SQLJDBC_HOME=%YTEX_HOME%\..\sqljdbc_3.0
+
+@rem mysql jdbc driver 
+@set MYSQL_CONNECTORJ=%YTEX_HOME%\..\mysql-connector-java-5.1.9\mysql-connector-java-5.1.9-bin.jar
 
 @rem tomcat installation directory
 @set CATALINA_HOME=%YTEX_HOME%\..\apache-tomcat-6.0.26
@@ -27,7 +42,7 @@
 @rem -------------------------------------------
 
 
-@set PATH=%JAVA_HOME%\bin;%MSSQL_TOOLS%;%SystemRoot%;%SystemRoot%\System32;%SystemRoot%\System32\wbem;%ANT_HOME%\apache-ant\bin
+@set PATH=%JAVA_HOME%\bin;%MSSQL_TOOLS%;%SystemRoot%;%SystemRoot%\System32;%SystemRoot%\System32\wbem;%ANT_HOME%\apache-ant\bin;%MYSQL_HOME%
 
 @rem if you are using a 64-bit jdk, adjust accordingly
 @set PATH=%PATH%;%SQLJDBC_HOME%\enu\auth\x86
@@ -78,6 +93,7 @@
 
 @rem add JDBC dependencies
 @set SYSTEM_CP=%SQLJDBC_HOME%\enu\sqljdbc4.jar
+@set SYSTEM_CP=%SYSTEM_CP%;%MYSQL_CONNECTORJ_HOME%\mysql-connector-java-5.1.9-bin.jar
 
 @rem add configuration dependencies
 @set SYSTEM_CP=%SYSTEM_CP%;%YTEX_HOME%\config\desc
