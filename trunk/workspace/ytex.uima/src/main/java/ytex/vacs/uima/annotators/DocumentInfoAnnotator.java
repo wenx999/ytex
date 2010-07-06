@@ -22,6 +22,7 @@ import org.apache.uima.resource.ResourceInitializationException;
 import ytex.vacs.uima.types.DocumentDate;
 import ytex.vacs.uima.types.DocumentTitle;
 import edu.mayo.bmi.uima.core.ae.type.NewlineToken;
+import edu.mayo.bmi.uima.core.ae.type.Segment;
 
 /**
  * annotate the document date and title.
@@ -31,7 +32,7 @@ import edu.mayo.bmi.uima.core.ae.type.NewlineToken;
  * <li>lineMax maximum number of lines into the document to look for title and date
  * 
  * Create a DocumentDate annotation for the date.
- * todo: Instead of new type, create a Segment annotation for the title with id TITLE? Would this be better?
+ * TODO: Get rid of DocumentTitle annotation and just use segment annotation for title
  * @author vijay
  *
  */
@@ -120,10 +121,16 @@ public class DocumentInfoAnnotator extends JCasAnnotator_ImplBase {
 					log.debug("Document Title: " + matcher.group(1));
 				if (aJCas != null) {
 					// cas can be null for unit testing
+					// TODO get rid of DocumentTitle
 					DocumentTitle title = new DocumentTitle(aJCas);
 					title.setBegin(matcher.start(1));
 					title.setEnd(matcher.end(1));
 					title.addToIndexes();
+					Segment segment = new Segment(aJCas);
+					segment.setId("TITLE");
+					segment.setBegin(matcher.start(1));
+					segment.setEnd(matcher.end(1));
+					segment.addToIndexes();
 					return title;
 				}
 			}

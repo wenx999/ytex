@@ -95,9 +95,12 @@ public class DBCollectionReader extends CollectionReader_ImplBase {
 					});
 			try {
 				DocumentKey docKey = new DocumentKey(aCAS.getJCas());
-				docKey.setStudyID((Integer) id.get("studyid"));
-				docKey.setUid((Integer) id.get("uid"));
-				docKey.setDocumentType((Integer) id.get("document_type_id"));
+				if(id.get("studyid") != null)
+					docKey.setStudyID((Integer) id.get("studyid"));
+				if(id.get("uid") != null)
+					docKey.setUid((Integer) id.get("uid"));
+				if(id.get("document_type_id") != null)
+					docKey.setDocumentType((Integer) id.get("document_type_id"));
 				if (id.get("site_id") != null)
 					docKey.setSiteID((String) id.get("site_id"));
 				docKey.addToIndexes();
