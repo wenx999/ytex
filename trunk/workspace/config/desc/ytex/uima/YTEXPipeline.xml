@@ -18,8 +18,8 @@
     <delegateAnalysisEngine key="SegmentRegexAnnotator">
       <import name="ytex.uima.annotators.SegmentRegexAnnotator"/>
     </delegateAnalysisEngine>
-    <delegateAnalysisEngine key="DictionaryLookupAnnotatorMSSQL">
-      <import name="ytex.uima.annotators.DictionaryLookupAnnotatorMSSQL"/>
+    <delegateAnalysisEngine key="DictionaryLookupAnnotator">
+      <import name="ytex.uima.annotators.DictionaryLookupAnnotator"/>
     </delegateAnalysisEngine>
     <delegateAnalysisEngine key="SentenceAnnotator">
       <import name="sentence.SentenceAnnotator"/>
@@ -123,7 +123,7 @@
         <node>Chunker</node>
         <node>AdjustNounPhraseToIncludeFollowingNP</node>
         <node>LookupWindowAnnotator</node>
-        <node>DictionaryLookupAnnotatorMSSQL</node>
+        <node>DictionaryLookupAnnotator</node>
         <node>NamedEntityRegexAnnotator</node>
         <node>SizeLocationRegExAnnotator</node>
         <node>NegexAnnotator</node>

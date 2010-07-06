@@ -10,7 +10,7 @@ Modified to use NamedEntityLookupConsumerImpl to just store CUI - don't need sno
 	
 		<dictionary id="DICT_UMLS_MS" externalResourceKey="DbConnection" caseSensitive="false">
 			<implementation>
-				<jdbcImpl tableName="test.V_ESLD_FWORD_LOOKUP" cacheSize="500"/>
+				<jdbcImpl tableName="ytex.V_ESLD_FWORD_LOOKUP" cacheSize="500"/>
 			</implementation>
 			<lookupField fieldName="fword"/>
 			<metaFields>

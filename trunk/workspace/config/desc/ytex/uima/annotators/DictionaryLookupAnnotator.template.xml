@@ -117,13 +117,25 @@
               <nameValuePair>
                 <name>DriverClassName</name>
                 <value>
-                  <string>com.microsoft.sqlserver.jdbc.SQLServerDriver</string>
+                  <string>@db.driver@</string>
                 </value>
               </nameValuePair>
               <nameValuePair>
                 <name>URL</name>
                 <value>
-                  <string>jdbc:sqlserver://@db.host@;databaseName=@db.name@;integratedSecurity=true</string>
+                  <string>@db.url@</string>
+                </value>
+              </nameValuePair>
+              <nameValuePair>
+                <name>Username</name>
+                <value>
+                  <string>@db.username@</string>
+                </value>
+              </nameValuePair>
+              <nameValuePair>
+                <name>Password</name>
+                <value>
+                  <string>@db.password@</string>
                 </value>
               </nameValuePair>
             </configurationParameterSettings>

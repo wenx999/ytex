@@ -123,7 +123,7 @@
               <nameValuePair>
                 <name>URL</name>
                 <value>
-                  <string>jdbc:sqlserver://localhost;databaseName=VACS_TEST;integratedSecurity=true</string>
+                  <string>jdbc:sqlserver://localhost;databaseName=ytex;integratedSecurity=true</string>
                 </value>
               </nameValuePair>
             </configurationParameterSettings>
