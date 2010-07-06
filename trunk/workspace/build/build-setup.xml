@@ -4,11 +4,11 @@
 	<!-- <property name="maveric.home" value="C:/java/MavericArcApp-1.0.0" /> -->
 	<property name="ytex.home" value="../" />
 	<property name="ytex.properties" value="${ytex.home}/config/desc/ytex.properties" />
+	<property file="${ytex.properties}"/>
 	<property name="lvg.download.dir" value="${ytex.home}/.." />
 	<property name="lvg.basename" value="lvg2010lite" />
 	<property name="lvg.filename" value="${lvg.basename}.tgz" />
 	<property name="lvg.tgz" value="${lvg.download.dir}/${lvg.filename}" />
-	<property name="umls.zip" value="${ytex.home}/../umls.zip" />
 
 	<target name="help">
 		<echo>
@@ -17,9 +17,9 @@ Call with option -projecthelp for more info.
 </echo>
 	</target>
 
-	<target name="all" depends="unpack.umls,setup.lvg,templateToConfig,setupDatabase,setup.ytex.web" description="calls unpack.umls, setup.lvg, templateToConfig, setupDatabase, and setup.ytex.web " />
+	<target name="all" depends="setup.lvg,templateToConfig,setupDatabase,setup.ytex.web" description="calls unpack.umls, setup.lvg, templateToConfig, setupDatabase, and setup.ytex.web " />
 	<target name="setupDatabase" description="setup ytex database tables">
-		<ant dir="${ytex.home}/data.mssql" target="all" />
+		<ant dir="${ytex.home}/data" target="all" />
 	</target>
 	<target name="templateToConfig" description="generate config files from templates using values specified in ytex.properties">
 		<copy todir="${ytex.home}" overwrite="yes">
@@ -61,8 +61,9 @@ Call with option -projecthelp for more info.
 	-->
 	<target name="search.templateToConfig" description="setup ytex.web search.properties">
 		<!-- default for development environment -->
+		<property file="${ytex.properties}"/>
 		<property name="search.properties.path" value="../ytex.web/src/main/java/ytex" />
-		<copy file="${search.properties.path}/search.template.properties" tofile="${search.properties.path}/search.properties" overwrite="yes">
+		<copy file="${search.properties.path}/search.template-${db.type}.properties" tofile="${search.properties.path}/search.properties" overwrite="yes">
 			<filterset>
 				<filtersfile file="${ytex.properties}" />
 			</filterset>
@@ -80,9 +81,7 @@ Default search.properties set up in ${catalina.base}/webapps/${context.root}/WEB
 Modify to match your configuration.
 		</echo>
 	</target>
-	<target name="unpack.umls" description="unpack the umls.zip to the correct data directory">
-		<unzip src="${umls.zip}" dest="${ytex.home}/data.mssql/umls" />
-	</target>
+	
 	<target name="download.lvg" description="download lvg2010lite.tgz from nlm">
 		<echo>Downloading ${lvg.filename} to ${lvg.download.dir}.  this may take a while!</echo>
 		<copy todir="${lvg.download.dir}" flatten="true">

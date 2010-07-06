@@ -12,6 +12,7 @@
 	<property name="tomcat.dir" value="apache-tomcat-6.0.26" />
 	<property name="ant.dir" value="apache-ant-1.8.0" />
 	<property name="sqljdbc.dir" value="sqljdbc_3.0" />
+	<property name="mysql-connector.dir" value="mysql-connector-java-5.1.9" />
 
 
 	<path id="cp.maveric">
@@ -142,13 +143,18 @@
 		</copy>
 	</target>
 	-->
-	<target name="copy.data.mssql">
+	<target name="copy.data">
 		<copy todir="${ytex.dist.home}">
 			<fileset dir="../">
-				<include name="data.mssql/**/*.*" />
+				<include name="data/**/*.*" />
 				<exclude name="**/.classpath" />
 				<exclude name="**/.project" />
 				<exclude name="**/.svn/**/*.*" />
+				<exclude name="**/umls/*.bcp" />
+				<exclude name="**/umls/*.txt" />
+			</fileset>
+			<fileset dir="../">
+				<include name="data/**/umls/*_sample.*" />
 			</fileset>
 		</copy>
 	</target>
@@ -243,13 +249,14 @@
 		<zip destfile="${dist.home}/ytex.zip" basedir="${dist.home}" includes="ytex/**/*.*" />
 		<zip destfile="${dist.home}/ytex-with-dependencies.zip">
 			<fileset dir="${dist.home}" includes="ytex/**/*.*" />
-			<fileset dir="${nlp.home}" includes="${tomcat.dir}/**/*.*" 
+			<zipfileset dir="${nlp.home}" includes="${tomcat.dir}/**/*.*" 
 				excludes="${tomcat.dir}/webapps/**/*.*" />
-			<fileset dir="${nlp.home}" includes="${ant.dir}/**/*.*" 
+			<zipfileset dir="${nlp.home}" includes="${ant.dir}/**/*.*" 
 				excludes="${ant.dir}/docs/**/*.*" />
-			<fileset dir="${nlp.home}" includes="${sqljdbc.dir}/**/*.*" 
+			<zipfileset dir="${nlp.home}" includes="${sqljdbc.dir}/**/*.*" 
 				excludes="${sqljdbc.dir}/enu/help/**/*.*,${sqljdbc.dir}/enu/xa/**/*.*" />
+			<zipfileset dir="${nlp.home}" includes="${mysql-connector.dir}/*.*" />
 		</zip>
 	</target>
-	<target name="build.all" depends="clean.dist,build.ctakes-patches,build.ytex.model,build.ytex.negex,build.ytex.uima,copy.config,copy.scripts,copy.data.mssql,copy.examples,build.ytex.web,copy.maveric,zip.dist" />
+	<target name="build.all" depends="clean.dist,build.ctakes-patches,build.ytex.model,build.ytex.negex,build.ytex.uima,copy.config,copy.scripts,copy.data,copy.examples,build.ytex.web,copy.maveric,zip.dist" />
 </project>
