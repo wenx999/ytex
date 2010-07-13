@@ -33,6 +33,7 @@ import gov.va.maveric.uima.section.type.Paragraph;
 
 /**
  * An example annotator that annotates Sentences.
+ * VNG: modified to split at periods using regular expression.
  */
 public class SentenceAnnotator extends JTextAnnotator_ImplBase{
   static abstract class Maker {
