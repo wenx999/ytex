@@ -32,6 +32,7 @@ quit</echo>
 		<exec executable="sqlplus" dir="${sql.dir}/${sqlcmd.dir}">
 			<arg line="${sqlplus.line} @${sqlcmd.script}.tmp" />
 		</exec>
+		<delete file="${sql.dir}/${sqlcmd.dir}/${sqlcmd.script}.tmp"/>
 	</target>
 	<target name="sqlcmd.mssql" if="mssql" description="execute sql script for ms sql server">
 		<echo>executing ${sqlcmd.dir}/${sqlcmd.script}</echo>
