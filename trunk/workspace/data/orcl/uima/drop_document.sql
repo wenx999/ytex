@@ -1,3 +1,8 @@
+drop sequence document_id_sequence;
+drop sequence anno_base_id_sequence;
+drop sequence document_class_id_sequence;
+drop sequence anno_onto_concept_id_sequence;
+
 -- drop 'operational' data
 drop table document_class;
 drop table anno_source_doc_info;

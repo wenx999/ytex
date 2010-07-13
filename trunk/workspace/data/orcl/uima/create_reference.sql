@@ -1,3 +1,7 @@
+create sequence named_entity_regex_id_sequence;
+create sequence segment_regex_id_sequence;
+create sequence hibernate_sequence;
+
 create table ref_named_entity_regex (
 	named_entity_regex_id int NOT NULL,
 	regex varchar2(256) not null,
