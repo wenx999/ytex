@@ -3,7 +3,7 @@
 <hibernate-mapping package="ytex.model">
 	<class name="SegmentRegex" table="ref_segment_regex">
 		<id name="SegmentRegexID" column="segment_regex_id">
-			<generator class="identity" />
+			<generator class="native" />
 		</id>
 		<property name="regex" column="regex" />
 		<property name="segmentID" column="segment_id" />
