@@ -2,7 +2,9 @@ package ytex.web.search;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.sql.DataSource;
@@ -60,14 +62,20 @@ public class UMLSFirstWordServiceImpl implements UMLSFirstWordService {
 	public List<UMLSFirstWord> getUMLSbyFirstWord(String textStart) {
 		String words[] = textStart.toLowerCase().split("\\s+");
 		String fword = textStart.toLowerCase();
-		int nFWordLength = fword.length();
+//		int nFWordLength = fword.length();
 		String text = textStart.toLowerCase();
 		int nTextLength = textStart.length();
 		if (words.length > 1) {
 			fword = words[0];
-			nFWordLength = fword.length();
+//			nFWordLength = fword.length();
 		}
-		return this.jdbcTemplate.query(query, new UMLSFirstWordRowMapper(),
-				new Object[] { fword.length(), fword, nTextLength, text });
+//		return this.jdbcTemplate.query(query, new UMLSFirstWordRowMapper(),
+//		new Object[] { fword.length(), fword, nTextLength, text });
+		Map<String, Object> args = new HashMap<String, Object>();
+		args.put("fword", fword);
+		args.put("fwordlen", fword.length());
+		args.put("term", text);
+		args.put("termlen", nTextLength);		
+		return this.jdbcTemplate.query(query, new UMLSFirstWordRowMapper(), args);
 	}
 }
