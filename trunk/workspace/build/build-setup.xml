@@ -4,7 +4,7 @@
 	<!-- <property name="maveric.home" value="C:/java/MavericArcApp-1.0.0" /> -->
 	<property name="ytex.home" value="../" />
 	<property name="ytex.properties" value="${ytex.home}/config/desc/ytex.properties" />
-	<property file="${ytex.properties}"/>
+	<property file="${ytex.properties}" />
 	<property name="lvg.download.dir" value="${ytex.home}/.." />
 	<property name="lvg.basename" value="lvg2010lite" />
 	<property name="lvg.filename" value="${lvg.basename}.tgz" />
@@ -61,13 +61,18 @@ Call with option -projecthelp for more info.
 	-->
 	<target name="search.templateToConfig" description="setup ytex.web search.properties">
 		<!-- default for development environment -->
-		<property file="${ytex.properties}"/>
+		<property file="${ytex.properties}" />
 		<property name="search.properties.path" value="../ytex.web/src/main/java/ytex" />
+		<property name="web-inf.path" value="../ytex.web/WebContent/WEB-INF" />
 		<copy file="${search.properties.path}/search.template-${db.type}.properties" tofile="${search.properties.path}/search.properties" overwrite="yes">
 			<filterset>
 				<filtersfile file="${ytex.properties}" />
 			</filterset>
 		</copy>
+		<condition property="appCtx" value="orcl" else="generic">
+			<equals arg1="${db.type}" arg2="orcl" />
+		</condition>
+		<copy file="${web-inf.path}/applicationContext.${appCtx}.xml" tofile="${web-inf.path}/applicationContext.xml" overwrite="yes" />
 	</target>
 	<target name="setup.ytex.web" description="setup ytex.web application for tomcat">
 		<property name="context.root" value="ytex.web" />
@@ -75,13 +80,14 @@ Call with option -projecthelp for more info.
 		<mkdir dir="${catalina.base}/temp" />
 		<antcall target="search.templateToConfig">
 			<param name="search.properties.path" value="${catalina.base}/webapps/${context.root}/WEB-INF/classes/ytex" />
+			<param name="web-inf.path" value="${catalina.base}/webapps/${context.root}/WEB-INF" />
 		</antcall>
 		<echo>
 Default search.properties set up in ${catalina.base}/webapps/${context.root}/WEB-INF/classes/ytex.
 Modify to match your configuration.
 		</echo>
 	</target>
-	
+
 	<target name="download.lvg" description="download lvg2010lite.tgz from nlm">
 		<echo>Downloading ${lvg.filename} to ${lvg.download.dir}.  this may take a while!</echo>
 		<copy todir="${lvg.download.dir}" flatten="true">
@@ -104,7 +110,7 @@ Modify to match your configuration.
 				<delete dir="${ytex.home}/maveric/resources/lvg/${lvg.basename}" />
 			</then>
 			<else>
-				<echo>${lvg.tgz} not available - please secute the setup.lvg.all to download and setup lvg</echo>
+				<echo>${lvg.tgz} not available - please execute the setup.lvg.all target to download and setup lvg</echo>
 			</else>
 		</if>
 	</target>
