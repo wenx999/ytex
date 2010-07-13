@@ -1,4 +1,7 @@
-
+create sequence document_id_sequence;
+create sequence anno_base_id_sequence;
+create sequence document_class_id_sequence;
+create sequence anno_onto_concept_id_sequence;
 
 CREATE TABLE document(
 	document_id int  NOT NULL,
