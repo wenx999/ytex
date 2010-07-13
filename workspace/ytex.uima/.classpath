@@ -9,5 +9,6 @@
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/maveric"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/ytex.model"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/config.local"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
