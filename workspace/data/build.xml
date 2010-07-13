@@ -6,6 +6,7 @@
 	<property name="sql.dir" value="./${db.type}" />
 	<property name="sqlcmd.line" value="-d ${db.name} -E -S ${db.host} -v db_schema=${db.schema}" />
 	<property name="mysql.line" value="--user=${db.username} --password=${db.password} --host=${db.host} ${db.schema}" />
+	<property name="sqlplus.line" value="${db.username}/${db.password}@${db.name}" />
 	<property name="umls.zip" value="${ytex.home}/../umls-${db.type}.zip"/>
 
 	<target name="all" depends="umls.all,vacs.all" description="call umls.all and vacs.all" />
@@ -16,9 +17,22 @@
 		<condition property="mssql">
 			<equals arg1="${db.type}" arg2="mssql" />
 		</condition>
+		<condition property="orcl">
+			<equals arg1="${db.type}" arg2="orcl" />
+		</condition>
 		<available file="${umls.zip}" property="umls.zip.available"/>
 	</target>
 
+	<target name="sqlcmd.orcl" if="orcl" description="execute sql script for oracle server">
+		<echo>executing ${sqlcmd.dir}/${sqlcmd.script}</echo>
+		<!-- append quit to end of file -->
+		<copy file="${sql.dir}/${sqlcmd.dir}/${sqlcmd.script}" tofile="${sql.dir}/${sqlcmd.dir}/${sqlcmd.script}.tmp" overwrite="yes"/>
+		<echo file="${sql.dir}/${sqlcmd.dir}/${sqlcmd.script}.tmp" append="yes">
+quit</echo>
+		<exec executable="sqlplus" dir="${sql.dir}/${sqlcmd.dir}">
+			<arg line="${sqlplus.line} @${sqlcmd.script}.tmp" />
+		</exec>
+	</target>
 	<target name="sqlcmd.mssql" if="mssql" description="execute sql script for ms sql server">
 		<echo>executing ${sqlcmd.dir}/${sqlcmd.script}</echo>
 		<exec executable="sqlcmd" dir="${sql.dir}/${sqlcmd.dir}">
@@ -32,7 +46,7 @@
 		</exec>
 	</target>
 
-	<target name="sqlcmd" depends="init,sqlcmd.mysql,sqlcmd.mssql" />
+	<target name="sqlcmd" depends="init,sqlcmd.mysql,sqlcmd.mssql,sqlcmd.orcl" />
 
 	<target name="unpack.umls.sample" unless="umls.zip.available">
 		<echo>${umls.zip} not available, loading umls sample</echo>
@@ -49,7 +63,25 @@
 		<unzip src="${umls.zip}" dest="${db.type}/umls"/>
 	</target>
 	<target name="unpack.umls" depends="init,unpack.umls.sample,unpack.umls.zip" description="unpack umls from archive, or load umls using just sample"/>
-	
+
+	<target name="umls.import.mssql" if="mssql">
+		<echo>import umls tables</echo>
+		<exec executable="bcp" dir="${sql.dir}/umls">
+			<arg line="${db.name}.${db.schema}.umls_snomed_map in umls_snomed_map.bcp -T -S ${db.host} -w" />
+		</exec>
+		<exec executable="bcp" dir="${sql.dir}/umls">
+			<arg line="${db.name}.${db.schema}.umls_ms_2009 in umls_ms_2009.bcp -T -S ${db.host} -w" />
+		</exec>
+	</target>
+	<target name="umls.import.orcl" if="orcl">
+		<echo>import umls tables</echo>
+		<exec executable="sqlldr" dir="${sql.dir}/umls">
+			<arg line="${sqlplus.line} control=umls_ms_2009.ctl" />
+		</exec>
+		<exec executable="sqlldr" dir="${sql.dir}/umls">
+			<arg line="${sqlplus.line} control=umls_snomed_map.ctl" />
+		</exec>
+	</target>
 	<target name="umls.all" description="setup UMLS tables" depends="init,unpack.umls">
 		<echo>drop umls tables</echo>
 		<antcall target="sqlcmd">
@@ -61,18 +93,9 @@
 			<param name="sqlcmd.dir" value="./umls" />
 			<param name="sqlcmd.script" value="create_tables.sql" />
 		</antcall>
-		<if>
-			<isset property="mssql" />
-			<then>
-				<echo>import umls tables</echo>
-				<exec executable="bcp" dir="${sql.dir}/umls">
-					<arg line="${db.name}.${db.schema}.umls_snomed_map in umls_snomed_map.bcp -T -S ${db.host} -w" />
-				</exec>
-				<exec executable="bcp" dir="${sql.dir}/umls">
-					<arg line="${db.name}.${db.schema}.umls_ms_2009 in umls_ms_2009.bcp -T -S ${db.host} -w" />
-				</exec>
-			</then>
-		</if>
+		<!-- import umls tables for oracle and mssql.  import for mysql in create_tables.sql --> 
+		<antcall target="import.umls.orcl"/>
+		<antcall target="import.umls.mssql"/>
 		<echo>index umls tables</echo>
 		<antcall target="sqlcmd">
 			<param name="sqlcmd.dir" value="./umls" />
@@ -96,7 +119,7 @@
 	</target>
 	-->
 	<!-- uima script targets -->
-	<target name="uima.all" description="drop and createytex uima tables" depends="uima.drop,uima.create" />
+	<target name="uima.all" description="drop and create ytex uima tables" depends="uima.drop,uima.create" />
 	<target name="uima.drop" description="drop ytex uima tables">
 		<for list="drop_view.sql,drop_document.sql,drop_reference.sql,drop_dummy_document.sql" param="sqlcmd.script">
 			<sequential>
