@@ -112,6 +112,12 @@
                 <multiValued>false</multiValued>
                 <mandatory>true</mandatory>
               </configurationParameter>
+              <configurationParameter>
+                <name>InitStatements</name>
+                <type>String</type>
+                <multiValued>false</multiValued>
+                <mandatory>false</mandatory>
+              </configurationParameter>
             </configurationParameters>
             <configurationParameterSettings>
               <nameValuePair>
@@ -138,10 +144,16 @@
                   <string>@db.password@</string>
                 </value>
               </nameValuePair>
+              <nameValuePair>
+                <name>InitStatements</name>
+                <value>
+                  <string>@db.initStatements@</string>
+                </value>
+              </nameValuePair>
             </configurationParameterSettings>
           </resourceMetaData>
         </configurableDataResourceSpecifier>
-        <implementationName>edu.mayo.bmi.uima.core.resource.JdbcConnectionResourceImpl</implementationName>
+        <implementationName>ytex.uima.resource.InitableJdbcConnectionResourceImpl</implementationName>
       </externalResource>
     </externalResources>
     <externalResourceBindings>
