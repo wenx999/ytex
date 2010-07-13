@@ -33,9 +33,6 @@
     <delegateAnalysisEngine key="Chunker">
       <import name="chunker.Chunker"/>
     </delegateAnalysisEngine>
-    <delegateAnalysisEngine key="SizeLocationRegExAnnotator">
-      <import name="size location regex.SizeLocationRegExAnnotator"/>
-    </delegateAnalysisEngine>
     <delegateAnalysisEngine key="LookupWindowAnnotator">
       <import name="lookup.LookupWindowAnnotator"/>
     </delegateAnalysisEngine>
@@ -47,9 +44,6 @@
     </delegateAnalysisEngine>
     <delegateAnalysisEngine key="LvgAnnotator">
       <import name="LVG.LvgAnnotator"/>
-    </delegateAnalysisEngine>
-    <delegateAnalysisEngine key="SentenceNumberAnnotator">
-      <import name="section.SentenceNumberAnnotator"/>
     </delegateAnalysisEngine>
   </delegateAnalysisEngineSpecifiers>
   <analysisEngineMetaData>
@@ -115,7 +109,6 @@
         <node>SegmentRegexAnnotator</node>
         <node>ParagraphAnnotator</node>
         <node>SentenceAnnotator</node>
-        <node>SentenceNumberAnnotator</node>
         <node>TokenizerAnnotator</node>
         <node>LvgAnnotator</node>
         <node>ContextDependentTokenizerAnnotator</node>
@@ -125,7 +118,6 @@
         <node>LookupWindowAnnotator</node>
         <node>DictionaryLookupAnnotator</node>
         <node>NamedEntityRegexAnnotator</node>
-        <node>SizeLocationRegExAnnotator</node>
         <node>NegexAnnotator</node>
         <node>DBConsumer</node>
       </fixedFlow>

@@ -17,4 +17,6 @@ db.password=
 # you should not have to modify anything below
 db.type=mssql
 db.driver=com.microsoft.sqlserver.jdbc.SQLServerDriver
+db.initStatements=
 ytex.beanRefContext=classpath*:beanRefContext.xml
+hibernate.dialect=org.hibernate.dialect.SQLServerDialect
