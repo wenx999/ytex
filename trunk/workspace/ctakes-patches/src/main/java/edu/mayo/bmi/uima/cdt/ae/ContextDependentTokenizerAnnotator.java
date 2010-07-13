@@ -81,6 +81,8 @@ import edu.mayo.bmi.uima.core.sentence.type.Sentence;
 
 /**
  * Finds tokens based on context.
+ * 
+ * VNG: changed to avoid NPE in case BaseToken is null (see VNG CHANGE below)
  *
  * @author Mayo Clinic
  */

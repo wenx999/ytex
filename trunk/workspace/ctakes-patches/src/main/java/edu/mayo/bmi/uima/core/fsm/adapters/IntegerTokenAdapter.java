@@ -32,6 +32,8 @@ import edu.mayo.bmi.uima.core.ae.type.NumToken;
  * Adapts JCas token annotation to interface expected by the Context Dependent
  * Tokenizer.
  * 
+ * VNG: added check for NumberFormatException
+ * 
  * @author Mayo Clinic
  * 
  */

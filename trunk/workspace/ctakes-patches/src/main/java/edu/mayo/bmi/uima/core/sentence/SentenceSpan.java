@@ -7,6 +7,8 @@ import java.util.regex.Pattern;
 
 /**
  * A span of text and its offsets within some larger text
+ * VNG add function to split at periods, avoid splitting at line breaks.
+ * TODO get the pattern from the configuration.
  */
 public class SentenceSpan {
 	public static String LF = "\n";
