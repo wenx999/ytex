@@ -3,7 +3,9 @@
 <hibernate-mapping package="ytex.model">
 	<class name="NamedEntityRegex" table="ref_named_entity_regex">
 		<id name="namedEntityRegexID" column="named_entity_regex_id">
-			<generator class="native" />
+			<generator class="native">
+				<param name="sequence">named_entity_regex_id_sequence</param>
+			</generator>
 		</id>
 		<property name="code" column="code" />
 		<property name="codingScheme" column="coding_scheme" />
