@@ -8,4 +8,3 @@ create table ref_document_type (
 	)
 ) ;
 
-create sequence hibernate_sequence;

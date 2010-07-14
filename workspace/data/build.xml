@@ -122,7 +122,7 @@ quit</echo>
 	<!-- uima script targets -->
 	<target name="uima.all" description="drop and create ytex uima tables" depends="uima.drop,uima.create" />
 	<target name="uima.drop" description="drop ytex uima tables">
-		<for list="drop_view.sql,drop_document.sql,drop_reference.sql,drop_dummy_document.sql" param="sqlcmd.script">
+		<for list="drop_view.sql,drop_document.sql,drop_reference.sql" param="sqlcmd.script">
 			<sequential>
 				<antcall target="sqlcmd">
 					<param name="sqlcmd.dir" value="uima" />
@@ -132,7 +132,7 @@ quit</echo>
 		</for>
 	</target>
 	<target name="uima.create" description="create ytex uima tables">
-		<for list="create_reference.sql,create_document.sql,create_view.sql,create_dummy_document.sql,insert_reference.sql" param="sqlcmd.script">
+		<for list="create_reference.sql,create_document.sql,create_view.sql,insert_reference.sql" param="sqlcmd.script">
 			<sequential>
 				<antcall target="sqlcmd">
 					<param name="sqlcmd.dir" value="uima" />
