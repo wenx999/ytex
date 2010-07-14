@@ -95,8 +95,8 @@ quit</echo>
 			<param name="sqlcmd.script" value="create_tables.sql" />
 		</antcall>
 		<!-- import umls tables for oracle and mssql.  import for mysql in create_tables.sql --> 
-		<antcall target="import.umls.orcl"/>
-		<antcall target="import.umls.mssql"/>
+		<antcall target="umls.import.orcl"/>
+		<antcall target="umls.import.mssql"/>
 		<echo>index umls tables</echo>
 		<antcall target="sqlcmd">
 			<param name="sqlcmd.dir" value="./umls" />
