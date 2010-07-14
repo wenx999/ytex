@@ -13,6 +13,7 @@
 	<property name="ant.dir" value="apache-ant-1.8.0" />
 	<property name="sqljdbc.dir" value="sqljdbc_3.0" />
 	<property name="mysql-connector.dir" value="mysql-connector-java-5.1.9" />
+	<property name="orcl.jdbc.dir" value="oracle11.2.0.1.0" />
 
 
 	<path id="cp.maveric">
@@ -246,16 +247,14 @@
 		</copy>
 	</target>
 	<target name="zip.dist">
-		<zip destfile="${dist.home}/ytex.zip" basedir="${dist.home}" includes="ytex/**/*.*" />
+		<zip destfile="${dist.home}/ytex.zip" basedir="${dist.home}" includes="ytex/**/*.*" excludes="ytex/lib/ytex.model.jar"/>
 		<zip destfile="${dist.home}/ytex-with-dependencies.zip">
-			<fileset dir="${dist.home}" includes="ytex/**/*.*" />
-			<zipfileset dir="${nlp.home}" includes="${tomcat.dir}/**/*.*" 
-				excludes="${tomcat.dir}/webapps/**/*.*" />
-			<zipfileset dir="${nlp.home}" includes="${ant.dir}/**/*.*" 
-				excludes="${ant.dir}/docs/**/*.*" />
-			<zipfileset dir="${nlp.home}" includes="${sqljdbc.dir}/**/*.*" 
-				excludes="${sqljdbc.dir}/enu/help/**/*.*,${sqljdbc.dir}/enu/xa/**/*.*" />
-			<zipfileset dir="${nlp.home}" includes="${mysql-connector.dir}/*.*" />
+			<fileset dir="${dist.home}" includes="ytex/**/*.*" excludes="ytex/lib/ytex.model.jar"/>
+			<zipfileset dir="${nlp.home}" includes="${tomcat.dir}/**/*.*" excludes="${tomcat.dir}/webapps/**/*.*" />
+			<zipfileset dir="${nlp.home}" includes="${ant.dir}/**/*.*" excludes="${ant.dir}/docs/**/*.*" />
+			<zipfileset dir="../libs.system" includes="${sqljdbc.dir}/**/*.*" excludes="**/.svn/**/*.*" />
+			<zipfileset dir="../libs.system" includes="${mysql-connector.dir}/*.*" excludes="**/.svn/**/*.*" />
+			<zipfileset dir="../libs.system" includes="${orcl.jdbc.dir}/*.*" excludes="**/.svn/**/*.*" />
 		</zip>
 	</target>
 	<target name="build.all" depends="clean.dist,build.ctakes-patches,build.ytex.model,build.ytex.negex,build.ytex.uima,copy.config,copy.scripts,copy.data,copy.examples,build.ytex.web,copy.maveric,zip.dist" />
