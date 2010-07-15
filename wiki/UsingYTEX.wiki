@@ -96,7 +96,7 @@ The semantic search engine allows searching by UMLS Concept id, negation status,
 To start the semantic search web app, execute `YTEX_HOME\ytexWeb.cmd`
 
 To use the semantic search web app,
-  # Open a browser and navigate to http://localhost:8080/ytex.web
+  # Open a browser and navigate to http://localhost:9080/ytex.web
   # login with username 'scott' and password 'wombat'
 
 =YTEX Data Model=
