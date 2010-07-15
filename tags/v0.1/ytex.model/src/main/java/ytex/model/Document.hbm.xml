@@ -1,0 +1,136 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="ytex.model">
+	<class name="Document" table="document" discriminator-value="D">
+		<id name="documentID" column="document_id">
+			<generator class="native">
+				<param name="sequence">document_id_sequence</param>
+			</generator>
+		</id>
+		<property name="docText" column="doc_text" type="text" />
+		<property name="cas" column="cas" type="binary" />
+		<property name="analysisBatch" column="analysis_batch" />
+		<bag name="documentAnnotations" inverse="true" cascade="delete">
+			<key column="document_id" />
+			<one-to-many class="DocumentAnnotation" />
+		</bag>
+		<bag name="documentClasses" inverse="true" cascade="delete">
+			<key column="document_id" />
+			<one-to-many class="DocumentClass" />
+		</bag>
+	</class>
+	<class name="DocumentClass" table="document_class">
+		<id name="documentClassID" column="document_class_id">
+			<generator class="native">
+				<param name="sequence">document_class_id_sequence</param>
+			</generator>
+		</id>
+		<many-to-one name="document" class="Document" column="document_id"
+			not-null="true" />
+		<property name="id" column="id" />
+		<property name="task" column="task" />
+		<property name="classAuto" column="class_auto" />
+		<property name="classGold" column="class_gold" />
+	</class>
+	<class name="DocumentAnnotation" table="anno_base">
+		<id name="documentAnnotationID" column="anno_base_id">
+			<generator class="native">
+				<param name="sequence">anno_base_id_sequence</param>
+			</generator>
+		</id>
+		<property name="begin" column="span_begin" />
+		<property name="end" column="span_end" />
+		<many-to-one name="uimaType" class="UimaType" column="uima_type_id"
+			not-null="true" />
+		<many-to-one name="document" class="Document" column="document_id"
+			not-null="true" />
+		<joined-subclass name="SentenceAnnotation" table="anno_sentence">
+			<key column="anno_base_id" />
+			<property name="sentenceNumber" column="sentence_number" />
+		</joined-subclass>
+		<joined-subclass name="NamedEntityAnnotation" table="anno_named_entity">
+			<key column="anno_base_id" />
+			<property name="discoveryTechnique" column="discovery_technique" />
+			<property name="status" column="status" />
+			<property name="certainty" column="certainty" />
+			<property name="typeID" column="type_id" />
+			<property name="confidence" column="confidence" />
+			<property name="segmentID" column="segment_id" />
+			<bag name="ontologyConcepts" inverse="true">
+				<key column="anno_base_id" />
+				<one-to-many class="OntologyConceptAnnotation" />
+			</bag>
+		</joined-subclass>
+		<joined-subclass name="SegmentAnnotation" table="anno_segment">
+			<key column="anno_base_id" />
+			<property name="segmentID" column="segment_id" />
+		</joined-subclass>
+		<joined-subclass name="ytex.vacs.model.DocumentDateAnnotation" table="anno_docdate">
+			<key column="anno_base_id" />
+			<property name="documentDate" column="doc_date" type="timestamp" />
+		</joined-subclass>
+		<joined-subclass name="ytex.vacs.model.DocumentKeyAnnotation" table="anno_dockey">
+			<key column="anno_base_id" />
+			<property name="studyID" column="study_id" />
+			<property name="uid" column="uid" />
+			<property name="documentType" column="document_type_id"
+				type="ytex.vacs.model.DocumentTypeUserType" />
+			<property name="siteID" column="site_id" />
+		</joined-subclass>
+		<joined-subclass name="SourceDocumentInformation" table="anno_source_doc_info">
+			<key column="anno_base_id" />
+			<property name="uri" column="uri"/>
+			<property name="offsetInSource" column="offset_in_source"/>
+			<property name="documentSize" column="document_size"/>
+			<property name="lastSegment" column="last_segment"/>
+		</joined-subclass>
+		<joined-subclass name="BaseToken" table="anno_base_token">
+			<key column="anno_base_id" />
+			<property name="tokenNumber" column="token_number"/>
+			<property name="normalizedForm" column="normalized_form"/>
+			<property name="partOfSpeech" column="part_of_speech"/>
+			<joined-subclass name="NumToken" table="anno_num_token">
+				<key column="anno_base_id" />
+				<property name="numType" column="num_type"/>
+			</joined-subclass>
+			<joined-subclass name="WordToken" table="anno_word_token">
+				<key column="anno_base_id" />
+				<property name="capitalization" column="capitalization"/>
+				<property name="numPosition" column="num_position"/>
+				<property name="suggestion" column="suggestion"/>
+				<property name="canonicalForm" column="canonical_form"/>
+			</joined-subclass>
+		</joined-subclass>
+	</class>
+	<class name="OntologyConceptAnnotation" table="anno_ontology_concept">
+		<id name="ontologyConceptAnnotationID" column="anno_ontology_concept_id">
+			<generator class="native">
+				<param name="sequence">anno_onto_concept_id_sequence</param>
+			</generator>
+		</id>
+		<property name="codingScheme" column="coding_scheme" />
+		<property name="code" column="code" />
+		<property name="oid" column="oid" />
+		<many-to-one name="namedEntityAnnotation" class="NamedEntityAnnotation"
+			column="anno_base_id" not-null="true" />
+		<joined-subclass name="UmlsConceptAnnotation" table="anno_umls_concept">
+			<key column="anno_ontology_concept_id" />
+			<property name="cui" column="cui" />
+		</joined-subclass>
+	</class>
+
+	<class name="UimaType" table="ref_uima_type">
+		<cache usage="read-only" />
+		<id name="uimaTypeID" column="uima_type_id" />
+		<property name="uimaTypeName" column="uima_type_name" />
+		<property name="mapperName" column="mapper_name" />
+	</class>
+
+	<query name="getUimaTypeByName"><![CDATA[
+		from UimaType
+		where uimaTypeName = :uimaTypeName
+	]]></query>
+	<query name="getUimaTypes"><![CDATA[
+		from UimaType
+	]]></query>
+</hibernate-mapping>

@@ -1,0 +1,37 @@
+# the oracle TNS name
+# used when executing sql*plus to setup tables
+db.name=XE
+
+# jdbc url for database.  
+# Replace localhost:1521/XE with the host, port and service name/SID of your database
+db.url=jdbc:oracle:thin:@//localhost:1521/XE
+
+# oracle username and password
+# user needs connect, resource, and create view privileges
+db.username=ytex
+db.password=ytex
+
+# database schema 
+# typically identical to username
+# alternatively, the user must have access to the schema
+db.schema=ytex
+
+# hibernate database dialect
+# specify Oracle8iDialect, Oracle9iDialect, or Oracle10gDialect
+# can use Oracle10gDialect for Oracle11
+hibernate.dialect=org.hibernate.dialect.Oracle10gDialect
+
+# initialization statements
+# set nls parameters to enable case-insensitive string comparisons
+# The following works for oracle >= 10gR2
+# for older versions, use NLS_COMP=ASCII
+db.initStatements=alter session set NLS_COMP=LINGUISTIC;alter session set NLS_SORT=BINARY_CI
+
+# you should not have to modify anything below
+db.type=orcl
+db.driver=oracle.jdbc.driver.OracleDriver
+ytex.beanRefContext=classpath*:beanRefContext.orcl.xml
+
+# host name of database server 
+# not used for oracle 
+#db.host=localhost
