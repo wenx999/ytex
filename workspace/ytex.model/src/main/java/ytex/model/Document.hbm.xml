@@ -69,12 +69,14 @@
 			<key column="anno_base_id" />
 			<property name="documentDate" column="doc_date" type="timestamp" />
 		</joined-subclass>
+		<!-- 
+		TODO: maybe create mapping for ref_document_type and use that here?
+		 -->
 		<joined-subclass name="ytex.vacs.model.DocumentKeyAnnotation" table="anno_dockey">
 			<key column="anno_base_id" />
 			<property name="studyID" column="study_id" />
 			<property name="uid" column="uid" />
-			<property name="documentType" column="document_type_id"
-				type="ytex.vacs.model.DocumentTypeUserType" />
+			<property name="documentTypeID" column="document_type_id" />
 			<property name="siteID" column="site_id" />
 		</joined-subclass>
 		<joined-subclass name="SourceDocumentInformation" table="anno_source_doc_info">
