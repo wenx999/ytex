@@ -22,7 +22,7 @@ public class DocumentKeyAnnotation extends DocumentAnnotation {
 
 	Integer uid;
 	Integer studyID;
-	DocumentType documentType;
+	Integer documentTypeID;
 	String siteID;
 
 	public String getSiteID() {
@@ -49,14 +49,14 @@ public class DocumentKeyAnnotation extends DocumentAnnotation {
 		this.studyID = studyID;
 	}
 
-	public DocumentType getDocumentType() {
-		return documentType;
+	public Integer getDocumentTypeID() {
+		return documentTypeID;
 	}
 
-	public void setDocumentType(DocumentType documentType) {
-		this.documentType = documentType;
-	}
-
+	public void setDocumentTypeID(Integer documentTypeID) {
+		this.documentTypeID = documentTypeID;
+	}	
+	
 	public DocumentKeyAnnotation() {
 	}
 
