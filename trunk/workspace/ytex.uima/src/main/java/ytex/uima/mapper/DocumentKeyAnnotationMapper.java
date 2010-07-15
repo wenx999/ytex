@@ -6,7 +6,6 @@ import org.apache.uima.jcas.tcas.Annotation;
 
 import ytex.model.Document;
 import ytex.vacs.model.DocumentKeyAnnotation;
-import ytex.vacs.model.DocumentType;
 import ytex.vacs.uima.types.DocumentKey;
 
 public class DocumentKeyAnnotationMapper extends
@@ -22,16 +21,12 @@ public class DocumentKeyAnnotationMapper extends
 	public void mapAnnotationProperties(DocumentKeyAnnotation anno,
 			Annotation uimaAnno, Document doc) {
 		DocumentKey docKey = (DocumentKey) uimaAnno;
-		anno.setStudyID(docKey.getStudyID());
 		anno.setUid(docKey.getUid());
-		int docTypeId = docKey.getDocumentType();
-		if (docTypeId < DocumentType.values().length) {
-			anno.setDocumentType(DocumentType.values()[docTypeId]);
-		} else {
-			log.warn("invalid doc type, using progress note as document type.");
-			anno.setDocumentType(DocumentType.PROGRESS_NOTE);
-		}
-		anno.setSiteID(docKey.getSiteID() != null ? docKey.getSiteID() : "");
+		anno.setSiteID(docKey.getSiteID());
+		if(docKey.getStudyID() != 0)
+			anno.setStudyID(docKey.getStudyID());
+		if(docKey.getDocumentType() != 0)
+			anno.setDocumentTypeID(docKey.getDocumentType());
 	}
 
 }
