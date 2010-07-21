@@ -99,9 +99,6 @@ To use the semantic search web app,
   # Open a browser and navigate to http://localhost:9080/ytex.web
   # login with username 'scott' and password 'wombat'
 
-=YTEX Data Model=
-TODO
-
 =Configuring YTEX=
 ==Named Entity Lookup Table==
 ==Segments (Sections) Regexs==
