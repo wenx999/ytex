@@ -9,6 +9,7 @@
 		</id>
 		<property name="regex" column="regex" />
 		<property name="segmentID" column="segment_id" />
+		<property name="limitToRegex" column="limit_to_regex" />
 	</class>
 </hibernate-mapping>
 	
