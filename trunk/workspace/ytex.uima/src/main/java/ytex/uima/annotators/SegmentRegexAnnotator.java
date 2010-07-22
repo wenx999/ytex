@@ -62,12 +62,15 @@ public class SegmentRegexAnnotator extends JCasAnnotator_ImplBase {
 	public void process(JCas aJCas) throws AnalysisEngineProcessException {
 		String strDocText = aJCas.getDocumentText();
 		List<Segment> segmentsAdded = new ArrayList<Segment>();
-		//find all the segments, set begin and id, add to list
+		// find all the segments, set begin and id, add to list
 		for (Map.Entry<SegmentRegex, Pattern> entry : regexMap.entrySet()) {
 			Matcher matcher = entry.getValue().matcher(strDocText);
 			while (matcher.find()) {
 				Segment seg = new Segment(aJCas);
 				seg.setBegin(matcher.start());
+				if (entry.getKey().isLimitToRegex()) {
+					seg.setEnd(matcher.end());
+				}
 				seg.setId(entry.getKey().getSegmentID());
 				segmentsAdded.add(seg);
 			}
@@ -86,16 +89,25 @@ public class SegmentRegexAnnotator extends JCasAnnotator_ImplBase {
 			// set the end for each segment
 			for (int i = 0; i < segmentsAdded.size(); i++) {
 				Segment seg = segmentsAdded.get(i);
+				Segment segNext = (i + 1) < segmentsAdded.size() ? segmentsAdded
+						.get(i + 1)
+						: null;
 				if (seg.getEnd() <= 0) {
-					if ((i + 1) < segmentsAdded.size()) {
-						seg.setEnd(segmentsAdded.get(i + 1).getBegin() - 1);
+					if (segNext != null) {
+						//set end to beginning of next segment
+						seg.setEnd(segNext.getBegin() - 1);
 					} else {
+						//set end to doc end
 						seg.setEnd(strDocText.length() - 1);
+					}
+				} else {
+					//segments shouldn't overlap
+					if (segNext!=null && segNext.getBegin() < seg.getEnd()) {
+						seg.setEnd(segNext.getBegin() - 1);
 					}
 				}
 				seg.addToIndexes();
 			}
 		}
 	}
-
 }
