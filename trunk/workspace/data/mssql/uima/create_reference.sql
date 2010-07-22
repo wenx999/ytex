@@ -12,6 +12,7 @@ create table $(db_schema).ref_segment_regex (
 	segment_regex_id int IDENTITY(1,1) NOT NULL,
 	regex varchar(256) not null,
 	segment_id varchar(256),
+	limit_to_regex bit null default 0, 
 	primary key (segment_regex_id)
 );
 
