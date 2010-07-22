@@ -37,27 +37,27 @@ YTEX comes with a DocumentKey annotation; the document primary key can be mapped
   * `site_id`: character site identifier
 
 To configure and execute the CPE, do the following:
-  # Start CPE
+  * Start CPE
   Execute `YTEX_HOME\ytexCPE.bat`, 
-  # Clear Settings 
+  * Clear Settings 
   In case of any settings are specified File->Clear All 
-  # Configure DBCollectionReader
+  * Configure DBCollectionReader
   For the Descriptor, specify `YTEX_HOME\config\desc\ytex\vacs\uima\DBCollectionReader.xml`.
   The 'Query Document Keys' and 'Query Get Document' parameters will appear.
-    * Specify query to retrieve document keys.  
+    ** Specify query to retrieve document keys.  
     {{{
     select document_id uid
 		from document
     }}}
-    * Specify query to retrieve individual document:
+    ** Specify query to retrieve individual document:
     {{{
 		select doc_text 
 		from document
 		where document_id = :uid
 		}}}
-  # Configure Analysis Engine
+  * Configure Analysis Engine
   Click on the 'Add' button in the 'Analysis Engine' section, and select `YTEX_HOME\config\desc\ytex\uima\YTEXPipeline.xml`
-    * analysis_batch: Documents can be assigned a 'group' or analysis_batch.  specify 'test2' here.
+    ** analysis_batch: Documents can be assigned a 'group' or analysis_batch.  specify 'test2' here.
   # Run the CPE
   Click the 'Play' button
   # View results
@@ -101,6 +101,74 @@ To use the semantic search web app,
 
 =Configuring YTEX=
 ==Named Entity Lookup Table==
-==Segments (Sections) Regexs==
-==Negation Detection==
+By default, YTEX annotates documents with SNOMED concepts.
+The UMLS and SNOMED are quite expansive; nevertheless, these vocabularies may lack certain synonyms/lexical variants for clinical concepts, are lack concepts completely.  
+
+To annotate (new) concepts using new lexical variants, do the following:
+  * Add concepts to the UMLS lookup table
+YTEX uses cTAKES JDBC DictionaryLookup algorithm, which searches the UMLS lookup table using the first word of each phrase which can be mapped to a concept.  To add a lexical variant to the lookup table, simply insert a row, e.g.:
+{{{
+insert into umls_ms_2009 (  cui, fword, text, code, sourcetype, tui)
+values ('ESLD_MASS','hypodense','hypodense area','ESLD_MASS','ESLD','T060');
+}}}
+
+|| column || description ||
+|| cui || Intended as the UMLS CUI, but can be used as an arbitrary concept id ||
+|| fword || the 1st word of the phrase to be mapped to a concept ||
+|| text || the full text of the (potentially multiword) phrase to be mapped ||
+|| code || Intended for SNOMED code, but not used by YTEX ||
+|| sourcetype || Source vocabulary (e.g. SNOMED, NCI).  Set this to the a project-specific code (ESLD for end-stage liver disease) ||
+|| tui || umls semantic type.  used to filter concepts (see below regarding the view) ||
+
+  * Modify the view used by YTEX to search for concepts
+YTEX retrieves concepts from the `v_snomed_fword_lookup` view.  Simply modify the view definition to include your concepts:
+{{{
+drop view v_snomed_fword_lookup;
+
+create view v_snomed_fword_lookup
+as
+select fword, cui, text
+from ytex.umls_ms_2009
+where 
+(
+	tui in 
+	(
+	'T021','T022','T023','T024','T025','T026','T029','T030','T031',
+	'T059','T060','T061',
+	'T019','T020','T037','T046','T047','T048','T049','T050','T190','T191',
+	'T033','T034','T040','T041','T042','T043','T044','T045','T046','T056','T057','T184'
+	)
+	and sourcetype = 'SNOMEDCT'
+) 
+or
+sourcetype = 'ESLD'
+}}}
+In the example above, the view is modified to include all terms from the `ESLD` source, in addition to `SNOMED`.
+
 ==Named Entity Recognition Regexs==
+The UMLS lookup table may not be flexible enough to identify all variants of a concept; YTEX can also identify concepts using regular expressions.  Simply add a row to the `ref_named_entity_regex` table:
+{{{
+insert into ref_named_entity_regex (regex, coding_scheme, code)
+values ('(?i)\bREFER\s+TO\s+.*#{0,1}+\s*\d+','ESLD','DOCREF')
+;
+}}}
+
+|| column || description ||
+|| regex || regular expression  (see java [http://download.oracle.com/docs/cd/E17476_01/javase/1.5.0/docs/api/java/util/regex/Pattern.html?is-external=true pattern]) ||
+|| coding_scheme || similar to sourcetype in umls lookup table (see above) ||
+|| code || concept id/code ||
+|| context || the document section to which the regular expression search should be limited (see sections below) ||
+
+==Negation Detection==
+YTEX uses NegEx, which relies on a list of negation triggers.  To add or modify negation triggers, update `YTEX_HOME\config\desc\ytex\uima\annotators\negex_triggers.txt`
+
+==Segments (Sections) Regexs==
+YTEX can identify sections within a document using regular expressions.  Update the `ref_segment_regex` table, e.g.:
+{{{
+insert into ytex.ref_segment_regex (segment_id, regex) values('FINDINGS', '\nFINDINGS:|\nTECHNIQUE AND FINDINGS|\nPROCEDURE AND FINDINGS:|\nFindings:');
+}}}
+
+|| column || description ||
+|| segment_id || the segment identifier ||
+|| regex || the regular expression that finds the section heading, or finds the entire section ||
+|| limit_to_regex || 0 - false - the regular expression only identifies the section heading. In this case, the section will span the text from the heading to the next section. 1 - true - the regular expression identifies the entire section.  The section spans from the beginning to the end of the text covered by the regular expression ||
