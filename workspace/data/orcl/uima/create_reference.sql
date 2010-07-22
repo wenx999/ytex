@@ -16,6 +16,7 @@ create table ref_segment_regex (
 	segment_regex_id int  NOT NULL,
 	regex varchar2(256) not null,
 	segment_id varchar2(256) not null,
+	limit_to_regex numeric(1),
 	primary key (segment_regex_id)
 ) ;
 
