@@ -17,6 +17,13 @@ public class SegmentRegex implements Serializable {
 	int segmentRegexID;
 	String regex;
 	String segmentID;
+	boolean limitToRegex;
+	public boolean isLimitToRegex() {
+		return limitToRegex;
+	}
+	public void setLimitToRegex(boolean limitToRegex) {
+		this.limitToRegex = limitToRegex;
+	}
 	public int getSegmentRegexID() {
 		return segmentRegexID;
 	}
