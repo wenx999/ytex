@@ -108,7 +108,7 @@ To annotate (new) concepts using new lexical variants, do the following:
   * Add concepts to the UMLS lookup table
 YTEX uses cTAKES JDBC DictionaryLookup algorithm, which searches the UMLS lookup table using the first word of each phrase which can be mapped to a concept.  To add a lexical variant to the lookup table, simply insert a row, e.g.:
 {{{
-insert into umls_ms_2009 (  cui, fword, text, code, sourcetype, tui)
+insert into <schema>.umls_ms_2009 (  cui, fword, text, code, sourcetype, tui)
 values ('ESLD_MASS','hypodense','hypodense area','ESLD_MASS','ESLD','T060');
 }}}
 
@@ -123,9 +123,9 @@ values ('ESLD_MASS','hypodense','hypodense area','ESLD_MASS','ESLD','T060');
   * Modify the view used by YTEX to search for concepts
 YTEX retrieves concepts from the `v_snomed_fword_lookup` view.  Simply modify the view definition to include your concepts:
 {{{
-drop view v_snomed_fword_lookup;
+drop view <schema>.v_snomed_fword_lookup;
 
-create view v_snomed_fword_lookup
+create view <schema>.v_snomed_fword_lookup
 as
 select fword, cui, text
 from ytex.umls_ms_2009
@@ -148,7 +148,7 @@ In the example above, the view is modified to include all terms from the `ESLD` 
 ==Named Entity Recognition Regexs==
 The UMLS lookup table may not be flexible enough to identify all variants of a concept; YTEX can also identify concepts using regular expressions.  Simply add a row to the `ref_named_entity_regex` table:
 {{{
-insert into ref_named_entity_regex (regex, coding_scheme, code)
+insert into <schema>.ref_named_entity_regex (regex, coding_scheme, code)
 values ('(?i)\bREFER\s+TO\s+.*#{0,1}+\s*\d+','ESLD','DOCREF')
 ;
 }}}
@@ -165,7 +165,7 @@ YTEX uses NegEx, which relies on a list of negation triggers.  To add or modify 
 ==Segments (Sections) Regexs==
 YTEX can identify sections within a document using regular expressions.  Update the `ref_segment_regex` table, e.g.:
 {{{
-insert into ytex.ref_segment_regex (segment_id, regex) values('FINDINGS', '\nFINDINGS:|\nTECHNIQUE AND FINDINGS|\nPROCEDURE AND FINDINGS:|\nFindings:');
+insert into <schema>.ref_segment_regex (segment_id, regex) values('FINDINGS', '\nFINDINGS:|\nTECHNIQUE AND FINDINGS|\nPROCEDURE AND FINDINGS:|\nFindings:');
 }}}
 
 || column || description ||
