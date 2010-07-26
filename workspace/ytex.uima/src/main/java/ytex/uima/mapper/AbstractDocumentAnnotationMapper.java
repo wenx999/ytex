@@ -33,7 +33,7 @@ public class AbstractDocumentAnnotationMapper<D extends DocumentAnnotation, T ex
 	Class<D> classDocumentAnnotation;
 	Class<T> classUIMAAnnotation;
 
-	AbstractDocumentAnnotationMapper(Class<D> classDocumentAnnotation,
+	public AbstractDocumentAnnotationMapper(Class<D> classDocumentAnnotation,
 			Class<T> classUIMAAnnotation) {
 		this.classDocumentAnnotation = classDocumentAnnotation;
 		this.classUIMAAnnotation = classUIMAAnnotation;
