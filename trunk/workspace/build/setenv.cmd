@@ -91,6 +91,7 @@
 @set YTEX_CP=%YTEX_CP%;%YTEX_LIB_HOME%\hibernate3.jar
 @set YTEX_CP=%YTEX_CP%;%YTEX_LIB_HOME%\javassist-3.9.0.GA.jar
 @set YTEX_CP=%YTEX_CP%;%YTEX_LIB_HOME%\jta-1.1.jar
+@set YTEX_CP=%YTEX_CP%;%YTEX_LIB_HOME%\commons-beanutils-1.8.3.jar
 @set YTEX_CP=%YTEX_CP%;%YTEX_LIB_HOME%\org.springframework.aop-3.0.2.RELEASE.jar
 @set YTEX_CP=%YTEX_CP%;%YTEX_LIB_HOME%\org.springframework.asm-3.0.2.RELEASE.jar
 @set YTEX_CP=%YTEX_CP%;%YTEX_LIB_HOME%\org.springframework.aspects.jar
