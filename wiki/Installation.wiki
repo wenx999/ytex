@@ -1,4 +1,5 @@
 #summary Installation details
+#labels Phase-Deploy,Featured
 #sidebar TableOfContents
 <wiki:toc max_depth="2" />
 
