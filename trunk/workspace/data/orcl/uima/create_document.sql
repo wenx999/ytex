@@ -121,12 +121,13 @@ CREATE INDEX IX_segment_anno_seg ON anno_segment
  * mapped to SourceDocumentInformation
  * TODO: best mapping of boolean for oracle?
  */
+
 create table anno_source_doc_info (
 	anno_base_id int NOT NULL,
 	uri varchar2(256),
 	offset_in_source int,
 	document_size int,
-	last_segment numeric(1),
+	last_segment numeric(1) default 0 check (last_segment between 0 and 1),
 	PRIMARY KEY
 	(
 		anno_base_id 
