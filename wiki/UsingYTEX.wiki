@@ -1,5 +1,5 @@
 #summary Using YTEX
-#labels Phase-Deploy
+#labels Phase-Deploy,Featured,Phase-Implementation
 <wiki:toc max_depth="2" />
 
 =Using YTEX=
@@ -30,13 +30,14 @@ Clinical Documents for the VACS project are stored in a database.  We developed 
 
 Documents in a database typically are given a Unique ID, and are cross-referenced with other information (e.g. patient id, document type, document date, etc.).  This document id can be stored as a document annotation, which in turn will be stored in the database, along with other document annotations.  This allows you to cross-reference annotation data with other document data.
 
-YTEX comes with a DocumentKey annotation; the document primary key can be mapped to the DocumentKey.  The document key query can return the following fields
+YTEX comes with a `DocumentKey` annotation; the document primary key can be mapped to the `DocumentKey`.  If the document key query returns any of the following fields, they will be mapped to the corresponding fields in the `DocumentKey` annotation and stored in the `anno_dockey` database table:
   * `uid`: a numeric document identifier
   * `studyid`: numeric patient identifier
   * `document_type_id`: a numeric document type id (foreign key to `ref_document_type` table)
   * `site_id`: character site identifier
 
-To configure and execute the CPE, do the following:
+=== Example ===
+To illustrate this, we can simply retrieve documents we stored in the database when we ran the UIMA Document Analyzer above.  To configure and execute the CPE, do the following:
   * Start CPE
   Execute `YTEX_HOME\ytexCPE.bat`, 
   * Clear Settings 
@@ -45,22 +46,22 @@ To configure and execute the CPE, do the following:
   For the Descriptor, specify `YTEX_HOME\config\desc\ytex\vacs\uima\DBCollectionReader.xml`.
   The 'Query Document Keys' and 'Query Get Document' parameters will appear.
     ** Specify query to retrieve document keys.  
-    {{{
+{{{
     select document_id uid
 		from document
-    }}}
+}}}
     ** Specify query to retrieve individual document:
-    {{{
+{{{
 		select doc_text 
 		from document
 		where document_id = :uid
-		}}}
+}}}
   * Configure Analysis Engine
   Click on the 'Add' button in the 'Analysis Engine' section, and select `YTEX_HOME\config\desc\ytex\uima\YTEXPipeline.xml`
     ** analysis_batch: Documents can be assigned a 'group' or analysis_batch.  specify 'test2' here.
-  # Run the CPE
+  * Run the CPE
   Click the 'Play' button
-  # View results
+  * View results
   {{{
   select * from 
   v_document where analysis_batch = 'test2'
