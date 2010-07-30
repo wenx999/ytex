@@ -18,3 +18,6 @@ insert into ref_uima_type values(23, 'edu.mayo.bmi.uima.core.ae.type.Punctuation
 insert into ref_uima_type values(24, 'edu.mayo.bmi.uima.core.ae.type.SymbolToken', 'ytex.uima.mapper.BaseTokenMapper');
 insert into ref_uima_type values(25, 'edu.mayo.bmi.uima.core.ae.type.WordToken', 'ytex.uima.mapper.WordTokenMapper');
 
+/* ytex types */
+insert into ref_uima_type values(50, 'ytex.uima.types.Date', 'ytex.uima.mapper.DateMapper');
+

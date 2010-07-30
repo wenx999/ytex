@@ -18,3 +18,5 @@ insert into $(db_schema).ref_uima_type values(23, 'edu.mayo.bmi.uima.core.ae.typ
 insert into $(db_schema).ref_uima_type values(24, 'edu.mayo.bmi.uima.core.ae.type.SymbolToken', 'ytex.uima.mapper.BaseTokenMapper');
 insert into $(db_schema).ref_uima_type values(25, 'edu.mayo.bmi.uima.core.ae.type.WordToken', 'ytex.uima.mapper.WordTokenMapper');
 
+/* ytex types */
+insert into $(db_schema).ref_uima_type values(50, 'ytex.uima.types.Date', 'ytex.uima.mapper.DateMapper');

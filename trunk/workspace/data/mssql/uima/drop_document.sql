@@ -9,6 +9,7 @@ drop table $(db_schema).anno_umls_concept;
 drop table $(db_schema).anno_ontology_concept;
 drop table $(db_schema).anno_named_entity;
 drop table $(db_schema).anno_sentence;
+drop table $(db_schema).anno_date; 
 drop table $(db_schema).anno_base;
 drop table $(db_schema).document;
 
