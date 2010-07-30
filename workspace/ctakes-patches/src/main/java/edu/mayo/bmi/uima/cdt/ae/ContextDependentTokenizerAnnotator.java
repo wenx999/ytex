@@ -55,6 +55,7 @@ import edu.mayo.bmi.fsm.output.RangeToken;
 import edu.mayo.bmi.fsm.output.RomanNumeralToken;
 import edu.mayo.bmi.fsm.output.TimeToken;
 import edu.mayo.bmi.fsm.token.BaseToken;
+import edu.mayo.bmi.fsm.token.EolToken;
 import edu.mayo.bmi.uima.cdt.ae.type.DateAnnotation;
 import edu.mayo.bmi.uima.cdt.ae.type.FractionAnnotation;
 import edu.mayo.bmi.uima.cdt.ae.type.MeasurementAnnotation;
@@ -133,9 +134,9 @@ public class ContextDependentTokenizerAnnotator extends JTextAnnotator_ImplBase 
 				while (btaItr.hasNext()) {
 					edu.mayo.bmi.uima.core.ae.type.BaseToken bta = (edu.mayo.bmi.uima.core.ae.type.BaseToken) btaItr
 							.next();
-					//VNG CHANGE
+					//VNG CHANGE - ignore newlines, avoid null tokens
 					BaseToken bt = adaptToBaseToken(bta);
-					if(bt != null)
+					if(bt != null && !(bt instanceof EolToken)) 
 						baseTokenList.add(bt);
 				}
 
