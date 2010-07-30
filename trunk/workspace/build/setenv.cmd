@@ -105,6 +105,7 @@
 @set YTEX_CP=%YTEX_CP%;%YTEX_LIB_HOME%\org.springframework.transaction-3.0.2.RELEASE.jar
 @set YTEX_CP=%YTEX_CP%;%YTEX_LIB_HOME%\slf4j-api-1.5.8.jar
 @set YTEX_CP=%YTEX_CP%;%YTEX_LIB_HOME%\slf4j-jcl-1.5.8.jar
+@set YTEX_CP=%YTEX_CP%;%YTEX_LIB_HOME%\jchronic-0.2.3.jar
 @set YTEX_CP=%YTEX_CP%;%YTEX_LIB_HOME%\weka.jar
 @set YTEX_CP=%YTEX_CP%;%YTEX_LIB_HOME%\ytex.model.jar
 @set YTEX_CP=%YTEX_CP%;%YTEX_HOME%\lib\ytex.negex.jar
