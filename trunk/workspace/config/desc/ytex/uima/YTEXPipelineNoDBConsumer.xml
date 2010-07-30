@@ -45,9 +45,6 @@
     <delegateAnalysisEngine key="LvgAnnotator">
       <import name="LVG.LvgAnnotator"/>
     </delegateAnalysisEngine>
-    <delegateAnalysisEngine key="DBConsumer">
-      <import name="ytex.uima.annotators.DBConsumer"/>
-    </delegateAnalysisEngine>
   </delegateAnalysisEngineSpecifiers>
   <analysisEngineMetaData>
     <name>AggregateAllAnnotation</name>
@@ -66,24 +63,6 @@
           <parameter>ParagraphAnnotator/Patterns</parameter>
         </overrides>
       </configurationParameter>
-      <configurationParameter>
-        <name>xmiOutputDirectory</name>
-        <type>String</type>
-        <multiValued>false</multiValued>
-        <mandatory>false</mandatory>
-        <overrides>
-          <parameter>DBConsumer/xmiOutputDirectory</parameter>
-        </overrides>
-      </configurationParameter>
-      <configurationParameter>
-        <name>analysisBatch</name>
-        <type>String</type>
-        <multiValued>false</multiValued>
-        <mandatory>false</mandatory>
-        <overrides>
-          <parameter>DBConsumer/analysisBatch</parameter>
-        </overrides>
-      </configurationParameter>
     </configurationParameters>
     <configurationParameterSettings>
       <nameValuePair>
@@ -92,18 +71,6 @@
           <array>
             <string>:\n|\z|\n\n|\r\n\r\n</string>
           </array>
-        </value>
-      </nameValuePair>
-      <nameValuePair>
-        <name>xmiOutputDirectory</name>
-        <value>
-          <string/>
-        </value>
-      </nameValuePair>
-      <nameValuePair>
-        <name>analysisBatch</name>
-        <value>
-          <string>test</string>
         </value>
       </nameValuePair>
     </configurationParameterSettings>
@@ -123,7 +90,6 @@
         <node>NamedEntityRegexAnnotator</node>
         <node>NegexAnnotator</node>
         <node>DateAnnotator</node>
-        <node>DBConsumer</node>
       </fixedFlow>
     </flowConstraints>
     <typePriorities/>
