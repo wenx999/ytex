@@ -34,6 +34,10 @@
 			<key column="anno_base_id" />
 			<property name="segmentID" column="segment_id" />
 		</joined-subclass>
+		<joined-subclass name="ytex.model.DateAnnotation" table="anno_date">
+			<key column="anno_base_id" />
+			<property name="date" column="tstamp" type="timestamp" />
+		</joined-subclass>
 		<joined-subclass name="ytex.vacs.model.DocumentDateAnnotation" table="anno_docdate">
 			<key column="anno_base_id" />
 			<property name="documentDate" column="doc_date" type="timestamp" />
