@@ -199,3 +199,9 @@ create table $(db_schema).anno_word_token (
 		ON DELETE CASCADE
 );
 
+create table $(db_schema).anno_date (
+	anno_base_id int not null,
+	tstamp datetime,
+	primary key (anno_base_id),
+	foreign key (anno_base_id) references $(db_schema).anno_base(anno_base_id) ON DELETE CASCADE
+);

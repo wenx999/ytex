@@ -218,3 +218,9 @@ create table anno_word_token (
 		ON DELETE CASCADE */
 ) engine=myisam;
 
+create table anno_date (
+	anno_base_id int not null,
+	tstamp datetime,
+	primary key (anno_base_id) /*,
+	foreign key (anno_base_id) references anno_base(anno_base_id) ON DELETE CASCADE */
+) engine=myisam;

@@ -14,6 +14,7 @@ drop table anno_umls_concept;
 drop table anno_ontology_concept;
 drop table anno_named_entity;
 drop table anno_sentence;
+drop table anno_date;
 drop table anno_base;
 drop table document;
 

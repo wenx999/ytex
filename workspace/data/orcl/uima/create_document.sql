@@ -204,3 +204,9 @@ create table anno_word_token (
 		ON DELETE CASCADE
 ) ;
 
+create table anno_date (
+	anno_base_id int not null,
+	tstamp timestamp,
+	primary key (anno_base_id),
+	foreign key (anno_base_id) references anno_base(anno_base_id) ON DELETE CASCADE 
+) ;

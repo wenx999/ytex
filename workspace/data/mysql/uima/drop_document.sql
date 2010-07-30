@@ -9,6 +9,7 @@ drop table if exists anno_umls_concept;
 drop table if exists anno_ontology_concept;
 drop table if exists anno_named_entity;
 drop table if exists anno_sentence;
+drop table if exists anno_date;
 drop table if exists anno_base;
 drop table if exists document;
 
