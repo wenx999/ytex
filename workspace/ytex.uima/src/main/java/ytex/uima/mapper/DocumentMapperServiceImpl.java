@@ -30,11 +30,12 @@ import ytex.model.DocumentAnnotation;
 import ytex.model.UimaType;
 
 /**
- * Map document annotations to the database.
- * Delegates to AnnotationMapper implementations.
- * AnnotationMappers are configured in the database (REF_UIMA_TYPE).
+ * Map document annotations to the database. Delegates to AnnotationMapper
+ * implementations. AnnotationMappers are configured in the database
+ * (REF_UIMA_TYPE).
+ * 
  * @author vijay
- *
+ * 
  */
 public class DocumentMapperServiceImpl implements DocumentMapperService,
 		InitializingBean {
@@ -88,22 +89,27 @@ public class DocumentMapperServiceImpl implements DocumentMapperService,
 		return tlAnalysisBatchDateFormat.get().format(new Date());
 	}
 
-	private Document createDocument(JCas jcas, String analysisBatch) {
+	private Document createDocument(JCas jcas, String analysisBatch,
+			boolean bStoreDocText, boolean bStoreCAS) {
 		Document doc = new Document();
-		doc.setDocText(jcas.getDocumentText());
+		if (bStoreDocText)
+			doc.setDocText(jcas.getDocumentText());
 		doc.setAnalysisBatch(analysisBatch == null
 				|| analysisBatch.length() == 0 ? getDefaultAnalysisBatch()
 				: analysisBatch);
-		try {
-			ByteArrayOutputStream out = new ByteArrayOutputStream();
-			GZIPOutputStream zipOut = new GZIPOutputStream(out);
-			XmiCasSerializer ser = new XmiCasSerializer(jcas.getTypeSystem());
-			XMLSerializer xmlSer = new XMLSerializer(zipOut, false);
-			ser.serialize(jcas.getCas(), xmlSer.getContentHandler());
-			zipOut.close();
-			doc.setCas(out.toByteArray());
-		} catch (Exception saxException) {
-			log.error("error serializing document cas", saxException);
+		if (bStoreCAS) {
+			try {
+				ByteArrayOutputStream out = new ByteArrayOutputStream();
+				GZIPOutputStream zipOut = new GZIPOutputStream(out);
+				XmiCasSerializer ser = new XmiCasSerializer(jcas
+						.getTypeSystem());
+				XMLSerializer xmlSer = new XMLSerializer(zipOut, false);
+				ser.serialize(jcas.getCas(), xmlSer.getContentHandler());
+				zipOut.close();
+				doc.setCas(out.toByteArray());
+			} catch (Exception saxException) {
+				log.error("error serializing document cas", saxException);
+			}
 		}
 		return doc;
 	}
@@ -115,8 +121,9 @@ public class DocumentMapperServiceImpl implements DocumentMapperService,
 	 * ytex.dao.mapper.DocumentMapperService#saveDocument(org.apache.uima.jcas
 	 * .JCas, java.lang.String)
 	 */
-	public Integer saveDocument(JCas jcas, String analysisBatch) {
-		Document doc = createDocument(jcas, analysisBatch);
+	public Integer saveDocument(JCas jcas, String analysisBatch,
+			boolean bStoreDocText, boolean bStoreCAS) {
+		Document doc = createDocument(jcas, analysisBatch, bStoreDocText, bStoreCAS);
 		this.sessionFactory.getCurrentSession().save(doc);
 		AnnotationIndex annoIdx = jcas
 				.getAnnotationIndex(Annotation.typeIndexID);

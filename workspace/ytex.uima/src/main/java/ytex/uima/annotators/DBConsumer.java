@@ -22,6 +22,14 @@ import ytex.uima.mapper.DocumentMapperService;
  * Store the document text, cas, and annotations in the database.
  * Delegates to DocumentMapperService.
  * This is an annotator and not a consumer because according to the uima docs the Consumer interface is deprecated.
+ * Config parameters:
+ * <ul>
+ * 	<li>xmiOutputDirectory - String - directory where the xmi serialized cas should be stored.  
+ * Leave empty if you don't want to store the xmi.  Defaults to empty.
+ * 	<li>analysisBatch - String - Document group/analysis batch, stored in document.analysis_batch.  Defaults to current date/time.
+ *  <li>storeDocText - boolean - should the document text be stored in the DB? defaults to true
+ *  <li>storeCAS - boolean - should the serialized xmi cas be stored in the DB? defaults to true
+ * </ul>
  * @author vijay
  *
  */
@@ -30,6 +38,8 @@ public class DBConsumer extends JCasAnnotator_ImplBase {
 	private DocumentMapperService documentMapperService;
 	private String xmiOutputDirectory;
 	private String analysisBatch;
+	private boolean bStoreDocText;
+	private boolean bStoreCAS;
 
 	@Override
 	public void initialize(UimaContext aContext)
@@ -39,6 +49,10 @@ public class DBConsumer extends JCasAnnotator_ImplBase {
 				.getConfigParameterValue("xmiOutputDirectory");
 		analysisBatch = (String) aContext
 				.getConfigParameterValue("analysisBatch");
+		Boolean boolStoreDocText = (Boolean) aContext.getConfigParameterValue("storeDocText");
+		Boolean boolStoreCAS = (Boolean) aContext.getConfigParameterValue("storeCAS");
+		bStoreDocText = boolStoreDocText == null ? true : boolStoreDocText.booleanValue();
+		bStoreCAS = boolStoreCAS == null ? true : boolStoreCAS.booleanValue();
 		documentMapperService = (DocumentMapperService) ApplicationContextHolder
 				.getApplicationContext().getBean("documentMapperService");
 	}
@@ -46,7 +60,7 @@ public class DBConsumer extends JCasAnnotator_ImplBase {
 	@Override
 	public void process(JCas jcas) {
 		Integer documentID = documentMapperService.saveDocument(jcas,
-				analysisBatch);
+				analysisBatch, bStoreDocText, bStoreCAS);
 		if (documentID != null && xmiOutputDirectory != null
 				&& xmiOutputDirectory.length() > 0) {
 			File dirOut = new File(xmiOutputDirectory);

@@ -12,6 +12,6 @@ public interface DocumentMapperService {
 	 *            optional
 	 * @return document id
 	 */
-	public abstract Integer saveDocument(JCas jcas, String analysisBatch);
+	public abstract Integer saveDocument(JCas jcas, String analysisBatch, boolean bStoreDocText, boolean bStoreCAS);
 
 }
