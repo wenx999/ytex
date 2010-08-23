@@ -54,20 +54,20 @@ public class DBCollectionReader extends CollectionReader_ImplBase {
 	/**
 	 * the query to get the document keys set in config file
 	 */
-	String queryGetDocumentKeys;
+	protected String queryGetDocumentKeys;
 	/**
 	 * the queyr to get a document given a key. set in config file
 	 */
-	String queryGetDocument;
+	protected String queryGetDocument;
 	/**
 	 * the key type. if not set, will default to
 	 * ytex.vacs.uima.types.DocumentKey.
 	 */
-	String keyTypeName;
+	protected String keyTypeName;
 
-	DataSource dataSource;
-	SimpleJdbcTemplate simpleJdbcTemplate;
-	NamedParameterJdbcTemplate namedJdbcTemplate;
+	protected DataSource dataSource;
+	protected SimpleJdbcTemplate simpleJdbcTemplate;
+	protected NamedParameterJdbcTemplate namedJdbcTemplate;
 	List<Map<String, Object>> listDocumentIds;
 	int i = 0;
 
@@ -101,25 +101,7 @@ public class DBCollectionReader extends CollectionReader_ImplBase {
 			if (log.isDebugEnabled()) {
 				log.debug("loading document with id = " + id);
 			}
-			namedJdbcTemplate.query(queryGetDocument, id,
-					new RowCallbackHandler() {
-						boolean bFirstRowRead = false;
-
-						@Override
-						public void processRow(ResultSet rs)
-								throws SQLException {
-							if (!bFirstRowRead) {
-								LobHandler lobHandler = new DefaultLobHandler();
-								String clobText = lobHandler.getClobAsString(
-										rs, 1);
-								aCAS.setDocumentText(clobText);
-							} else {
-								log
-										.error("Multiple documents for document key: "
-												+ id);
-							}
-						}
-					});
+			getDocumentById(aCAS, id);
 			try {
 				if (keyTypeName != null) {
 					Annotation key = (Annotation)ConstructorUtils.invokeConstructor(Class
@@ -159,6 +141,28 @@ public class DBCollectionReader extends CollectionReader_ImplBase {
 			throw new CollectionException("no documents to process",
 					new Object[] {});
 		}
+	}
+
+	protected void getDocumentById(final CAS aCAS, final Map<String, Object> id) {
+		namedJdbcTemplate.query(queryGetDocument, id,
+				new RowCallbackHandler() {
+					boolean bFirstRowRead = false;
+
+					@Override
+					public void processRow(ResultSet rs)
+							throws SQLException {
+						if (!bFirstRowRead) {
+							LobHandler lobHandler = new DefaultLobHandler();
+							String clobText = lobHandler.getClobAsString(
+									rs, 1);
+							aCAS.setDocumentText(clobText);
+						} else {
+							log
+									.error("Multiple documents for document key: "
+											+ id);
+						}
+					}
+				});
 	}
 
 	@Override
