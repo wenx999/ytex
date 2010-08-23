@@ -201,7 +201,7 @@
 		<property name="project.classpathref" value="cp.all" />
 		<delete dir="${project.bin.home}" quiet="yes" />
 		<mkdir dir="${project.bin.home}" />
-		<javac srcdir="${project.src.home}" destdir="${project.bin.home}" classpathref="${project.classpathref}" />
+		<javac srcdir="${project.src.home}" destdir="${project.bin.home}" classpathref="${project.classpathref}" debug="yes" />
 		<copy todir="${project.bin.home}">
 			<fileset dir="${project.src.home}">
 				<exclude name="**/*.java" />
@@ -221,7 +221,7 @@
 			</fileset>
 		</copy>
 		<mkdir dir="${ytex.web.classes.dir}" />
-		<javac srcdir="../ytex.web/src/main/java" destdir="${ytex.web.classes.dir}">
+		<javac srcdir="../ytex.web/src/main/java" destdir="${ytex.web.classes.dir}" debug="yes">
 			<classpath>
 				<fileset dir="${ytex.dist.home}/lib">
 					<include name="ytex.model.jar" />
@@ -247,9 +247,9 @@
 		</copy>
 	</target>
 	<target name="zip.dist">
-		<zip destfile="${dist.home}/ytex.zip" basedir="${dist.home}" includes="ytex/**/*.*" excludes="ytex/lib/ytex.model.jar"/>
+		<zip destfile="${dist.home}/ytex.zip" basedir="${dist.home}" includes="ytex/**/*.*" excludes="ytex/lib/ytex.model.jar" />
 		<zip destfile="${dist.home}/ytex-with-dependencies.zip">
-			<fileset dir="${dist.home}" includes="ytex/**/*.*" excludes="ytex/lib/ytex.model.jar"/>
+			<fileset dir="${dist.home}" includes="ytex/**/*.*" excludes="ytex/lib/ytex.model.jar" />
 			<zipfileset dir="${nlp.home}" includes="${tomcat.dir}/**/*.*" excludes="${tomcat.dir}/webapps/**/*.*" />
 			<zipfileset dir="${nlp.home}" includes="${ant.dir}/**/*.*" excludes="${ant.dir}/docs/**/*.*" />
 			<zipfileset dir="../libs.system" includes="${sqljdbc.dir}/**/*.*" excludes="**/.svn/**/*.*" />
