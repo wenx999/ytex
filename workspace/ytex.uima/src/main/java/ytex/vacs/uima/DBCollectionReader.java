@@ -87,6 +87,10 @@ public class DBCollectionReader extends CollectionReader_ImplBase {
 				.getApplicationContext().getBean("dataSource");
 		simpleJdbcTemplate = new SimpleJdbcTemplate(dataSource);
 		namedJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
+		loadDocumentIds();
+	}
+
+	protected void loadDocumentIds() {
 		if (listDocumentIds == null) {
 			listDocumentIds = simpleJdbcTemplate
 					.queryForList(queryGetDocumentKeys);
@@ -106,6 +110,8 @@ public class DBCollectionReader extends CollectionReader_ImplBase {
 				if (keyTypeName != null) {
 					Annotation key = (Annotation)ConstructorUtils.invokeConstructor(Class
 							.forName(keyTypeName), aCAS.getJCas());
+					// just copy properties with the specified key names
+					BeanUtils.populate(key, id);
 					if (key instanceof DocumentKey) {
 						// backwards compatibility
 						DocumentKey docKey = (DocumentKey)key;
@@ -119,8 +125,6 @@ public class DBCollectionReader extends CollectionReader_ImplBase {
 						if (id.get("site_id") != null)
 							docKey.setSiteID((String) id.get("site_id"));
 					}
-					// just copy properties with the specified key names
-					BeanUtils.populate(key, id);
 					key.addToIndexes();
 				}
 			} catch (CASException ce) {
