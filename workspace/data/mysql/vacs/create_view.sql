@@ -10,7 +10,7 @@ as
       select da.document_id, k.study_id, k.uid, k.site_id, k.document_type_id, t.document_type_name
       from anno_base da
       inner join anno_dockey k on k.anno_base_id = da.anno_base_id
-      inner join ref_document_type t on t.document_type_id = k.document_type_id
+      left join ref_document_type t on t.document_type_id = k.document_type_id
 ;
 
 create view v_doctitle
