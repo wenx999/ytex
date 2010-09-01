@@ -6,7 +6,7 @@ insert into ref_uima_type values(5 , 'edu.mayo.bmi.uima.cdt.ae.type.RangeAnnotat
 insert into ref_uima_type values(6 , 'edu.mayo.bmi.uima.cdt.ae.type.RomanNumeralAnnotation', 'ytex.uima.mapper.AnnotationMapper');
 insert into ref_uima_type values(7 , 'edu.mayo.bmi.uima.cdt.ae.type.TimeAnnotation', 'ytex.uima.mapper.AnnotationMapper');
 insert into ref_uima_type values(8 , 'edu.mayo.bmi.uima.core.ae.type.NamedEntity', 'ytex.uima.mapper.NamedEntityDocumentAnnotationMapper');
-insert into ref_uima_type values(9 , 'edu.mayo.bmi.uima.core.sentence.type.Sentence', 'ytex.uima.mapper.AnnotationMapper');
+insert into ref_uima_type values(9 , 'edu.mayo.bmi.uima.core.sentence.type.Sentence', 'ytex.uima.mapper.SentenceAnnotationMapper');
 insert into ref_uima_type values(12 , 'edu.mayo.bmi.uima.core.ae.type.Segment', 'ytex.uima.mapper.SegmentAnnotationMapper');
 insert into ref_uima_type values(13 , 'org.apache.uima.examples.SourceDocumentInformation', 'ytex.uima.mapper.SourceDocumentInformationMapper');
 
