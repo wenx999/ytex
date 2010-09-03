@@ -4,7 +4,7 @@ create sequence hibernate_sequence;
 
 create table ref_named_entity_regex (
 	named_entity_regex_id int NOT NULL,
-	regex varchar2(256) not null,
+	regex varchar2(512) not null,
 	coding_scheme varchar2(20) not null,
 	code varchar2(20) not null,
 	oid varchar2(10) null,
