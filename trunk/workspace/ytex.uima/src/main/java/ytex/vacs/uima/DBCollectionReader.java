@@ -73,6 +73,11 @@ public class DBCollectionReader extends CollectionReader_ImplBase {
 
 	@Override
 	public void initialize() throws ResourceInitializationException {
+		initializePreLoad();
+		loadDocumentIds();
+	}
+
+	protected void initializePreLoad() throws ResourceInitializationException {
 		super.initialize();
 		ProcessingResourceMetaData metaData = getProcessingResourceMetaData();
 		ConfigurationParameterSettings paramSettings = metaData
@@ -87,7 +92,6 @@ public class DBCollectionReader extends CollectionReader_ImplBase {
 				.getApplicationContext().getBean("dataSource");
 		simpleJdbcTemplate = new SimpleJdbcTemplate(dataSource);
 		namedJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
-		loadDocumentIds();
 	}
 
 	protected void loadDocumentIds() {
