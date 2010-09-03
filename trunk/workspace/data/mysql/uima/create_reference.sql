@@ -1,6 +1,6 @@
 create table ref_named_entity_regex (
 	named_entity_regex_id int auto_increment NOT NULL,
-	regex varchar(256) not null,
+	regex varchar(512) not null,
 	coding_scheme varchar(20) not null,
 	code varchar(20) not null,
 	oid varchar(10),
