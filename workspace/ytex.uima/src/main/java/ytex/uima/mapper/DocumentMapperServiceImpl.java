@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.zip.GZIPOutputStream;
 
 import org.apache.commons.logging.Log;
@@ -122,14 +123,17 @@ public class DocumentMapperServiceImpl implements DocumentMapperService,
 	 * .JCas, java.lang.String)
 	 */
 	public Integer saveDocument(JCas jcas, String analysisBatch,
-			boolean bStoreDocText, boolean bStoreCAS) {
-		Document doc = createDocument(jcas, analysisBatch, bStoreDocText, bStoreCAS);
+			boolean bStoreDocText, boolean bStoreCAS,
+			Set<String> setTypesToIgnore) {
+		Document doc = createDocument(jcas, analysisBatch, bStoreDocText,
+				bStoreCAS);
 		this.sessionFactory.getCurrentSession().save(doc);
 		AnnotationIndex annoIdx = jcas
 				.getAnnotationIndex(Annotation.typeIndexID);
 		FSIterator annoIterator = annoIdx.iterator();
 		while (annoIterator.hasNext()) {
-			saveDocumentAnnotation((Annotation) annoIterator.next(), doc);
+			saveDocumentAnnotation((Annotation) annoIterator.next(), doc,
+					setTypesToIgnore);
 		}
 		return doc.getDocumentID();
 	}
@@ -144,17 +148,19 @@ public class DocumentMapperServiceImpl implements DocumentMapperService,
 	 * @return null if the annotation is not mapped
 	 */
 	private DocumentAnnotation saveDocumentAnnotation(Annotation annotation,
-			Document document) {
-		DocumentAnnotationMapper<? extends DocumentAnnotation> mapper = this
-				.getMapperForAnnotation(annotation.getClass().getName());
-		if (mapper != null) {
-			DocumentAnnotation docAnno = (DocumentAnnotation) mapper
-					.mapAnnotation(annotation, document, this
-							.getSessionFactory());
-			return docAnno;
-		} else {
-			return null;
+			Document document, Set<String> setTypesToIgnore) {
+		if (setTypesToIgnore != null
+				&& !setTypesToIgnore.contains(annotation.getClass().getName())) {
+			DocumentAnnotationMapper<? extends DocumentAnnotation> mapper = this
+					.getMapperForAnnotation(annotation.getClass().getName());
+			if (mapper != null) {
+				DocumentAnnotation docAnno = (DocumentAnnotation) mapper
+						.mapAnnotation(annotation, document, this
+								.getSessionFactory());
+				return docAnno;
+			}
 		}
+		return null;
 	}
 
 	/**
