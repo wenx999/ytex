@@ -1,5 +1,7 @@
 package ytex.uima.mapper;
 
+import java.util.Set;
+
 import org.apache.uima.jcas.JCas;
 
 public interface DocumentMapperService {
@@ -12,6 +14,7 @@ public interface DocumentMapperService {
 	 *            optional
 	 * @return document id
 	 */
-	public abstract Integer saveDocument(JCas jcas, String analysisBatch, boolean bStoreDocText, boolean bStoreCAS);
+	public abstract Integer saveDocument(JCas jcas, String analysisBatch,
+			boolean bStoreDocText, boolean bStoreCAS, Set<String> typesToIgnore);
 
 }

@@ -4,6 +4,10 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -29,6 +33,7 @@ import ytex.uima.mapper.DocumentMapperService;
  * 	<li>analysisBatch - String - Document group/analysis batch, stored in document.analysis_batch.  Defaults to current date/time.
  *  <li>storeDocText - boolean - should the document text be stored in the DB? defaults to true
  *  <li>storeCAS - boolean - should the serialized xmi cas be stored in the DB? defaults to true
+ *  <li>typesToIngore - multivalued String - uima types not to be saved. 
  * </ul>
  * @author vijay
  *
@@ -40,7 +45,9 @@ public class DBConsumer extends JCasAnnotator_ImplBase {
 	private String analysisBatch;
 	private boolean bStoreDocText;
 	private boolean bStoreCAS;
+	private Set<String> setTypesToIgnore = new HashSet<String>();
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void initialize(UimaContext aContext)
 			throws ResourceInitializationException {
@@ -51,6 +58,9 @@ public class DBConsumer extends JCasAnnotator_ImplBase {
 				.getConfigParameterValue("analysisBatch");
 		Boolean boolStoreDocText = (Boolean) aContext.getConfigParameterValue("storeDocText");
 		Boolean boolStoreCAS = (Boolean) aContext.getConfigParameterValue("storeCAS");
+		String typesToIgnore[] = (String[])aContext.getConfigParameterValue("typesToIgnore");
+		if(typesToIgnore != null)
+			setTypesToIgnore.addAll(Arrays.asList(typesToIgnore));
 		bStoreDocText = boolStoreDocText == null ? true : boolStoreDocText.booleanValue();
 		bStoreCAS = boolStoreCAS == null ? true : boolStoreCAS.booleanValue();
 		documentMapperService = (DocumentMapperService) ApplicationContextHolder
@@ -60,7 +70,7 @@ public class DBConsumer extends JCasAnnotator_ImplBase {
 	@Override
 	public void process(JCas jcas) {
 		Integer documentID = documentMapperService.saveDocument(jcas,
-				analysisBatch, bStoreDocText, bStoreCAS);
+				analysisBatch, bStoreDocText, bStoreCAS, setTypesToIgnore);
 		if (documentID != null && xmiOutputDirectory != null
 				&& xmiOutputDirectory.length() > 0) {
 			File dirOut = new File(xmiOutputDirectory);
