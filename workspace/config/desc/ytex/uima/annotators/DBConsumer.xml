@@ -33,6 +33,13 @@
         <multiValued>false</multiValued>
         <mandatory>false</mandatory>
       </configurationParameter>
+      <configurationParameter>
+        <name>typesToIgnore</name>
+        <description>uima types (fully qualified class names) that should not be saved in the database.</description>
+        <type>String</type>
+        <multiValued>true</multiValued>
+        <mandatory>false</mandatory>
+      </configurationParameter>
     </configurationParameters>
     <configurationParameterSettings>
       <nameValuePair>
