@@ -84,6 +84,24 @@
           <parameter>DBConsumer/analysisBatch</parameter>
         </overrides>
       </configurationParameter>
+      <configurationParameter>
+        <name>storeDocText</name>
+        <type>Boolean</type>
+        <multiValued>false</multiValued>
+        <mandatory>false</mandatory>
+        <overrides>
+          <parameter>DBConsumer/storeDocText</parameter>
+        </overrides>
+      </configurationParameter>
+      <configurationParameter>
+        <name>storeCAS</name>
+        <type>Boolean</type>
+        <multiValued>false</multiValued>
+        <mandatory>false</mandatory>
+        <overrides>
+          <parameter>DBConsumer/storeCAS</parameter>
+        </overrides>
+      </configurationParameter>
     </configurationParameters>
     <configurationParameterSettings>
       <nameValuePair>
@@ -104,6 +122,18 @@
         <name>analysisBatch</name>
         <value>
           <string>test</string>
+        </value>
+      </nameValuePair>
+      <nameValuePair>
+        <name>storeDocText</name>
+        <value>
+          <boolean>true</boolean>
+        </value>
+      </nameValuePair>
+      <nameValuePair>
+        <name>storeCAS</name>
+        <value>
+          <boolean>true</boolean>
         </value>
       </nameValuePair>
     </configurationParameterSettings>
