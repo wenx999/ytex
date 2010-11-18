@@ -17,8 +17,8 @@ public class DocumentClass implements Serializable {
 	private int documentClassID;
 	private int id;
 	private String task;
-	private String classAuto;
-	private String classGold;
+	private Integer classAuto;
+	private Integer classGold;
 	private Document document;
 	
 	public Document getDocument() {
@@ -45,16 +45,16 @@ public class DocumentClass implements Serializable {
 	public void setTask(String task) {
 		this.task = task;
 	}
-	public String getClassAuto() {
+	public Integer getClassAuto() {
 		return classAuto;
 	}
-	public void setClassAuto(String classAuto) {
+	public void setClassAuto(Integer classAuto) {
 		this.classAuto = classAuto;
 	}
-	public String getClassGold() {
+	public Integer getClassGold() {
 		return classGold;
 	}
-	public void setClassGold(String classGold) {
+	public void setClassGold(Integer classGold) {
 		this.classGold = classGold;
 	}
 	public DocumentClass() {
