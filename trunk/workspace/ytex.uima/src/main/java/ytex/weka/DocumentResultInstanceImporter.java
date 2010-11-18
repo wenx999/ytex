@@ -6,14 +6,13 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.SessionFactory;
 
-import ytex.dao.DocumentDaoImpl;
 import ytex.model.Document;
 import ytex.model.DocumentClass;
 
 public class DocumentResultInstanceImporter implements
 		WekaResultInstanceImporter {
 	private SessionFactory sessionFactory;
-	private static final Log log = LogFactory.getLog(DocumentDaoImpl.class);
+	private static final Log log = LogFactory.getLog(DocumentResultInstanceImporter.class);
 
 	public SessionFactory getSessionFactory() {
 		return sessionFactory;
