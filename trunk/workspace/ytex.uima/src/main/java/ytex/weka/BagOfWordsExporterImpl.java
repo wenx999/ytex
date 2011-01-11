@@ -212,7 +212,7 @@ public class BagOfWordsExporterImpl implements BagOfWordsExporter {
 				String classLabel = rs.getString(2);
 				instanceClasses.put(instanceId, classLabel);
 				classes.add(classLabel);
-				//add other attributes
+				// add other attributes
 				for (String columnHeader : this.numericColumnHeaders) {
 					double wordValue = rs.getDouble(columnHeader);
 					if (!rs.wasNull()) {
