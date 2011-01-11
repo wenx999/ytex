@@ -27,7 +27,9 @@
 		</id>
 		<many-to-one name="document" class="Document" column="document_id"
 			not-null="true" />
+		<!-- 
 		<property name="id" column="id" />
+		-->
 		<property name="task" column="task" />
 		<property name="classAuto" column="class_auto" />
 		<property name="classGold" column="class_gold" />

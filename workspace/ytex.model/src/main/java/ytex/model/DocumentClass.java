@@ -15,7 +15,7 @@ public class DocumentClass implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	private int documentClassID;
-	private int id;
+//	private int id;
 	private String task;
 	private Integer classAuto;
 	private Integer classGold;
@@ -33,12 +33,12 @@ public class DocumentClass implements Serializable {
 	public void setDocumentClassID(int documentClassID) {
 		this.documentClassID = documentClassID;
 	}
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
+//	public int getId() {
+//		return id;
+//	}
+//	public void setId(int id) {
+//		this.id = id;
+//	}
 	public String getTask() {
 		return task;
 	}
