@@ -106,8 +106,8 @@ public class DBCollectionReader extends CollectionReader_ImplBase {
 	public void getNext(final CAS aCAS) throws IOException, CollectionException {
 		if (i < listDocumentIds.size()) {
 			final Map<String, Object> id = listDocumentIds.get(i++);
-			if (log.isDebugEnabled()) {
-				log.debug("loading document with id = " + id);
+			if (log.isInfoEnabled()) {
+				log.info("loading document with id = " + id);
 			}
 			getDocumentById(aCAS, id);
 			try {
