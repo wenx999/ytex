@@ -61,6 +61,8 @@ public class SegmentRegexAnnotator extends JCasAnnotator_ImplBase {
 	@Override
 	public void process(JCas aJCas) throws AnalysisEngineProcessException {
 		String strDocText = aJCas.getDocumentText();
+		if(strDocText == null)
+			return;
 		List<Segment> segmentsAdded = new ArrayList<Segment>();
 		// find all the segments, set begin and id, add to list
 		for (Map.Entry<SegmentRegex, Pattern> entry : regexMap.entrySet()) {
