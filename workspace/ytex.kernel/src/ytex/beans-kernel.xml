@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
+http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
+	<bean
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations" value="classpath:ytex.properties" />
+	</bean>
+	<!--
+		the transactional advice (what 'happens'; see the <aop:advisor/> bean
+		below)
+	-->
+	<tx:advice id="txAdvice" transaction-manager="kernelTransactionManager">
+		<!-- the transactional semantics... -->
+		<tx:attributes>
+			<tx:method name="*" propagation="REQUIRED" />
+		</tx:attributes>
+	</tx:advice>
+	<!--
+		ensure that the above transactional advice runs for any execution of
+		an operation defined by the FooService interface
+	-->
+	<aop:config>
+		<aop:pointcut id="daoOperation"
+			expression="execution(* ytex.kernel.dao.*Dao.*(..))" />
+		<aop:pointcut id="umlsDaoOperation" expression="execution(* ytex.umls.dao.*Dao.*(..))" />
+		<aop:pointcut id="gramOperation"
+			expression="execution(* ytex.kernel.GramMatrixExpoerter*.*(..))" />
+		<aop:pointcut id="wekaOperation"
+			expression="execution(* ytex.weka.BagOfWordsExporter.*(..))" />
+		<aop:pointcut id="wekaImporter"
+			expression="execution(* ytex.weka.WekaResultsImporterImpl.*(..))" />
+		<aop:pointcut id="mapperOperation" expression="execution(* ytex.uima.mapper.*.*(..))" />
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="gramOperation" />
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="wekaOperation" />
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="mapperOperation" />
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="wekaImporter" />
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="daoOperation" />
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="umlsDaoOperation" />
+	</aop:config>
+
+	<bean id="kernelSessionFactory"
+		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="mappingResources">
+			<list>
+				<value>ytex/kernel/model/KernelEvaluation.hbm.xml</value>
+				<value>ytex/kernel/model/ConceptGraph.hbm.xml</value>
+				<value>ytex/kernel/model/Corpus.hbm.xml</value>
+				<value>ytex/model/Document.hbm.xml</value>
+				<value>ytex/model/DocumentAnnotation.hbm.xml</value>
+			</list>
+		</property>
+		<property name="hibernateProperties" ref="hibernateProperties" />
+	</bean>
+	<bean id="umlsHibernateProperties"
+		class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+		<property name="properties">
+			<props>
+				<prop key="hibernate.dialect">${hibernate.dialect}</prop>
+				<!--   
+				-->
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.default_schema">umls</prop>
+				<prop key="hibernate.cache.provider_class">org.hibernate.cache.EhCacheProvider</prop>
+				<prop key="hibernate.cache.use_query_cache">true</prop>
+			</props>
+		</property>
+	</bean>
+	<bean id="umlsSessionFactory"
+		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="mappingResources">
+			<list>
+				<value>ytex/umls/model/UMLS.hbm.xml</value>
+			</list>
+		</property>
+		<property name="hibernateProperties" ref="umlsHibernateProperties" />
+	</bean>
+	<bean id="kernelTransactionManager"
+		class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory" ref="kernelSessionFactory" />
+	</bean>
+	<bean id="kernelEvaluationDao" class="ytex.kernel.dao.KernelEvaluationDaoImpl">
+		<property name="sessionFactory" ref="kernelSessionFactory" />
+	</bean>
+	<bean id="conceptDao" class="ytex.kernel.dao.ConceptDaoImpl">
+		<property name="sessionFactory" ref="kernelSessionFactory" />
+		<property name="umlsDao" ref="umlsDao" />
+	</bean>
+	<bean id="umlsDao" class="ytex.umls.dao.UMLSDaoImpl">
+		<property name="sessionFactory" ref="umlsSessionFactory" />
+	</bean>
+	<bean id="bagOfWordsExporter" class="ytex.weka.BagOfWordsExporterImpl">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	<bean id="gramMatrixExporter" class="ytex.kernel.GramMatrixExporterImpl">
+		<property name="dataSource" ref="dataSource" />
+		<property name="kernelEvaluationDao" ref="kernelEvaluationDao" />
+		<property name="bagOfWordsExporter" ref="bagOfWordsExporter" />
+		<property name="transactionManager" ref="kernelTransactionManager" />
+	</bean>
+	<bean id="documentResultInstanceImporter" class="ytex.weka.DocumentResultInstanceImporter">
+		<property name="sessionFactory" ref="kernelSessionFactory" />
+	</bean>
+	<bean id="wekaResultsImporter" class="ytex.weka.WekaResultsImporterImpl">
+		<property name="docResultInstanceImporter" ref="documentResultInstanceImporter" />
+	</bean>
+	<bean id="corpusDao" class="ytex.kernel.dao.CorpusDaoImpl">
+		<property name="sessionFactory" ref="kernelSessionFactory" />
+	</bean>
+	<bean id="conceptSimilarityService" class="ytex.kernel.ConceptSimilarityServiceImpl"
+		init-method="init">
+		<property name="transactionManager" ref="kernelTransactionManager" />
+		<property name="conceptDao" ref="conceptDao" />
+		<property name="corpusDao" ref="corpusDao" />
+		<property name="corpusNames">
+			<list>
+				<value>cmc-ctakes</value>
+			</list>
+		</property>
+	</bean>
+</beans>
