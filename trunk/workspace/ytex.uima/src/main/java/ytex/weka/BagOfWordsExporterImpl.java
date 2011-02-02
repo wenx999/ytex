@@ -52,9 +52,10 @@ public class BagOfWordsExporterImpl implements BagOfWordsExporter {
 	 */
 	private Instances initializeInstances(String arffRelation,
 			Set<String> classLabels, Set<String> numericWords,
-			Map<String, Set<String>> nominalWords, BagOfWordsDecorator bDecorator) {
+			Map<String, Set<String>> nominalWords,
+			BagOfWordsDecorator bDecorator) {
 		FastVector wekaAttributes = new FastVector(numericWords.size()
-					+ nominalWords.size() + 2);
+				+ nominalWords.size() + 2);
 		// add instance id attribute
 		wekaAttributes.addElement(new Attribute("instance_id"));
 		// add numeric word attributes
@@ -249,8 +250,8 @@ public class BagOfWordsExporterImpl implements BagOfWordsExporter {
 					.doubleValue());
 			// set document class
 			Attribute classAttr = instances.attribute("class");
-			wekaInstance.setValue(classAttr.index(),
-					classAttr.indexOfValue(entry.getValue()));
+			wekaInstance.setValue(classAttr.index(), classAttr
+					.indexOfValue(entry.getValue()));
 			// set numeric words
 			if (instanceNumericWords.get(entry.getKey()) != null) {
 				for (Map.Entry<String, Double> word : instanceNumericWords.get(
@@ -278,7 +279,8 @@ public class BagOfWordsExporterImpl implements BagOfWordsExporter {
 
 	public void exportBagOfWords(String arffRelation,
 			String instanceClassQuery, String instanceNumericWordQuery,
-			String instanceNominalWordQuery, BufferedWriter writer) throws IOException {
+			String instanceNominalWordQuery, BufferedWriter writer)
+			throws IOException {
 		exportBagOfWords(arffRelation, instanceClassQuery,
 				instanceNumericWordQuery, instanceNominalWordQuery, writer,
 				null);
@@ -313,12 +315,14 @@ public class BagOfWordsExporterImpl implements BagOfWordsExporter {
 					instanceNumericWords, numericWords);
 		// added to support adding gram matrix index in GramMatrixExporter
 		if (bDecorator != null)
-			bDecorator.decorateNumericInstanceWords(instanceNumericWords, numericWords);
+			bDecorator.decorateNumericInstanceWords(instanceNumericWords,
+					numericWords);
 		if (instanceNominalWordQuery.trim().length() > 0)
 			this.getNominalInstanceWords(instanceNominalWordQuery,
 					instanceNominalWords, nominalWordValueMap);
 		if (bDecorator != null)
-			bDecorator.decorateNominalInstanceWords(instanceNominalWords, nominalWordValueMap);
+			bDecorator.decorateNominalInstanceWords(instanceNominalWords,
+					nominalWordValueMap);
 		// add instance for each document
 		// initialize the instances
 		Instances instances = initializeInstances(arffRelation, classes,
@@ -350,13 +354,12 @@ public class BagOfWordsExporterImpl implements BagOfWordsExporter {
 				props.loadFromXML(in);
 			else
 				props.load(in);
-			writer = new BufferedWriter(new FileWriter(
-					props.getProperty("arffFile")));
-			exportBagOfWords(props.getProperty("arffRelation"),
-					props.getProperty("instanceClassQuery"),
-					props.getProperty("numericWordQuery", ""),
-					props.getProperty("nominalWordQuery", ""), writer,
-					bDecorator);
+			writer = new BufferedWriter(new FileWriter(props
+					.getProperty("arffFile")));
+			exportBagOfWords(props.getProperty("arffRelation"), props
+					.getProperty("instanceClassQuery"), props.getProperty(
+					"numericWordQuery", ""), props.getProperty(
+					"nominalWordQuery", ""), writer, bDecorator);
 		} finally {
 			try {
 				if (in != null)

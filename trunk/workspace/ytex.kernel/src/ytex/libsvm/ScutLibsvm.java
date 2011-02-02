@@ -20,10 +20,14 @@ public class ScutLibsvm {
 		ScutLibsvm scutLibsvm = new ScutLibsvm();
 		Object[] scutOutput = scutLibsvm.calculateScutLibsvm(predictionFile,
 				instanceFile);
-		scutLibsvm.printIRMetrics(System.out, "raw\t", (IRMetrics) scutOutput[1]);
-		scutLibsvm.printIRMetrics(System.out, "scut\t" + scutOutput[0], (IRMetrics) scutOutput[2]);
-//		Object[] scutApplyOutput = scutLibsvm.applyScutLibsvm(predictionFile, instanceFile, (Double)scutOutput[0]);
-//		scutLibsvm.printIRMetrics(System.out, "apply scut\t" + scutOutput[0], (IRMetrics) scutApplyOutput[1]);
+		scutLibsvm.printIRMetrics(System.out, "raw\t",
+				(IRMetrics) scutOutput[1]);
+		scutLibsvm.printIRMetrics(System.out, "scut\t" + scutOutput[0],
+				(IRMetrics) scutOutput[2]);
+		// Object[] scutApplyOutput = scutLibsvm.applyScutLibsvm(predictionFile,
+		// instanceFile, (Double)scutOutput[0]);
+		// scutLibsvm.printIRMetrics(System.out, "apply scut\t" + scutOutput[0],
+		// (IRMetrics) scutApplyOutput[1]);
 	}
 
 	/**
@@ -55,9 +59,10 @@ public class ScutLibsvm {
 	 * 
 	 * @param predictionFile
 	 * @param instanceFile
-	 * @param scutThreshold threshold to apply
-	 * @return [IRMetrics raw - ir scores using
-	 *         libsvm's default threshold, IRMetrics scut]
+	 * @param scutThreshold
+	 *            threshold to apply
+	 * @return [IRMetrics raw - ir scores using libsvm's default threshold,
+	 *         IRMetrics scut]
 	 * @throws Exception
 	 */
 	public Object[] applyScutLibsvm(String predictionFile, String instanceFile,

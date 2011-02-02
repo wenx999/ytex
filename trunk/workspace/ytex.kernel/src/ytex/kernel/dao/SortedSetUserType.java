@@ -35,9 +35,9 @@ public class SortedSetUserType {
 	private String sortedSetToString(SortedSet<String> set) {
 		StringBuilder b = new StringBuilder();
 		Iterator<String> iter = set.iterator();
-		while(iter.hasNext()) {
+		while (iter.hasNext()) {
 			b.append(iter.next());
-			if(iter.hasNext()) {
+			if (iter.hasNext()) {
 				b.append("|");
 			}
 		}
@@ -60,7 +60,7 @@ public class SortedSetUserType {
 	@SuppressWarnings("unchecked")
 	public void nullSafeSet(PreparedStatement st, Object value, int index)
 			throws HibernateException, SQLException {
-		st.setString(index, sortedSetToString((SortedSet<String>)value));
+		st.setString(index, sortedSetToString((SortedSet<String>) value));
 	}
 
 	public Object deepCopy(Object value) {
@@ -78,20 +78,22 @@ public class SortedSetUserType {
 		return true;
 	}
 
-    public Object assemble(Serializable cached, Object owner) throws HibernateException  
-    {
-         return cached;
-    } 
+	public Object assemble(Serializable cached, Object owner)
+			throws HibernateException {
+		return cached;
+	}
 
-    public Serializable disassemble(Object value) throws HibernateException { 
-        return (Serializable)value; 
-    } 
- 
-    public Object replace(Object original, Object target, Object owner) throws HibernateException { 
-        return original; 
-    } 
-    public int hashCode(Object x) throws HibernateException { 
-        return x.hashCode(); 
-    } 
+	public Serializable disassemble(Object value) throws HibernateException {
+		return (Serializable) value;
+	}
+
+	public Object replace(Object original, Object target, Object owner)
+			throws HibernateException {
+		return original;
+	}
+
+	public int hashCode(Object x) throws HibernateException {
+		return x.hashCode();
+	}
 
 }

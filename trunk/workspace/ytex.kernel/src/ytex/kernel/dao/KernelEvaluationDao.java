@@ -17,7 +17,8 @@ public interface KernelEvaluationDao {
 	public abstract Double getKernel(String name, int instanceId1,
 			int instanceId2);
 
-	public abstract List<KernelEvaluation> getAllKernelEvaluations(Set<String> names);
+	public abstract List<KernelEvaluation> getAllKernelEvaluations(
+			Set<String> names);
 
 	List<KernelEvaluation> getAllKernelEvaluationsForInstance(
 			Set<String> names, int instanceId);

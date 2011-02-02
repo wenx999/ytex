@@ -16,7 +16,6 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import javax.sql.DataSource;
-import javax.transaction.TransactionManager;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowCallbackHandler;
@@ -26,8 +25,6 @@ import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
 
-import weka.core.Attribute;
-import weka.core.FastVector;
 import ytex.kernel.dao.KernelEvaluationDao;
 import ytex.kernel.model.KernelEvaluation;
 import ytex.weka.BagOfWordsDecorator;
@@ -99,14 +96,16 @@ public class GramMatrixExporterImpl extends BagOfWordsExporterImpl implements
 		public void decorateNumericInstanceWords(
 				Map<Integer, Map<String, Double>> instanceNumericWords,
 				Set<String> numericWords) {
-			for (Map.Entry<Integer, Integer> instanceIdToIndex : instanceIdToIndexMap.entrySet()) {
+			for (Map.Entry<Integer, Integer> instanceIdToIndex : instanceIdToIndexMap
+					.entrySet()) {
 				int instanceId = instanceIdToIndex.getKey();
 				int index = instanceIdToIndex.getValue();
-				if(!instanceNumericWords.containsKey(instanceId)) {
-					instanceNumericWords.put(instanceId, new HashMap<String,Double>());
+				if (!instanceNumericWords.containsKey(instanceId)) {
+					instanceNumericWords.put(instanceId,
+							new HashMap<String, Double>());
 				}
 				instanceNumericWords.get(instanceId).put(INDEX_NAME,
-						(double)index);
+						(double) index);
 			}
 			numericWords.add(INDEX_NAME);
 		}
@@ -141,15 +140,15 @@ public class GramMatrixExporterImpl extends BagOfWordsExporterImpl implements
 				props.loadFromXML(in);
 			else
 				props.load(in);
-			matrixWriter = new BufferedWriter(new FileWriter(
-					props.getProperty("matrixFile")));
+			matrixWriter = new BufferedWriter(new FileWriter(props
+					.getProperty("matrixFile")));
 			String kernelEvaluationNames = props
 					.getProperty("kernelEvaluationNames");
 			Set<String> setKernelEvaluationNames = new HashSet<String>();
-			Collections.addAll(setKernelEvaluationNames,
-					kernelEvaluationNames.split(","));
-			initializeInstanceIndices(props.getProperty("instanceClassQuery"), instanceIDClassLabel,
-					instanceIdToIndexMap);			
+			Collections.addAll(setKernelEvaluationNames, kernelEvaluationNames
+					.split(","));
+			initializeInstanceIndices(props.getProperty("instanceClassQuery"),
+					instanceIDClassLabel, instanceIdToIndexMap);
 			this.bagOfWordsExporter.exportBagOfWords(propertyFile,
 					new GramMatrixArffDecorator(instanceIdToIndexMap));
 			exportGramMatrix(matrixWriter, setKernelEvaluationNames,
@@ -186,7 +185,8 @@ public class GramMatrixExporterImpl extends BagOfWordsExporterImpl implements
 			final int instanceId = instanceIdIndex.getKey();
 			TransactionTemplate t = new TransactionTemplate(
 					this.transactionManager);
-			t.setPropagationBehavior(TransactionTemplate.PROPAGATION_REQUIRES_NEW);
+			t
+					.setPropagationBehavior(TransactionTemplate.PROPAGATION_REQUIRES_NEW);
 			t.execute(new TransactionCallback<Object>() {
 				@Override
 				public Object doInTransaction(TransactionStatus arg0) {
@@ -214,7 +214,8 @@ public class GramMatrixExporterImpl extends BagOfWordsExporterImpl implements
 				}
 			});
 		}
-		// may run into memory issues/ transaction timeout with getting all kernel evals in one go
+		// may run into memory issues/ transaction timeout with getting all
+		// kernel evals in one go
 		// for (KernelEvaluation keval : this.getKernelEvaluationDao()
 		// .getAllKernelEvaluations(kernelEvaluationNames)) {
 		// Integer index1 = instanceToIndexMap.get(keval.getInstanceId1());

@@ -17,7 +17,7 @@ import org.apache.commons.logging.LogFactory;
 import org.hibernate.HibernateException;
 import org.hibernate.usertype.UserType;
 
-public class StringArrayUserType implements UserType  {
+public class StringArrayUserType implements UserType {
 	private static final Log log = LogFactory.getLog(StringArrayUserType.class);
 
 	public int[] sqlTypes() {
@@ -72,9 +72,9 @@ public class StringArrayUserType implements UserType  {
 		if (value == null)
 			return null;
 
-		String source[] = (String[])value;
+		String source[] = (String[]) value;
 		String copy[] = new String[source.length];
-		for(int i=0; i<source.length; i++)
+		for (int i = 0; i < source.length; i++)
 			copy[i] = source[i];
 		return copy;
 	}

@@ -18,7 +18,7 @@ public class CorpusDaoTest extends TestCase {
 	public void testUpdateCorpusTermFrequency() {
 		Set<String> analysisBatches = new HashSet<String>(1);
 		analysisBatches.add("cmc-ctakes");
-//		corpusDao.updateCorpusTermFrequency("cmc-ctakes", analysisBatches);
+		// corpusDao.updateCorpusTermFrequency("cmc-ctakes", analysisBatches);
 	}
 
 }

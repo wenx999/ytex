@@ -92,15 +92,15 @@ public class ConcRel implements java.io.Serializable {
 	 */
 	public static ObjPair<ConcRel, Integer> getLeastCommonConcept(ConcRel c1,
 			ConcRel c2) {
-		if(log.isLoggable(Level.FINE)) {
-			log.fine("getLeastCommonConcept("+c1+","+c2+")");
+		if (log.isLoggable(Level.FINE)) {
+			log.fine("getLeastCommonConcept(" + c1 + "," + c2 + ")");
 		}
 		// result
 		ObjPair<ConcRel, Integer> res = new ObjPair<ConcRel, Integer>(null,
 				Integer.MAX_VALUE);
-		//concept 1's parent distance map
+		// concept 1's parent distance map
 		Map<ConcRel, Integer> cand1 = new HashMap<ConcRel, Integer>();
-		//concept 2's parent distance map
+		// concept 2's parent distance map
 		Map<ConcRel, Integer> cand2 = new HashMap<ConcRel, Integer>();
 
 		// parents of concept 1
@@ -113,40 +113,41 @@ public class ConcRel implements java.io.Serializable {
 		HashSet<ConcRel> tmp2;
 
 		int dist = 0;
-		//while there are parents
-		//this does a dual-breadth first search
-		//parC1 are the dist'th ancestors of concept 1
-		//parC2 are the dist'th ancestors of concept 2  
+		// while there are parents
+		// this does a dual-breadth first search
+		// parC1 are the dist'th ancestors of concept 1
+		// parC2 are the dist'th ancestors of concept 2
 		while (!parC1.isEmpty() || !parC2.isEmpty()) {
-			//grandparents
+			// grandparents
 			tmp.clear();
-			//go through parents of concept1
+			// go through parents of concept1
 			for (Iterator<ConcRel> it = parC1.iterator(); it.hasNext();) {
 				ConcRel cr = it.next();
-				//checkif it's in the map concept2's parent distance map
-				//- map of distances from concept 1
+				// checkif it's in the map concept2's parent distance map
+				// - map of distances from concept 1
 				if (cand2.containsKey(cr)) {
 					res.v1 = cr;
 					res.v2 = dist + cand2.get(cr).intValue();
-					//return
+					// return
 					return res;
 				}
-				//not in the map - add it to the concept-distance map
+				// not in the map - add it to the concept-distance map
 				cand1.put(cr, dist);
-				//add the grandparents to the tmp set
+				// add the grandparents to the tmp set
 				tmp.addAll(cr.parents);
 			}
-			//remove concepts already in concept1's parent distance map from the grandparent map
+			// remove concepts already in concept1's parent distance map from
+			// the grandparent map
 			tmp.removeAll(cand1.keySet());
-			//tmp2 becomes the parents of c1
+			// tmp2 becomes the parents of c1
 			tmp2 = parC1;
-			//par c1 becomes grandparents minus parents
+			// par c1 becomes grandparents minus parents
 			parC1 = tmp;
-			//tmp becomes tmp2, which is going to be killed in the next line
+			// tmp becomes tmp2, which is going to be killed in the next line
 			tmp = tmp2;
 
 			tmp.clear();
-			//repeat everything for concept2 - go up one level 
+			// repeat everything for concept2 - go up one level
 			for (Iterator<ConcRel> it = parC2.iterator(); it.hasNext();) {
 				ConcRel cr = it.next();
 				if (cand1.containsKey(cr)) {

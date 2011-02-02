@@ -6,13 +6,15 @@ public class ExportGramMatrix {
 
 	/**
 	 * @param args
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public static void main(String[] args) throws IOException {
-		if(args.length < 1) {
-			System.out.println("usage: java ytex.kernel.ExportGramMatrix <property file>");
+		if (args.length < 1) {
+			System.out
+					.println("usage: java ytex.kernel.ExportGramMatrix <property file>");
 		} else {
-			GramMatrixExporter g = (GramMatrixExporter)KernelContextHolder.getApplicationContext().getBean("gramMatrixExporter");
+			GramMatrixExporter g = (GramMatrixExporter) KernelContextHolder
+					.getApplicationContext().getBean("gramMatrixExporter");
 			g.exportGramMatrix(args[0]);
 		}
 	}

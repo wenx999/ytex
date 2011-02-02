@@ -26,7 +26,8 @@ public class CalculateMetrics {
 	private static final int IDX_FP = 2;
 	private static final int IDX_FN = 3;
 	private static final int IDX_PREC = 4;
-	private static final int IDX_RECALL = 5;	private static final int IDX_SPEC = 6;
+	private static final int IDX_RECALL = 5;
+	private static final int IDX_SPEC = 6;
 	private static final int IDX_F1 = 7;
 
 	public static void main(String args[]) throws Exception {
@@ -55,7 +56,8 @@ public class CalculateMetrics {
 		}
 	}
 
-	private static void outputMetrics(Map<String, double[]> metrics, String modelFile) throws IOException {
+	private static void outputMetrics(Map<String, double[]> metrics,
+			String modelFile) throws IOException {
 		for (Map.Entry<String, double[]> entry : metrics.entrySet()) {
 			MessageFormat doubleFmt = new MessageFormat("{0,number,#.###}");
 			System.out.print(entry.getKey());
@@ -68,11 +70,11 @@ public class CalculateMetrics {
 				System.out.print("\t");
 				System.out.print(doubleFmt.format(new Object[] { new Double(
 						classMetric[i]) }));
-			} 
-			if(modelFile != null) {
+			}
+			if (modelFile != null) {
 				String totalSV = getTotalSV(modelFile);
 				System.out.print("\t");
-				if(totalSV != null) {
+				if (totalSV != null) {
 					System.out.print(totalSV);
 				}
 			}
@@ -214,23 +216,23 @@ public class CalculateMetrics {
 		}
 		return token;
 	}
-	
+
 	private static String getTotalSV(String modelFile) throws IOException {
 		BufferedReader r = null;
 		try {
 			r = new BufferedReader(new FileReader(modelFile));
 			String line = null;
-			while((line = r.readLine()) != null) {
+			while ((line = r.readLine()) != null) {
 				Matcher m = totalSVPattern.matcher(line);
-				if(m.find()) {
+				if (m.find()) {
 					return m.group(1);
 				}
 			}
 		} finally {
 			try {
-				if(r != null)
+				if (r != null)
 					r.close();
-			} catch(Exception e) {
+			} catch (Exception e) {
 				System.err.println("reading model file");
 				e.printStackTrace(System.err);
 			}

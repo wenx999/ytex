@@ -12,7 +12,8 @@ import ytex.model.DocumentClass;
 public class DocumentResultInstanceImporter implements
 		WekaResultInstanceImporter {
 	private SessionFactory sessionFactory;
-	private static final Log log = LogFactory.getLog(DocumentResultInstanceImporter.class);
+	private static final Log log = LogFactory
+			.getLog(DocumentResultInstanceImporter.class);
 
 	public SessionFactory getSessionFactory() {
 		return sessionFactory;
