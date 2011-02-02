@@ -15,7 +15,7 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
 		the transactional advice (what 'happens'; see the <aop:advisor/> bean
 		below)
 	-->
-	<tx:advice id="txAdvice" transaction-manager="cmcTransactionManager">
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
 		<!-- the transactional semantics... -->
 		<tx:attributes>
 			<tx:method name="*" propagation="REQUIRED" />
@@ -33,46 +33,32 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
 		<aop:advisor advice-ref="txAdvice" pointcut-ref="cmcKernelOperation" />
 	</aop:config>
 
-	<bean id="cmcSessionFactory"
-		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
-		<property name="dataSource" ref="dataSource" />
-		<property name="mappingResources">
-			<list>
-				<value>ytex/cmc/model/cmc.hbm.xml</value>
-				<value>ytex/model/Document.hbm.xml</value>
-				<value>ytex/model/DocumentAnnotation.hbm.xml</value>
-				<value>ytex/model/NamedEntityRegex.hbm.xml</value>
-				<value>ytex/model/SegmentRegex.hbm.xml</value>
-			</list>
-		</property>
-		<property name="hibernateProperties" ref="hibernateProperties" />
-	</bean>
-	<bean id="cmcTransactionManager"
+	<bean id="transactionManager"
 		class="org.springframework.orm.hibernate3.HibernateTransactionManager">
-		<property name="sessionFactory" ref="cmcSessionFactory" />
+		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 	<bean id="documentLoader" class="ytex.cmc.DocumentLoaderImpl">
-		<property name="sessionFactory" ref="cmcSessionFactory" />
+		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 	<bean id="cTakesXpathKernel" class="ytex.cmc.CTakesXPathKernelImpl"
 		init-method="init">
-		<property name="sessionFactory" ref="cmcSessionFactory" />
-		<property name="cmcSessionFactory" ref="cmcSessionFactory" />
+		<property name="sessionFactory" ref="sessionFactory" />
 		<property name="cacheManager" ref="cacheManager" />
 		<property name="conceptSimilarityService" ref="conceptSimilarityService" />
 		<property name="kernelEvaluationDao" ref="kernelEvaluationDao" />
 	</bean>
 	<bean id="cTakesDBKernel" class="ytex.cmc.CTakesDBKernelImpl"
 		init-method="init">
-		<property name="sessionFactory" ref="cmcSessionFactory" />
+		<property name="sessionFactory" ref="sessionFactory" />
 		<property name="cacheManager" ref="cacheManager" />
 		<property name="conceptSimilarityService" ref="conceptSimilarityService" />
-		<property name="transactionManager" ref="cmcTransactionManager" />
+		<property name="transactionManager" ref="transactionManager" />
 	</bean>
 	<bean id="cmcEvaluator" class="ytex.cmc.CMCEvaluatorImpl">
-		<property name="cmcSessionFactory" ref="cmcSessionFactory" />
+		<property name="sessionFactory" ref="sessionFactory" />
 		<property name="kernelEvaluationDao" ref="kernelEvaluationDao" />
 		<property name="kernel" ref="cTakesDBKernel" />
+		<property name="transactionManager" ref="transactionManager" />
 	</bean>
 	
 	<bean id="ehcacheConfigURL"
