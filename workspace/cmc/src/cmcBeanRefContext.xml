@@ -8,7 +8,8 @@
 			<list>
 				<value>ytex/beans-datasource.xml</value>
 				<value>ytex/beans.xml</value>
-				<value>ytex/cmc/beans.xml</value>
+				<value>ytex/beans-cmc.xml</value>
+				<value>ytex/beans-cmc.hbm.xml</value>
 				<value>ytex/beans-kernel.xml</value>
 			</list>
 		</constructor-arg>

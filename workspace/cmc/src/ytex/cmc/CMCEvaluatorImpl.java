@@ -1,16 +1,41 @@
 package ytex.cmc;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallback;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import ytex.kernel.dao.KernelEvaluationDao;
+import ytex.kernel.model.KernelEvalKey;
+import ytex.kernel.model.KernelEvaluation;
 
 public class CMCEvaluatorImpl implements CMCEvaluator {
-	SessionFactory cmcSessionFactory;
+	SessionFactory sessionFactory;
 	KernelEvaluationDao kernelEvaluationDao;
 	CMCKernel kernel;
+	PlatformTransactionManager transactionManager;
+	TransactionTemplate txTemplate;
+
+	public PlatformTransactionManager getTransactionManager() {
+		return transactionManager;
+	}
+
+	public void setTransactionManager(
+			PlatformTransactionManager transactionManager) {
+		this.transactionManager = transactionManager;
+		txTemplate = new TransactionTemplate(this.transactionManager);
+		txTemplate
+				.setPropagationBehavior(TransactionTemplate.PROPAGATION_REQUIRES_NEW);
+	}
 
 	public KernelEvaluationDao getKernelEvaluationDao() {
 		return kernelEvaluationDao;
@@ -28,33 +53,70 @@ public class CMCEvaluatorImpl implements CMCEvaluator {
 		this.kernel = kernel;
 	}
 
-	public SessionFactory getCmcSessionFactory() {
-		return cmcSessionFactory;
+	public SessionFactory getSessionFactory() {
+		return sessionFactory;
 	}
 
-	public void setCmcSessionFactory(SessionFactory cmcSessionFactory) {
-		this.cmcSessionFactory = cmcSessionFactory;
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see ytex.cmc.CMCEvaluator#evaluateAllCMC()
 	 */
+	@SuppressWarnings("unchecked")
 	public void evaluateAllCMC() {
-		Query q = cmcSessionFactory.getCurrentSession().createQuery(
-				"select documentId from CMCDocument where documentSet = 'train' order by documentId asc");
-		q.setMaxResults(100);
+		Query q = sessionFactory
+				.getCurrentSession()
+				.createQuery(
+						"select documentId from CMCDocument where documentSet = 'train' order by documentId asc");
+		// q.setMaxResults(100);
 		List<Integer> documentIds = q.list();
+		Query qtest = sessionFactory
+				.getCurrentSession()
+				.createQuery(
+						"select documentId from CMCDocument where documentSet = 'test' order by documentId asc");
+		Set<String> names = new HashSet<String>(1);
+		names.add("cmc-ctakes");
+		List<Integer> testDocumentIds = qtest.list();
+		// Map<KernelEvalKey, Double> mapKernelEval = kernelEvaluationDao
+		// .getAllKernelEvaluations("cmc-ctakes");
 		for (int i = 0; i < documentIds.size(); i++) {
-			for (int j = i; j < documentIds.size(); j++) {
-				if (i != j) {
-					int instanceId1 = documentIds.get(i);
-					int instanceId2 = documentIds.get(j);
-					kernelEvaluationDao.storeKernel("cmc-ctakes", instanceId1,
-							instanceId2, kernel.calculateSimilarity(instanceId1,
-									instanceId2));
+			// left hand side of kernel evaluation
+			int instanceId1 = documentIds.get(i);
+			// list of instance ids right hand side of kernel evaluation
+			SortedSet<Integer> rightDocumentIDs = new TreeSet<Integer>(
+					documentIds.subList(i + 1, documentIds.size() - 1));
+			rightDocumentIDs.addAll(testDocumentIds);
+			// remove instances already evaluated
+			for (KernelEvaluation kEval : this.kernelEvaluationDao
+					.getAllKernelEvaluationsForInstance(names, instanceId1)) {
+				rightDocumentIDs
+						.remove(instanceId1 == kEval.getInstanceId1() ? kEval
+								.getInstanceId2() : kEval.getInstanceId1());
+			}
+			for (Integer instanceId2 : rightDocumentIDs) {
+				if (instanceId1 != instanceId2) {
+					final int i1 = instanceId1;
+					final int i2 = instanceId2;
+					// if (!mapKernelEval.containsKey(new KernelEvalKey(i1,
+					// i2))) {
+					// store in separate tx so that there are less objects
+					// in
+					// session for hibernate to deal with
+					txTemplate.execute(new TransactionCallback() {
+						@Override
+						public Object doInTransaction(TransactionStatus arg0) {
+							kernelEvaluationDao.storeKernel("cmc-ctakes", i1,
+									i2, kernel.calculateSimilarity(i1, i2));
+							return null;
+						}
+					});
+					// }
 				}
 			}
 		}
 	}
-
 }
