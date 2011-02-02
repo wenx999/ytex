@@ -26,11 +26,19 @@
 	]]></query>
 	<query name="getAllKernelEvaluations"><![CDATA[
 		from KernelEvaluation
-		where name in (:names)
+		where name = :name
 	]]></query>
+	<!-- 
+	2 separate indices for instanceId1 & instanceId2
+	use union so that mysql can use both indices
+	 -->
 	<query name="getAllKernelEvaluationsForInstance"><![CDATA[
 		from KernelEvaluation
 		where name in (:names)
-		and (instanceId1 = :instanceId or instanceId2 = :instanceId)  
+		and instanceId1 = :instanceId 
+		union
+		from KernelEvaluation
+		where name in (:names)
+		and instanceId2 = :instanceId 
 	]]></query>	
 </hibernate-mapping>
