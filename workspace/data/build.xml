@@ -1,5 +1,6 @@
 <project name="ytex.data.mssql">
 	<taskdef resource="net/sf/antcontrib/antlib.xml" />
+	<property environment="env"/>
 	<property name="ytex.home" value=".."/>
 	<property name="ytex.properties" value="${ytex.home}/config/desc/ytex.properties" />
 	<property file="${ytex.properties}" />
@@ -8,6 +9,7 @@
 	<property name="mysql.line" value="--user=${db.username} --password=${db.password} --host=${db.host} ${db.schema}" />
 	<property name="sqlplus.line" value="${db.username}/${db.password}@${db.name}" />
 	<property name="umls.zip" value="${ytex.home}/../umls-${db.type}.zip"/>
+	<property name="mysql.home" value="${env.MYSQL_HOME}"/>
 
 	<target name="all" depends="umls.all,vacs.all" description="call umls.all and vacs.all" />
 	<target name="init" description="initialize flags indicating which db is in use">
@@ -42,7 +44,7 @@ quit</echo>
 	</target>
 	<target name="sqlcmd.mysql" if="mysql" description="execute sql script for mysql">
 		<echo>executing ${sqlcmd.dir}/${sqlcmd.script}</echo>
-		<exec executable="mysql" dir="${sql.dir}/${sqlcmd.dir}">
+		<exec executable="${mysql.home}/mysql" dir="${sql.dir}/${sqlcmd.dir}">
 			<arg line="${mysql.line} -e &quot;source ${sqlcmd.script}&quot;" />
 		</exec>
 	</target>
