@@ -1,6 +1,8 @@
 package ytex.kernel.dao;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
@@ -8,6 +10,7 @@ import org.apache.commons.logging.LogFactory;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 
+import ytex.kernel.model.KernelEvalKey;
 import ytex.kernel.model.KernelEvaluation;
 
 public class KernelEvaluationDaoImpl implements KernelEvaluationDao {
@@ -54,17 +57,17 @@ public class KernelEvaluationDaoImpl implements KernelEvaluationDao {
 		int instanceId2s = instanceId1 <= instanceId2 ? instanceId2
 				: instanceId1;
 		// delete existing norm
-		if (getKernel(name, instanceId1, instanceId2) != null) {
-			Query q = this.getSessionFactory().getCurrentSession()
-					.getNamedQuery("deleteKernelEvaluation");
-			q.setString("name", name);
-			q.setInteger("instanceId1", instanceId1s);
-			q.setInteger("instanceId2", instanceId2s);
-			q.executeUpdate();
-			if (log.isWarnEnabled())
-				log.warn("replacing kernel, instanceId1: " + instanceId1s
-						+ ", instanceId2: " + instanceId2s + ", name: " + name);
-		}
+		// if (getKernel(name, instanceId1, instanceId2) != null) {
+		Query q = this.getSessionFactory().getCurrentSession().getNamedQuery(
+				"deleteKernelEvaluation");
+		q.setString("name", name);
+		q.setInteger("instanceId1", instanceId1s);
+		q.setInteger("instanceId2", instanceId2s);
+		q.executeUpdate();
+		// if (log.isWarnEnabled())
+		// log.warn("replacing kernel, instanceId1: " + instanceId1s
+		// + ", instanceId2: " + instanceId2s + ", name: " + name);
+		// }
 		KernelEvaluation g = new KernelEvaluation(name, instanceId1s,
 				instanceId2s, kernel);
 		this.getSessionFactory().getCurrentSession().save(g);
@@ -95,11 +98,18 @@ public class KernelEvaluationDaoImpl implements KernelEvaluationDao {
 	}
 
 	@Override
-	public List<KernelEvaluation> getAllKernelEvaluations(Set<String> names) {
+	public Map<KernelEvalKey, Double> getAllKernelEvaluations(String name) {
 		Query q = this.getSessionFactory().getCurrentSession().getNamedQuery(
 				"getAllKernelEvaluations");
-		q.setParameterList("names", names);
-		return (List<KernelEvaluation>) q.list();
+		q.setString("name", name);
+		List<KernelEvaluation> kevals = (List<KernelEvaluation>) q.list();
+		Map<KernelEvalKey, Double> kevalMap = new HashMap<KernelEvalKey, Double>(
+				kevals.size());
+		for (KernelEvaluation keval : kevals) {
+			kevalMap.put(new KernelEvalKey(keval.getInstanceId1(), keval
+					.getInstanceId2()), keval.getSimilarity());
+		}
+		return kevalMap;
 	}
 
 	@Override
