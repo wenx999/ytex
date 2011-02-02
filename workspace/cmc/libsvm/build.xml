@@ -1,0 +1,277 @@
+<project name="Libsvm">
+	<taskdef resource="net/sf/antcontrib/antlib.xml" />
+	<property name="libsvm.home" value="c:/java/libsvm-3.0" />
+	<property name="libsvm.bin" value="${libsvm.home}/windows" />
+	<property name="ytex.kernel.cp" value="../ytex.kernel/bin" />
+	<property name="processedData" value="./processedData" />
+	<property name="costs" value="0.0001,0.001,0.01,0.1,1,10,100,1000" />
+	<!-- property name="classLabels" value="25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45" / -->
+	<property name="classLabels" value="1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45" />
+	<!--
+	<property name="costs" value="1,10" />
+	<property name="classLabels" value="1,2" />
+	-->
+
+	<path id="libsvm.cp">
+		<pathelement location="${libsvm.home}/java/libsvm.jar" />
+		<pathelement location="${ytex.kernel.cp}" />
+	</path>
+
+	<!-- property name="classLabels" value="1,2"/ -->
+	<!-- property name="costs" value="0.01,0.1" / -->
+	<!--
+	<target name="cv.consolidateResult.all">
+		<antcall target="cv.all">
+			<param name="iteration.target" value="cv.consolidateResult" />
+			<param name="iteration.parallel" value="false" />
+		</antcall>
+	</target>
+	-->
+	<target name="cv.all">
+		<property name="iteration.target" value="cv.classWeightCost" />
+		<property name="iteration.parallel" value="true" />
+		<property name="iteration.threads" value="4" />
+		<for list="${classLabels}" param="classLabel" parallel="${iteration.parallel}" threadCount="${iteration.threads}">
+			<sequential>
+				<antcall target="cv.generateFolds">
+					<param name="cv.classLabel" value="@{classLabel}" />
+				</antcall>
+			</sequential>
+		</for>
+	</target>
+	<target name="cv.generateFolds">
+		<property name="cv.classLabel" value="1" />
+		<java classname="ytex.libsvm.CreateStratifiedCVFolds" classpathref="libsvm.cp" fork="no">
+			<arg value="${processedData}/training_gram_${cv.classLabel}.txt" />
+			<arg value="10" />
+		</java>
+		<for param="training.file">
+			<fileset dir="${processedData}" includes="training_gram_${cv.classLabel}_fold*_train.txt" />
+			<sequential>
+				<antcall target="cv.classWeights">
+					<param name="cv.fold.training" value="@{training.file}" />
+				</antcall>
+			</sequential>
+		</for>
+		<delete quiet="yes">
+			<fileset dir="${processedData}" includes="training_gram_${cv.classLabel}_fold*.*" />
+		</delete>
+	</target>
+	<target name="init.classWeights">
+		<property name="cv.classLabel" value="1" />
+		<loadfile srcfile="${processedData}/classWeights.properties" property="classWeights">
+			<filterchain>
+				<linecontains>
+					<contains value="class.weight.${cv.classLabel}=" />
+				</linecontains>
+				<replacestring from="class.weight.${cv.classLabel}=" to="" />
+				<striplinebreaks />
+			</filterchain>
+		</loadfile>
+	</target>
+	<target name="cv.classWeights" depends="init.classWeights">
+		<property name="cv.fold.training" value="${processedData}/training_gram_1_fold1_train.txt" />
+		<basename file="${cv.fold.training}" property="cv.fold.base" suffix="_train.txt" />
+		<for list="${classWeights}" param="classWeight">
+			<sequential>
+				<antcall target="cv.classWeightCosts">
+					<param name="cv.weight" value="@{classWeight}" />
+				</antcall>
+			</sequential>
+		</for>
+	</target>
+	<target name="cv.classWeightCosts">
+		<for list="${costs}" param="cost">
+			<sequential>
+				<antcall target="cv.classWeightCost">
+					<param name="cv.cost" value="@{cost}" />
+				</antcall>
+			</sequential>
+		</for>
+	</target>
+	<target name="cv.classWeightCost">
+		<property name="cv.classLabel" value="1" />
+		<property name="cv.cost" value="1" />
+		<property name="cv.weight" value="1" />
+		<property name="cv.fold.base" value="training_gram_1_fold8" />
+		<property name="cv.fold.train" value="${cv.fold.base}_train.txt" />
+		<property name="cv.fold.test" value="${cv.fold.base}_test.txt" />
+		<property name="cv.fold.model" value="${cv.fold.base}_model.txt" />
+		<property name="cv.fold.predict" value="${cv.fold.base}_predict.txt" />
+		<!--
+		<java classname="svm_train" fork="yes" classpathref="libsvm.cp" >
+			<arg line="-q -b 1 -t 4 -w1 ${cv.weight} -c ${cv.cost} ${cv.fold.train} ${cv.fold.model}" />
+		</java>
+		<java classname="svm_predict" fork="yes" classpathref="libsvm.cp" >
+			<arg line="-b 1 ${cv.fold.test} ${cv.fold.model} ${cv.fold.predict}" />
+		</java>
+		-->
+		<!-- train the svm -->
+		<exec executable="${libsvm.bin}/svm-train" dir="${processedData}">
+			<arg line="-q -b 1 -t 4 -w1 ${cv.weight} -c ${cv.cost} ${cv.fold.train} ${cv.fold.model}" />
+		</exec>
+		<!-- test the svm -->
+		<exec executable="${libsvm.bin}/svm-predict" dir="${processedData}">
+			<arg line="-b 1 ${cv.fold.test} ${cv.fold.model} ${cv.fold.predict}" />
+		</exec>
+		<!-- extract results -->
+		<antcall target="cv.extractResults">
+		</antcall>
+		<!--
+		<java classname="ytex.libsvm.CalculateMetrics" fork="no" classpathref="libsvm.cp" output="${cv.outfile}" append="yes">
+			<arg line="${processedData}/${cv.fold.test} ${processedData}/${cv.fold.predict} ${processedData}/${cv.fold.model}" />
+		</java>
+		-->
+	</target>
+	<target name="cv.extractResults" description="calculate IR metrics, calculate optimal threshold, output to cv_${cv.classLabel}.txt">
+		<property name="cv.classLabel" value="20" />
+		<property name="cv.cost" value="1" />
+		<property name="cv.weight" value="1" />
+		<property name="cv.fold.base" value="training_gram_20_fold8" />
+		<property name="cv.fold.train" value="${cv.fold.base}_train.txt" />
+		<property name="cv.fold.test" value="${cv.fold.base}_test.txt" />
+		<property name="cv.fold.model" value="${cv.fold.base}_model.txt" />
+		<property name="cv.fold.predict" value="${cv.fold.base}_predict.txt" />
+		<property name="cv.outfile" value="${processedData}/cv_${cv.classLabel}.txt" />
+		<script language="beanshell" classpathref="libsvm.cp">
+			<![CDATA[
+			import ytex.libsvm.*;
+			String processedDataDir = project.getProperty("processedData");
+			String testFile = project.getProperty("cv.fold.test");
+			String predictFile = project.getProperty("cv.fold.predict");
+			String modelFile = project.getProperty("cv.fold.model");
+			LibSVMParser p = new LibSVMParser();
+			ScutLibsvm scut = new ScutLibsvm(); 
+			int nSV = p.parseModel(processedDataDir+"/"+modelFile);
+			project.setProperty("cv.nsv", Integer.toString(nSV));
+			Object[] scutMetrics = scut.calculateScutLibsvm(processedDataDir+"/"+predictFile, processedDataDir+"/"+testFile);
+			project.setProperty("cv.metrics", 
+				scutMetrics[1].toString() + "\t"
+				+ Double.toString(scutMetrics[0]) + "\t"
+				+ scutMetrics[2].toString()); 
+		]]>
+		</script>
+		<echo append="yes" file="${cv.outfile}">${cv.classLabel}	${cv.cost}	${cv.weight}	${cv.nsv}	${cv.metrics}
+</echo>
+	</target>
+	<target name="consolidateResult.all">
+		<delete file="${processedData}/cv.txt" quiet="yes" />
+		<concat destfile="${processedData}/cv.txt">
+			<fileset dir="${processedData}" includes="cv_*.txt" />
+		</concat>
+	</target>
+	<target name="test.all">
+		<property name="test.outfile" value="${processedData}/test_results.txt" />
+		<delete file="test.outfile" quiet="yes" />
+		<for list="${classLabels}" param="classLabel">
+			<sequential>
+				<antcall target="test.evaluate">
+					<param name="test.classLabel" value="@{classLabel}" />
+				</antcall>
+			</sequential>
+		</for>
+	</target>
+	<!--
+	<target name="test.consolidateResult">
+		<property name="classLabel" value="1" />
+		<property name="result.file" value="processedData/results_${classLabel}.txt" />
+		<property name="all.result.file" value="processedData/test_results.txt" />
+		<script language="beanshell">
+			<![CDATA[
+			import java.io.*;
+			String strResultFile = project.getProperty("result.file");
+			String strClassLabel = project.getProperty("classLabel");
+			BufferedReader r = new BufferedReader(new FileReader(strResultFile));
+			BufferedWriter w = new BufferedWriter(new FileWriter(project.getProperty("all.result.file"), true));
+			String line = null;
+			while((line = r.readLine()) != null) {
+				if(!line.startsWith("Accuracy")) {
+					w.write(strClassLabel);
+					w.write("\t");
+					w.write(line);
+					w.newLine();
+				}
+			}
+			r.close();
+			w.close();
+		]]>
+		</script>
+	</target>
+	<target name="cv.consolidateResult">
+		<property name="cv.classLabel" value="20" />
+		<property name="cv.cost" value="1" />
+		<property name="cv.weight" value="1" />
+		<property name="cv.outfile" value="${processedData}/cv_${cv.classLabel}_${cv.weight}_${cv.cost}.cv.txt" />
+		<property name="cv.resultsfile" value="${processedData}/cv.results.txt" />
+		<available file="${cv.outfile}" property="available" />
+		<if>
+			<available file="${cv.outfile}" />
+			<then>
+				<loadfile srcfile="${cv.outfile}" property="cv.accuracy">
+					<filterchain>
+						<tailfilter lines="1" />
+						<replacestring from="Cross Validation Accuracy = " to="" />
+						<replacestring from="%" to="" />
+					</filterchain>
+				</loadfile>
+				<echo file="${cv.resultsfile}" append="yes">${cv.classLabel}	${cv.cost}	${cv.weight}	${cv.accuracy}</echo>
+			</then>
+		</if>
+	</target>
+	-->
+	<target name="test.evaluate" depends="init.test.evaluate">
+		<!-- train the svm -->
+		<property name="test.classLabel" value="1" />
+		<property name="test.train" value="training_gram_${test.classLabel}.txt" />
+		<property name="test.test" value="test_gram_${test.classLabel}.txt" />
+		<property name="test.model" value="model_${cv.fold.base}.txt" />
+		<property name="test.predict" value="predict_${cv.fold.base}.txt" />		
+		<exec executable="${libsvm.bin}/svm-train" dir="${processedData}">
+			<arg line="-q -b 1 -t 4 -w1 ${weight} -c ${cost} ${test.train} ${test.model}" />
+		</exec>
+		<!-- test the svm -->
+		<exec executable="${libsvm.bin}/svm-predict" dir="${processedData}">
+			<arg line="-b 1 ${test.test} ${test.model} ${test.predict}" />
+		</exec>
+		<!-- extract results -->
+		<antcall target="test.extractResults">
+		</antcall>
+	</target>
+	<target name="init.test.evaluate">
+		<property name="test.classLabel" value="20" />
+		<loadproperties srcfile="${processedData}/optimalParams.properties">
+			<filterchain>
+				<linecontains>
+					<contains value="${test.classLabel}." />
+				</linecontains>
+				<replacestring from="${test.classLabel}." to="" />
+			</filterchain>
+		</loadproperties>
+		<echo>${cost} ${weight} ${scut}</echo>
+	</target>
+	<target name="test.extractResults" description="calculate IR metrics, calculate optimal threshold, output to cv_${cv.classLabel}.txt">
+		<!-- train the svm -->
+		<property name="test.classLabel" value="1" />
+		<property name="test.test" value="test_gram_${test.classLabel}.txt" />
+		<property name="test.predict" value="predict_${test.classLabel}.txt" />		
+		<property name="test.outfile" value="${processedData}/test_results.txt" />
+		<property name="scut" value="0.5" />
+		<script language="beanshell" classpathref="libsvm.cp">
+			<![CDATA[
+			import ytex.libsvm.*;
+			String processedDataDir = project.getProperty("processedData");
+			String testFile = project.getProperty("test.test");
+			String predictFile = project.getProperty("test.predict");
+			Double scut = Double.parseDouble(project.getProperty("scut"));
+			LibSVMParser p = new LibSVMParser();
+			ScutLibsvm scutLibsvm = new ScutLibsvm(); 
+			Object[] scutMetrics = scutLibsvm.applyScutLibsvm(processedDataDir+"/"+predictFile, processedDataDir+"/"+testFile, scut);
+			project.setProperty("test.metrics", 
+				scutMetrics[0].toString() + "\t"
+				+ scutMetrics[1].toString());
+		]]>
+		</script>
+		<echo append="yes" file="${test.outfile}">${test.classLabel}	${test.metrics}
+</echo>
+	</target>
+</project>
