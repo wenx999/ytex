@@ -1,7 +1,6 @@
 package ytex.kernel.dao;
 
 import java.util.List;
-import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -79,8 +78,9 @@ public class CorpusDaoImpl implements CorpusDao {
 		Query getTerms = this.getSessionFactory().getCurrentSession()
 				.getNamedQuery("getCorpus");
 		getTerms.setString("corpusName", corpusName);
-		return (Corpus)getTerms.uniqueResult();
+		return (Corpus) getTerms.uniqueResult();
 	}
+
 	public List<InfoContent> getInfoContent(List<String> corpusNames) {
 		Query getTerms = this.getSessionFactory().getCurrentSession()
 				.getNamedQuery("getInfoContent");

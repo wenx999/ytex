@@ -16,7 +16,6 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 
 import ytex.kernel.model.ConcRel;
@@ -184,15 +183,15 @@ public class ConceptDaoImpl implements ConceptDao {
 	 * @see ytex.kernel.dao.ConceptDao#getConceptGraph(java.util.Set)
 	 */
 	public ConceptGraph getConceptGraph(String sourceVocabularies[]) {
-//		Query q = this.getSessionFactory().getCurrentSession().getNamedQuery(
-//				"getConceptGraph");
-//		q.setParameter("sourceVocabularies", sourceVocabularies);
-//		ConceptGraph cg = (ConceptGraph) q.uniqueResult();
-//		if (cg != null) {
-//			initializeConceptGraph(cg);
-//		}
+		// Query q = this.getSessionFactory().getCurrentSession().getNamedQuery(
+		// "getConceptGraph");
+		// q.setParameter("sourceVocabularies", sourceVocabularies);
+		// ConceptGraph cg = (ConceptGraph) q.uniqueResult();
+		// if (cg != null) {
+		// initializeConceptGraph(cg);
+		// }
 		File f = new File("c:/temp/conceptGraph");
-		if(f.exists())
+		if (f.exists())
 			return initializeConceptGraph(this.readConceptGraph());
 		else
 			return null;

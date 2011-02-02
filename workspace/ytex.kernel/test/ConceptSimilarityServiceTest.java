@@ -1,6 +1,6 @@
+import junit.framework.TestCase;
 import ytex.kernel.ConceptSimilarityService;
 import ytex.kernel.KernelContextHolder;
-import junit.framework.TestCase;
 
 public class ConceptSimilarityServiceTest extends TestCase {
 	ConceptSimilarityService conceptSimilarityService;
@@ -12,7 +12,7 @@ public class ConceptSimilarityServiceTest extends TestCase {
 	}
 
 	public void testUpdateInformationContent() {
-		//conceptSimilarityService.updateInformationContent("cmc-ctakes");
+		// conceptSimilarityService.updateInformationContent("cmc-ctakes");
 	}
 
 	public void testLin() {
@@ -27,18 +27,19 @@ public class ConceptSimilarityServiceTest extends TestCase {
 	}
 
 	public void testSim() {
-		String pairs[][] = new String[][]{
-				new String[]{"C0477176","C2136108"},
-				new String[]{"C2136112","C2168238"},
-				new String[]{"C2136110","C2168238"},
-				new String[]{"C1446337","C2168238"},
-				new String[]{"C2136108","C2168238"}
-		};
-		for(String[] pair : pairs) {
+		String pairs[][] = new String[][] {
+				new String[] { "C0477176", "C2136108" },
+				new String[] { "C2136112", "C2168238" },
+				new String[] { "C2136110", "C2168238" },
+				new String[] { "C1446337", "C2168238" },
+				new String[] { "C2136108", "C2168238" } };
+		for (String[] pair : pairs) {
 			double lch = conceptSimilarityService.lch(pair[0], pair[1]);
-			double lin = conceptSimilarityService.lin("cmc-ctakes", pair[0], pair[1]);
+			double lin = conceptSimilarityService.lin("cmc-ctakes", pair[0],
+					pair[1]);
 			Object lcs[] = conceptSimilarityService.lcs(pair[0], pair[1]);
-			System.out.println(pair[0]+"\t"+pair[1]+"\t"+lch+"\t"+lin+"\t"+lcs[0]+"\t"+lcs[1]);
+			System.out.println(pair[0] + "\t" + pair[1] + "\t" + lch + "\t"
+					+ lin + "\t" + lcs[0] + "\t" + lcs[1]);
 		}
 	}
 }

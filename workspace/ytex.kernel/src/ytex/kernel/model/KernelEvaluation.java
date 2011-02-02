@@ -12,36 +12,47 @@ public class KernelEvaluation implements Serializable {
 	int instanceId1;
 	int instanceId2;
 	double similarity;
+
 	public int getKernelEvaluationId() {
 		return kernelEvaluationId;
 	}
+
 	public void setKernelEvaluationId(int kernelEvaluationId) {
 		this.kernelEvaluationId = kernelEvaluationId;
 	}
+
 	public String getName() {
 		return name;
 	}
+
 	public void setName(String name) {
 		this.name = name;
 	}
+
 	public int getInstanceId1() {
 		return instanceId1;
 	}
+
 	public void setInstanceId1(int instanceId1) {
 		this.instanceId1 = instanceId1;
 	}
+
 	public int getInstanceId2() {
 		return instanceId2;
 	}
+
 	public void setInstanceId2(int instanceId2) {
 		this.instanceId2 = instanceId2;
 	}
+
 	public double getSimilarity() {
 		return similarity;
 	}
+
 	public void setSimilarity(double similarity) {
 		this.similarity = similarity;
 	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -51,6 +62,7 @@ public class KernelEvaluation implements Serializable {
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		return result;
 	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -71,9 +83,11 @@ public class KernelEvaluation implements Serializable {
 			return false;
 		return true;
 	}
+
 	public KernelEvaluation() {
 		super();
 	}
+
 	public KernelEvaluation(String name, int instanceId1, int instanceId2,
 			double similarity) {
 		super();
@@ -82,6 +96,5 @@ public class KernelEvaluation implements Serializable {
 		this.instanceId2 = instanceId2;
 		this.similarity = similarity;
 	}
-	
 
 }

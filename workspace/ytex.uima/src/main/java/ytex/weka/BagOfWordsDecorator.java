@@ -14,8 +14,6 @@ public interface BagOfWordsDecorator {
 	public void decorateNumericInstanceWords(
 			Map<Integer, Map<String, Double>> instanceNumericWords,
 			Set<String> numericWords);
-	
-	
 
 	public void decorateNominalInstanceWords(
 			Map<Integer, Map<String, String>> instanceNominalWords,

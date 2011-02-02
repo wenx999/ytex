@@ -1,5 +1,4 @@
 package ytex.kernel;
-import java.io.InputStream;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.access.ContextSingletonBeanFactoryLocator;

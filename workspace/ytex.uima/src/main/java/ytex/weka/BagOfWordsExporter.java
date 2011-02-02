@@ -27,8 +27,7 @@ public interface BagOfWordsExporter {
 	 */
 	public abstract void exportBagOfWords(String arffRelation,
 			String instanceClassQuery, String numericWordQuery,
-			String nominalWordQuery, BufferedWriter writer)
-			throws IOException;
+			String nominalWordQuery, BufferedWriter writer) throws IOException;
 
 	/**
 	 * 

@@ -4,15 +4,17 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 /**
- * implements SCut strategy to optimize threshold for a given objective.  
+ * implements SCut strategy to optimize threshold for a given objective.
  * Currently only supports binary classification and F1.
+ * 
  * @author vijay
  */
 public class SCut {
 	/*
-	 * avoid dependencies on commons logging so that we can use this with weka/libsvm
-	 * without too many additional dependencies.
+	 * avoid dependencies on commons logging so that we can use this with
+	 * weka/libsvm without too many additional dependencies.
 	 */
 	private static final Logger logger = Logger.getLogger(SCut.class.getName());
 
@@ -47,15 +49,16 @@ public class SCut {
 		if (predictedClassLabels != null) {
 			tempPredictedClassLabels = new int[classLabels.length];
 		}
-		//collect thresholds into a sorted set
+		// collect thresholds into a sorted set
 		for (double instanceScore : classScores) {
-			//round to 3 digits
-			double score = ((int) ( instanceScore * 1000)) / 1000.0;
+			// round to 3 digits
+			double score = ((int) (instanceScore * 1000)) / 1000.0;
 			setThresholds.add(score);
 		}
-		//evaluate each threshold to find the optimum
+		// evaluate each threshold to find the optimum
 		for (double threshold : setThresholds) {
-			//TODO: is this convex? should we implement delta to determine when we've peaked?
+			// TODO: is this convex? should we implement delta to determine when
+			// we've peaked?
 			double statistic = 0;
 			if (TargetStatistic.F1.equals(targetStat)) {
 				statistic = evaluateF1(classScores, classLabels, threshold,
@@ -79,30 +82,38 @@ public class SCut {
 	}
 
 	/**
-	 * evaluate F1 for the given scores 
-	 * @param classScores probabilities
-	 * @param classLabels 'true' labels
-	 * @param score score to use as threshold
-	 * @param targetClass target class for calculating F1
-	 * @param predictedClassLabels predicted class labels from applying score as threshold
+	 * evaluate F1 for the given scores
+	 * 
+	 * @param classScores
+	 *            probabilities
+	 * @param classLabels
+	 *            'true' labels
+	 * @param score
+	 *            score to use as threshold
+	 * @param targetClass
+	 *            target class for calculating F1
+	 * @param predictedClassLabels
+	 *            predicted class labels from applying score as threshold
 	 * @return
 	 */
 	private double evaluateF1(double[] classScores, int[] classLabels,
-			double score, int targetClass, 
-			int[] predictedClassLabels) {
+			double score, int targetClass, int[] predictedClassLabels) {
 		for (int i = 0; i < classScores.length; i++) {
 			predictedClassLabels[i] = classScores[i] < score ? 1 : 0;
 		}
-		IRMetrics ir = MetricUtil.calculateIRMetrics(classLabels, predictedClassLabels, targetClass);
-		if(logger.isLoggable(Level.FINE)) {
-			logger.fine("score:"+score+" precision:" + ir.getPrecision() +" recall:"+ir.getRecall()+" f1:"+ir.getF1());
+		IRMetrics ir = MetricUtil.calculateIRMetrics(classLabels,
+				predictedClassLabels, targetClass);
+		if (logger.isLoggable(Level.FINE)) {
+			logger.fine("score:" + score + " precision:" + ir.getPrecision()
+					+ " recall:" + ir.getRecall() + " f1:" + ir.getF1());
 		}
 		return ir.getF1();
 	}
 
 	/**
-	 * apply the scut threshold to the given classes. 
-	 * trivial, but consolidated the logic here
+	 * apply the scut threshold to the given classes. trivial, but consolidated
+	 * the logic here
+	 * 
 	 * @param classScores
 	 * @param threshold
 	 * @return

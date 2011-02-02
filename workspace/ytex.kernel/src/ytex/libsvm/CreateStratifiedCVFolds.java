@@ -17,8 +17,8 @@ import java.util.Set;
 import java.util.TreeSet;
 
 public class CreateStratifiedCVFolds {
-//	private static final Log log = LogFactory
-//			.getLog(CreateStratifiedCVFolds.class);
+	// private static final Log log = LogFactory
+	// .getLog(CreateStratifiedCVFolds.class);
 
 	/**
 	 * @param args
@@ -55,6 +55,7 @@ public class CreateStratifiedCVFolds {
 
 	/**
 	 * write train/test cross-validation file pairs
+	 * 
 	 * @param gramFile
 	 * @param folds
 	 * @param lines
@@ -70,13 +71,14 @@ public class CreateStratifiedCVFolds {
 			suffix = gramFile.substring(nLastDot);
 		}
 		for (int i = 0; i < folds.size(); i++) {
-			String trainFileName = prefix + "_fold" + (i + 1) + "_train"+ suffix;
-			String testFileName = prefix + "_fold" + (i + 1) + "_test"+ suffix;
+			String trainFileName = prefix + "_fold" + (i + 1) + "_train"
+					+ suffix;
+			String testFileName = prefix + "_fold" + (i + 1) + "_test" + suffix;
 			Set<Integer> setTrainLineNums = new TreeSet<Integer>();
 			Set<Integer> setTestLineNums = new TreeSet<Integer>();
 			int nFold = 0;
-			for(Set<Integer> lineNums : folds) {
-				if(nFold == i) {
+			for (Set<Integer> lineNums : folds) {
+				if (nFold == i) {
 					setTestLineNums.addAll(lineNums);
 				} else {
 					setTrainLineNums.addAll(lineNums);
@@ -88,12 +90,12 @@ public class CreateStratifiedCVFolds {
 		}
 	}
 
-	private static void writeSubSet(String fileName,
-			Set<Integer> setLineNums, List<String> lines) throws IOException {
+	private static void writeSubSet(String fileName, Set<Integer> setLineNums,
+			List<String> lines) throws IOException {
 		BufferedWriter w = null;
 		try {
 			w = new BufferedWriter(new FileWriter(fileName));
-			for(int lineNum : setLineNums) {
+			for (int lineNum : setLineNums) {
 				w.write(lines.get(lineNum));
 				w.newLine();
 			}
@@ -139,8 +141,7 @@ public class CreateStratifiedCVFolds {
 					double fraction = (double) nMinPerClass
 							/ (double) lineNums.size();
 					// iterate through the list, start somewhere in the middle
-					int lineNumIndex = (int) (r.nextDouble() * lineNums
-							.size());
+					int lineNumIndex = (int) (r.nextDouble() * lineNums.size());
 					while (foldLineNums.size() < nMinPerClass) {
 						// go back to beginning of list if we hit the end
 						if (lineNumIndex >= lineNums.size()) {
