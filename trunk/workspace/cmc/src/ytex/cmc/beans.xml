@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
+http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
+	<bean
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations" value="classpath:ytex.properties" />
+	</bean>
+
+	<!--
+		the transactional advice (what 'happens'; see the <aop:advisor/> bean
+		below)
+	-->
+	<tx:advice id="txAdvice" transaction-manager="cmcTransactionManager">
+		<!-- the transactional semantics... -->
+		<tx:attributes>
+			<tx:method name="*" propagation="REQUIRED" />
+		</tx:attributes>
+	</tx:advice>
+	<!--
+		ensure that the above transactional advice runs for any execution of
+		an operation defined by the FooService interface
+	-->
+	<aop:config>
+		<aop:pointcut id="cmcDaoOperation"
+			expression="execution(* ytex.cmc.*.*(..))" />
+		<aop:pointcut id="cmcKernelOperation" expression="execution(* ytex.cmc.*Kernel*.*(..))" />
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="cmcDaoOperation" />
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="cmcKernelOperation" />
+	</aop:config>
+
+	<bean id="cmcSessionFactory"
+		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="mappingResources">
+			<list>
+				<value>ytex/cmc/model/cmc.hbm.xml</value>
+				<value>ytex/model/Document.hbm.xml</value>
+				<value>ytex/model/DocumentAnnotation.hbm.xml</value>
+				<value>ytex/model/NamedEntityRegex.hbm.xml</value>
+				<value>ytex/model/SegmentRegex.hbm.xml</value>
+			</list>
+		</property>
+		<property name="hibernateProperties" ref="hibernateProperties" />
+	</bean>
+	<bean id="cmcTransactionManager"
+		class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory" ref="cmcSessionFactory" />
+	</bean>
+	<bean id="documentLoader" class="ytex.cmc.DocumentLoaderImpl">
+		<property name="sessionFactory" ref="cmcSessionFactory" />
+	</bean>
+	<bean id="cTakesXpathKernel" class="ytex.cmc.CTakesXPathKernelImpl"
+		init-method="init">
+		<property name="sessionFactory" ref="cmcSessionFactory" />
+		<property name="cmcSessionFactory" ref="cmcSessionFactory" />
+		<property name="cacheManager" ref="cacheManager" />
+		<property name="conceptSimilarityService" ref="conceptSimilarityService" />
+		<property name="kernelEvaluationDao" ref="kernelEvaluationDao" />
+	</bean>
+	<bean id="cTakesDBKernel" class="ytex.cmc.CTakesDBKernelImpl"
+		init-method="init">
+		<property name="sessionFactory" ref="cmcSessionFactory" />
+		<property name="cacheManager" ref="cacheManager" />
+		<property name="conceptSimilarityService" ref="conceptSimilarityService" />
+		<property name="transactionManager" ref="cmcTransactionManager" />
+	</bean>
+	<bean id="cmcEvaluator" class="ytex.cmc.CMCEvaluatorImpl">
+		<property name="cmcSessionFactory" ref="cmcSessionFactory" />
+		<property name="kernelEvaluationDao" ref="kernelEvaluationDao" />
+		<property name="kernel" ref="cTakesDBKernel" />
+	</bean>
+	
+	<bean id="ehcacheConfigURL"
+		class="org.springframework.beans.factory.config.PropertyPathFactoryBean">
+		<property name="targetObject">
+			<bean class="org.springframework.core.io.ClassPathResource">
+				<constructor-arg value="/ytex/cmc/ehcache.xml" />
+			</bean>
+		</property>
+		<property name="propertyPath" value="URL" />
+	</bean>
+
+	<bean id="cacheManager" class="net.sf.ehcache.CacheManager">
+		<constructor-arg ref="ehcacheConfigURL" />
+	</bean>
+</beans>
