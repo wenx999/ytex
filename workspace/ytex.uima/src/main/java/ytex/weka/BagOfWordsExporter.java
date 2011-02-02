@@ -48,4 +48,7 @@ public interface BagOfWordsExporter {
 	public abstract void exportBagOfWords(String propertyFile)
 			throws IOException;
 
+	public abstract void exportBagOfWords(String propertyFile,
+			BagOfWordsDecorator bDecorator) throws IOException;
+
 }

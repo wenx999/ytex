@@ -3,7 +3,7 @@ package ytex.weka;
 import java.io.BufferedReader;
 import java.io.FileReader;
 
-import ytex.uima.ApplicationContextHolder;
+import ytex.kernel.KernelContextHolder;
 
 /**
  * Runs ytex.weka.WekaResultsImporter for the specified task and result file.
@@ -22,7 +22,7 @@ public class ImportWekaResults {
 			System.out
 					.println("Usage: java ytex.weka.ImportWekaResults <task name> <file name>");
 		} else {
-			WekaResultsImporter importer = (WekaResultsImporter) ApplicationContextHolder
+			WekaResultsImporter importer = (WekaResultsImporter) KernelContextHolder
 					.getApplicationContext().getBean("wekaResultsImporter");
 			BufferedReader reader = null;
 			try {
