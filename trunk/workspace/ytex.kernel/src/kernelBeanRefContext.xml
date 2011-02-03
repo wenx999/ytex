@@ -7,6 +7,7 @@
 		<constructor-arg>
 			<list>
 				<value>ytex/beans-datasource.xml</value>
+				<value>ytex/beans-kernel.hbm.xml</value>
 				<value>ytex/beans-kernel.xml</value>
 			</list>
 		</constructor-arg>

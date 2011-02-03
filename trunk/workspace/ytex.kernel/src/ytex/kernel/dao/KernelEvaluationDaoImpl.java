@@ -1,8 +1,6 @@
 package ytex.kernel.dao;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
@@ -10,7 +8,6 @@ import org.apache.commons.logging.LogFactory;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 
-import ytex.kernel.model.KernelEvalKey;
 import ytex.kernel.model.KernelEvaluation;
 
 public class KernelEvaluationDaoImpl implements KernelEvaluationDao {
@@ -98,27 +95,18 @@ public class KernelEvaluationDaoImpl implements KernelEvaluationDao {
 	}
 
 	@Override
-	public Map<KernelEvalKey, Double> getAllKernelEvaluations(String name) {
-		Query q = this.getSessionFactory().getCurrentSession().getNamedQuery(
-				"getAllKernelEvaluations");
-		q.setString("name", name);
-		List<KernelEvaluation> kevals = (List<KernelEvaluation>) q.list();
-		Map<KernelEvalKey, Double> kevalMap = new HashMap<KernelEvalKey, Double>(
-				kevals.size());
-		for (KernelEvaluation keval : kevals) {
-			kevalMap.put(new KernelEvalKey(keval.getInstanceId1(), keval
-					.getInstanceId2()), keval.getSimilarity());
-		}
-		return kevalMap;
-	}
-
-	@Override
 	public List<KernelEvaluation> getAllKernelEvaluationsForInstance(
 			Set<String> names, int instanceId) {
 		Query q = this.getSessionFactory().getCurrentSession().getNamedQuery(
-				"getAllKernelEvaluationsForInstance");
+				"getAllKernelEvaluationsForInstance1");
 		q.setParameterList("names", names);
 		q.setInteger("instanceId", instanceId);
-		return (List<KernelEvaluation>) q.list();
+		List<KernelEvaluation> kevals = q.list();
+		Query q2 = this.getSessionFactory().getCurrentSession().getNamedQuery(
+				"getAllKernelEvaluationsForInstance2");
+		q2.setParameterList("names", names);
+		q2.setInteger("instanceId", instanceId);
+		kevals.addAll(q2.list());
+		return kevals;
 	}
 }
