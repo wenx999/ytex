@@ -2,7 +2,6 @@ package ytex.cmc;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -15,7 +14,6 @@ import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import ytex.kernel.dao.KernelEvaluationDao;
-import ytex.kernel.model.KernelEvalKey;
 import ytex.kernel.model.KernelEvaluation;
 
 public class CMCEvaluatorImpl implements CMCEvaluator {
