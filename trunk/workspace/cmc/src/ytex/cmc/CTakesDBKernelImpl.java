@@ -20,6 +20,8 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 import ytex.kernel.ConceptSimilarityService;
 
+/**
+ */
 public class CTakesDBKernelImpl implements CMCKernel {
 	private static final Log log = LogFactory.getLog(CTakesDBKernelImpl.class);
 	SessionFactory sessionFactory;
