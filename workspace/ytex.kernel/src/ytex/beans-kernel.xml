@@ -6,10 +6,7 @@
 http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
 http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
 http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
-	<bean
-		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-		<property name="locations" value="classpath:ytex.properties" />
-	</bean>
+
 	<!--
 		the transactional advice (what 'happens'; see the <aop:advisor/> bean
 		below)
@@ -86,5 +83,10 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
 				<value>cmc-ctakes</value>
 			</list>
 		</property>
+	</bean>
+	<bean id="libSVMGramMatrixExporter" class="ytex.libsvm.LibSVMGramMatrixExporterImpl">
+		<property name="dataSource" ref="dataSource" />
+		<property name="kernelEvaluationDao" ref="kernelEvaluationDao" />
+		<property name="transactionManager" ref="transactionManager" />
 	</bean>
 </beans>

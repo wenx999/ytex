@@ -31,14 +31,16 @@
 	<!-- 
 	2 separate indices for instanceId1 & instanceId2
 	use union so that mysql can use both indices
+	arggh! hibernate doesn't support union - run 2 queries
 	 -->
-	<query name="getAllKernelEvaluationsForInstance"><![CDATA[
+	<query name="getAllKernelEvaluationsForInstance1"><![CDATA[
 		from KernelEvaluation
 		where name in (:names)
 		and instanceId1 = :instanceId 
-		union
+	]]></query>	
+	<query name="getAllKernelEvaluationsForInstance2"><![CDATA[
 		from KernelEvaluation
 		where name in (:names)
 		and instanceId2 = :instanceId 
-	]]></query>	
+	]]></query>		
 </hibernate-mapping>

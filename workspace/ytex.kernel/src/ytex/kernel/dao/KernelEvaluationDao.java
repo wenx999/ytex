@@ -1,10 +1,8 @@
 package ytex.kernel.dao;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
-import ytex.kernel.model.KernelEvalKey;
 import ytex.kernel.model.KernelEvaluation;
 
 public interface KernelEvaluationDao {
@@ -19,10 +17,7 @@ public interface KernelEvaluationDao {
 	public abstract Double getKernel(String name, int instanceId1,
 			int instanceId2);
 
-	public abstract Map<KernelEvalKey,Double> getAllKernelEvaluations(
-			String name);
-
-	List<KernelEvaluation> getAllKernelEvaluationsForInstance(
+	public List<KernelEvaluation> getAllKernelEvaluationsForInstance(
 			Set<String> names, int instanceId);
 	
 }

@@ -33,7 +33,6 @@ import ytex.weka.BagOfWordsExporterImpl;
 
 public class GramMatrixExporterImpl extends BagOfWordsExporterImpl implements
 		GramMatrixExporter {
-	private SimpleJdbcTemplate simpleJdbcTemplate;
 	private JdbcTemplate jdbcTemplate;
 	private KernelEvaluationDao kernelEvaluationDao;
 	private BagOfWordsExporter bagOfWordsExporter;
@@ -70,7 +69,6 @@ public class GramMatrixExporterImpl extends BagOfWordsExporterImpl implements
 
 	public void setDataSource(DataSource ds) {
 		this.jdbcTemplate = new JdbcTemplate(ds);
-		this.simpleJdbcTemplate = new SimpleJdbcTemplate(ds);
 	}
 
 	public DataSource getDataSource(DataSource ds) {
