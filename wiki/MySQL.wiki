@@ -17,7 +17,7 @@ create table v_snomed_fword_lookup (
   fword varchar(100) not null,
   cui varchar(10) not null,
   text text not null
-) engine=myisam, comment 'umls lookup table, created from umls_aui_fword and mrconso' ;
+) engine=myisam, comment 'umls lookup table, created from umls_ms_2009' ;
 
 insert into v_snomed_fword_lookup
 select fword, cui, text
