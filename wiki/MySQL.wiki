@@ -35,7 +35,7 @@ where
 ) 
 ;
 
-create index idx_fword on umls_fword_lookup (fword);
-create index idx_cui on umls_fword_lookup (cui);
+create index idx_fword on v_snomed_fword_lookup (fword);
+create index idx_cui on v_snomed_fword_lookup (cui);
 
 }}}
