@@ -61,7 +61,8 @@ chmod u+x *.profile
 chmod u+x ../apache-ant-1.8.0/bin/ant
 chmod u+x *.sh
 . ./ytex.profile
-ant -buildfile build-setup.xml -Dytex.home=${YTEX_HOME} all > setup.out 2>&1
+ant -buildfile build-setup.xml -Dytex.home=${YTEX_HOME} all > setup.out 2>&1 &
+tail -f setup.out
 }}}
 
 == Notes on UMLS Installation ==
