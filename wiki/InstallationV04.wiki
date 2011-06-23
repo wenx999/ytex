@@ -54,14 +54,16 @@ Open a command prompt, navigate to YTEX_HOME, and execute setup.cmd all. This wi
 cd /d c:\clinicalnlp\ytex
 setup all
 }}}
-    * *linux*: From a shell, cd to the YTEX_HOME directory, set the environment, and execute the ant script:
+    * *linux*: From a shell, cd to the YTEX_HOME directory, set the environment, make sure necessary scripts are executable, and execute the ant script:
 {{{
 cd ${HOME}/clinicalnlp/ytex
 . ./ytex.profile
+chmod u+x ../apache-ant-1.8.0/bin/ant
+chmod u+x *.sh
 ant -buildfile build-setup.xml -Dytex.home=${YTEX_HOME} setupDatabase
 }}}
 
 == Notes on UMLS Installation ==
-YTEX is distributed with a tiny subset of the UMLS.  During setup, we try to see if the UMLS is installed in the database (we look for the MRCONSO table); if we don't find it, we load the data files from the <tt>umls.zip</tt> included in the ytex distribution.  If you are unable / too lazy to install the UMLS in your database, we can send you a <tt>umls.zip</tt> that contains a larger subset of the UMLS if you send us your UMLS license confirmation.
+YTEX is distributed with a tiny subset of the UMLS.  During setup, we try to see if the UMLS is installed in the database (we look for the MRCONSO table); if we don't find it, we load the data files from the <tt>umls.zip</tt> included in the YTEX distribution.  If you are unable / too lazy to install the UMLS in your database, we can send you a <tt>umls.zip</tt> that contains a larger subset of the UMLS if you send us your UMLS license confirmation.
 
 The cTAKES DBLookup algorithm requires a table/view that contains the first word of a concept, a concept code, and the full text of the concept.  The <tt>MRCONSO</tt> table contains concept codes (CUI field) and the full text of the concept (STR field).  We generate a table <tt>umls_aui_fword</tt> that contains the first word of every concept in the <tt>MRCONSO</tt> table.  We then join the <tt>umls_aui_fword</tt> and <tt>MRCONSO</tt> tables, to create a view ([MySQL for mysql a table]) that contains a subset of the UMLS.  You are free to replace this view with subsets of the UMLS of your liking; refer to <tt>YTEX_HOME/data/mysql/umls/create_view.sql</tt>.
