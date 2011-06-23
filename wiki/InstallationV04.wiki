@@ -4,11 +4,11 @@
 
 YTEX v0.4 is under development.  We have implemented the following features:
 
-* Support for Linux.  We have tested YTEX on Linux w/ MySQL.
+  * Support for Linux.  We have tested YTEX on Linux w/ MySQL.
 
-* Support for updated UMLS.  For previous versions, we sent users UMLS data for named entity recognition based on the UMLS 2009AA, and using only the SNOMED, ICD, and NCI vocabularies.  For this version, we use the [http://www.ncbi.nlm.nih.gov/books/NBK9685/#ch03.I31_Data_Files UMLS tables] directly.  This requires that you install UMLS in locally.
+  * Support for updated UMLS.  For previous versions, we sent users UMLS data for named entity recognition based on the UMLS 2009AA, and using only the SNOMED, ICD, and NCI vocabularies.  For this version, we use the [http://www.ncbi.nlm.nih.gov/books/NBK9685/#ch03.I31_Data_Files UMLS tables] directly.  This requires that you install UMLS in locally.
 
-* Support for exporting data to R, Matlab, SAS, Libsvm, and SVMLight
+  * Support for exporting data to R, Matlab, SAS, Libsvm, and SVMLight
 
 YTEX is distributed with a tiny subset of the UMLS for demonstration purposes.  For production use, [http://www.nlm.nih.gov/research/umls/implementation_resources/scripts/README_RRF_MySQL_Output_Stream.html you must install UMLS locally] (if you ask us nicely, we can send you a dump of our UMLS database tables).  YTEX currently uses only the <tt>MRCONSO</tt> table.  We have developed scripts for loading the UMLS into SQL Server (NLM only provides scripts for Oracle & MySQL).
 
@@ -17,7 +17,7 @@ YTEX is distributed with a tiny subset of the UMLS for demonstration purposes.  
 
 
 == Installation ==
-# Create a directory where ytex will be installed, e.g
+  # Create a directory where ytex will be installed, e.g
 
 Linux:
 {{{
@@ -29,39 +29,33 @@ Windows:
 c:\java\clinicalnlp
 }}}
 
-# Download the following archives to the installation directory: 
+  # Download the following archives to the installation directory: 
     * YTEX Archive: ytex-with-dependencies.zip 
     Download from this site 
-
     * LVG 2010 Archive: lvg2010lite.tgz (optional) 
     ([http://lexsrv3.nlm.nih.gov/LexSysGroup/Projects/lvg/2010/release/lvg2010lite.tgz download]). Make sure you save this file as lvg2010lite.tgz (Internet Explorer may rename this). The lvg is required for stemming; if you do not download this file, stemming will not be performed. 
-
-# Extract <tt>ytex-with-dependencies.zip</tt> to the installation directory; this will create a ytex subdirectory, e.g. windows <tt>c:\java\clinicalnlp\ytex</tt> / linux <tt>${HOME}/clinicalnlp/java</tt>, referred to subsequently as YTEX_HOME.
-
-# Edit environment batch/shell script, and Fix the path references to match your environment
-* windows <tt>YTEX_HOME\setenv.cmd</tt>
-* linux <tt>YTEX_HOME/ytex.profile</tt>
-
-# Create YTEX_HOME\config\desc\ytex.properties: In this file, you specify the database connection parameters. Use YTEX_HOME\config\desc\ytex.properties.<db type>.example as a template.
-
-# Execute the setup script.  The script does the following:
+  # Extract <tt>ytex-with-dependencies.zip</tt> to the installation directory; this will create a ytex subdirectory, e.g. windows <tt>c:\java\clinicalnlp\ytex</tt> / linux <tt>${HOME}/clinicalnlp/java</tt>, referred to subsequently as YTEX_HOME.
+  # Edit environment batch/shell script, and Fix the path references to match your environment
+    * windows <tt>YTEX_HOME\setenv.cmd</tt>
+    * linux <tt>YTEX_HOME/ytex.profile</tt>
+  # Create YTEX_HOME\config\desc\ytex.properties: In this file, you specify the database connection parameters. Use YTEX_HOME\config\desc\ytex.properties.<db type>.example as a template.
+  # Execute the setup script.  The script does the following:
 Open a command prompt, navigate to YTEX_HOME, and execute setup.cmd all. This will call the ant script build-setup.xml, which does the following:
-
     * Generates configuration files from templates
     * Sets up YTEX Database Objects 
-
     The installation executes SQL scripts located in the YTEX_HOME\data directory, and imports umls tables. All YTEX database objects will be dropped and recreated. If this is the initial installation, ignore the errors about objects not existing when they are being dropped. 
-
     * Unpacks lvg data files
+    * Generates <tt>umls_aui_fword</tt> table
     * Sets up Semantic Search Web Application 
-
     The semantic search web application will be deployed to a tomcat server under YTEX_HOME\web\catalina. 
-
-    * Executing the script for windows: Open a command prompt, navigate to YTEX_HOME, and execute setup.cmd all.
-    * Executing the script for linux: From a shell, cd to the YTEX_HOME directory, set the environment, and execute the ant script:
+    * *windows*: Open a command prompt, navigate to YTEX_HOME, and execute setup script:
+{{{
+cd /d c:\clinicalnlp\ytex
+setup all
+}}}
+    * *linux*: From a shell, cd to the YTEX_HOME directory, set the environment, and execute the ant script:
 {{{
 cd ${HOME}/clinicalnlp/ytex
 . ./ytex.profile
 ant -buildfile build-setup.xml -Dytex.home=${YTEX_HOME} setupDatabase
 }}}
-
