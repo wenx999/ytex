@@ -1,4 +1,5 @@
 #summary Installation for YTEX v0.4
+#labels Phase-Deploy
 
 = Introduction =
 
@@ -59,3 +60,8 @@ cd ${HOME}/clinicalnlp/ytex
 . ./ytex.profile
 ant -buildfile build-setup.xml -Dytex.home=${YTEX_HOME} setupDatabase
 }}}
+
+== Notes on UMLS Installation ==
+YTEX is distributed with a tiny subset of the UMLS.  During setup, we try to see if the UMLS is installed in the database (we look for the MRCONSO table); if we don't find it, we load the data files from the <tt>umls.zip</tt> included in the ytex distribution.  If you are unable / too lazy to install the UMLS in your database, if you send us your UMLS license confirmation, we can send you a <tt>umls.zip</tt> that contains a larger subset of the UMLS.
+
+The cTAKES DBLookup algorithm requires a table/view that contains the first word of a concept, a concept code, and the full text of the concept.  The <tt>MRCONSO</tt> table contains concept codes (CUI field) and the full text of the concept (STR field).  We generate a table <tt>umls_aui_fword</tt> that contains the first word of every concept in the <tt>MRCONSO</tt> table.  We then join the <tt>umls_aui_fword</tt> and <tt>MRCONSO</tt> tables, to create a view ([MySQL for mysql a table]) that contains a subset of the UMLS.  You are free to replace this view with subsets of the UMLS of your liking; refer to <tt>YTEX_HOME/data/mysql/umls/create_view.sql</tt>.
