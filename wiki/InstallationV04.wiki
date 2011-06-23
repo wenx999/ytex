@@ -35,7 +35,7 @@ c:\java\clinicalnlp
     Download from this site 
     * LVG 2010 Archive: lvg2010lite.tgz (optional) 
     ([http://lexsrv3.nlm.nih.gov/LexSysGroup/Projects/lvg/2010/release/lvg2010lite.tgz download]). Make sure you save this file as lvg2010lite.tgz (Internet Explorer may rename this). The lvg is required for stemming; if you do not download this file, stemming will not be performed. 
-  # Extract <tt>ytex-with-dependencies.zip</tt> to the installation directory; this will create a ytex subdirectory, e.g. windows <tt>c:\java\clinicalnlp\ytex</tt> / linux <tt>${HOME}/clinicalnlp/java</tt>, referred to subsequently as YTEX_HOME.
+  # Extract <tt>ytex-with-dependencies.zip</tt> to the installation directory; this will create a ytex subdirectory, e.g. windows <tt>c:\java\clinicalnlp\ytex</tt> / linux <tt>${HOME}/clinicalnlp/ytex</tt>, referred to subsequently as YTEX_HOME.
   # Edit environment batch/shell script, and Fix the path references to match your environment
     * windows <tt>YTEX_HOME\setenv.cmd</tt>
     * linux <tt>YTEX_HOME/ytex.profile</tt>
