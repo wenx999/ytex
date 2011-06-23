@@ -57,10 +57,11 @@ setup all
     * *linux*: From a shell, cd to the YTEX_HOME directory, set the environment, make sure necessary scripts are executable, and execute the ant script:
 {{{
 cd ${HOME}/clinicalnlp/ytex
-. ./ytex.profile
+chmod u+x *.profile
 chmod u+x ../apache-ant-1.8.0/bin/ant
 chmod u+x *.sh
-ant -buildfile build-setup.xml -Dytex.home=${YTEX_HOME} setupDatabase
+. ./ytex.profile
+ant -buildfile build-setup.xml -Dytex.home=${YTEX_HOME} all > setup.out 2>&1
 }}}
 
 == Notes on UMLS Installation ==
