@@ -3,9 +3,12 @@
 = Introduction =
 
 YTEX v0.4 is under development.  We have implemented the following features:
+
 * Support for Linux.  We have tested YTEX on Linux w/ MySQL.
+
 * Support for updated UMLS.  For previous versions, we sent users UMLS data for named entity recognition based on the UMLS 2009AA, and using only the SNOMED, ICD, and NCI vocabularies.  For this version, we use the [http://www.ncbi.nlm.nih.gov/books/NBK9685/#ch03.I31_Data_Files UMLS tables] directly.  This requires that you install UMLS in locally.
-* Support for exporting annotation data to R, Matlab, SAS, Libsvm, and SVMLight
+
+* Support for exporting data to R, Matlab, SAS, Libsvm, and SVMLight
 
 YTEX is distributed with a tiny subset of the UMLS for demonstration purposes.  For production use, [http://www.nlm.nih.gov/research/umls/implementation_resources/scripts/README_RRF_MySQL_Output_Stream.html you must install UMLS locally] (if you ask us nicely, we can send you a dump of our UMLS database tables).  YTEX currently uses only the <tt>MRCONSO</tt> table.  We have developed scripts for loading the UMLS into SQL Server (NLM only provides scripts for Oracle & MySQL).
 
@@ -55,4 +58,10 @@ Open a command prompt, navigate to YTEX_HOME, and execute setup.cmd all. This wi
     The semantic search web application will be deployed to a tomcat server under YTEX_HOME\web\catalina. 
 
     * Executing the script for windows: Open a command prompt, navigate to YTEX_HOME, and execute setup.cmd all.
-    * Executing the script for linux: From a shell, 
+    * Executing the script for linux: From a shell, cd to the YTEX_HOME directory, set the environment, and execute the ant script:
+{{{
+cd ${HOME}/clinicalnlp/ytex
+. ./ytex.profile
+ant -buildfile build-setup.xml -Dytex.home=${YTEX_HOME} setupDatabase
+}}}
+
