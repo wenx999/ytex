@@ -7,11 +7,11 @@ YTEX v0.4 is under development.  We have implemented the following features:
 
   * Support for Linux.  We have tested YTEX on Linux w/ MySQL.
 
-  * Support for updated UMLS.  For previous versions, we sent users UMLS data for named entity recognition based on the UMLS 2009AA, and using only the SNOMED, ICD, and NCI vocabularies.  For this version, we use the [http://www.ncbi.nlm.nih.gov/books/NBK9685/#ch03.I31_Data_Files UMLS tables] directly.  This requires that you install UMLS locally.
+  * Support for updated UMLS.  For previous versions, we sent users UMLS data for named entity recognition based on an older version of the UMLS, and using only the SNOMED, ICD, and NCI vocabularies.  For this version, we use the [http://www.ncbi.nlm.nih.gov/books/NBK9685/#ch03.I31_Data_Files UMLS tables] directly.  This requires that you install UMLS locally.
 
   * Support for exporting data to R, Matlab, SAS, Libsvm, and SVMLight
 
-YTEX is distributed with a tiny subset of the UMLS for demonstration purposes.  For production use, [http://www.nlm.nih.gov/research/umls/implementation_resources/scripts/README_RRF_MySQL_Output_Stream.html you must install UMLS locally] (if you ask us nicely, we can send you a dump of our UMLS database tables).  YTEX currently uses only the <tt>MRCONSO</tt> table.  We have developed scripts for loading the UMLS into SQL Server (NLM only provides scripts for Oracle & MySQL).
+YTEX is distributed with a tiny subset of the UMLS for demonstration purposes.  For production use, [http://www.nlm.nih.gov/research/umls/implementation_resources/scripts/README_RRF_MySQL_Output_Stream.html you must install UMLS locally] (if you ask us nicely - vngarla at gmail.com - we can send you a dump of our UMLS database tables).  YTEX currently uses the <tt>MRCONSO</tt> and <tt>MRSTY</tt> tables.  We have developed scripts for loading the UMLS into SQL Server (NLM only provides scripts for Oracle & MySQL).
 
 == Prerequisites ==
 [Installation#Prerequisites Same as for v0.3]
@@ -66,9 +66,20 @@ tail -f setup.out
 }}}
 
 == Notes on UMLS Installation ==
-YTEX is distributed with a tiny subset of the UMLS.  During setup, we try to see if the UMLS is installed in the database (we look for the MRCONSO table); if we don't find it, we load the data files from the <tt>umls.zip</tt> included in the YTEX distribution.  If you are unable / too lazy to install the UMLS in your database, we can send you a <tt>umls.zip</tt> that contains a larger subset of the UMLS if you send us your UMLS license confirmation.
+YTEX is distributed with a tiny subset of the UMLS.  During setup, we try to see if the UMLS is installed in the database (we look for the MRCONSO table); if we don't find it, we look for a <tt>umls-[platform].zip</tt> file with the tables; if we don't find that we load the sample data files included in the YTEX distribution.  If you are unable / too lazy to install the UMLS in your database, we can send you a <tt>umls-[platform].zip</tt> that contains a larger subset of the UMLS if you send us your UMLS license confirmation.
 
-The cTAKES DBLookup algorithm requires a table/view that contains the first word of a concept, a concept code, and the full text of the concept.  The <tt>MRCONSO</tt> table contains concept codes (CUI field) and the full text of the concept (STR field).  We generate a table <tt>umls_aui_fword</tt> that contains the first word of every concept in the <tt>MRCONSO</tt> table.  We then join the <tt>umls_aui_fword</tt> and <tt>MRCONSO</tt> tables, to create a view ([MySQL for mysql a table]) that contains a subset of the UMLS.  You are free to replace this view with subsets of the UMLS of your liking; refer to <tt>YTEX_HOME/data/mysql/umls/create_view.sql</tt>.
+The cTAKES Database Lookup algorithm requires a table/view that contains the first word of a concept, a concept code, and the full text of the concept.  The <tt>MRCONSO</tt> table contains concept codes (CUI field) and the full text of the concept (STR field).  We generate a table <tt>umls_aui_fword</tt> that contains the first word of every concept in the <tt>MRCONSO</tt> table.  We then join the <tt>umls_aui_fword</tt> and <tt>MRCONSO</tt> tables, to create a view ([MySQL for mysql a table]) that contains a subset of the UMLS.  You are free to replace this view with subsets of the UMLS of your liking; refer to <tt>YTEX_HOME/data/mysql/umls/create_view.template.sql</tt>.
+
+=== Differences between cTAKES/ARC/YTEX ===
+You are free to use whatever dictionary you like with cTAKES/ARC/YTEX.  'By default' cTAKES/ARC are configured to use a database table for SNOMED-CT, and a lucene index for RXNORM.  In addition cTAKES/ARC store the SNOMED Codes for concepts.
+
+In contrast, YTEX uses only a database table for lookup, and only stores the UMLS CUIs.  The reasons for this include:
+  * Performance
+  Using the RXNORM lucene index incurs some memory requirements (1gb heap).  For each UMLS concept it finds, cTAKES executes another query to find the corresponding SNOMED codes.  Therefore, for each word that it tries to map, cTAKES is running 2 queries (snomed + rxnorm lookups) + n queries (cui to snomed lookup).  YTEX in contrast looks in a single database table.  Thus, the dictionary lookup in YTEX runs just 1 query (umls lookup).
+  * Cleaner Data Model
+  YTEX is DB-oriented, and storing only the UMLS CUI corresponds to a normalized data model.  To map UMLS CUIs to codes from any source vocabulary (e.g. SNOMED-CT/RXNORM), you can simply join the <tt>ytex.anno_ontology_concept</tt> and <tt>umls.mrconso</tt> tables.
+
+If you like the way cTAKES is doing things, you can configure YTEX to get the same functionality.  Refer to [http://ohnlp.sourceforge.net/cTAKES/#boost_performance the cTAKES documentation] for information on setting up the tables / lucene indices and configuration the Dictionary Lookup Annotator.
 
 == Notes on running examples on linux ==
 We've created .sh files for many of the .cmd files.  For the others, you should be able to figure out what to do by looking at the .cmd files.
