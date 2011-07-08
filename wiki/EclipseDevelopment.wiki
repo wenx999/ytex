@@ -23,7 +23,7 @@ This page describes checking YTEX out and setting up an eclipse development envi
     ** Setup Repository: https://ytex.googlecode.com/svn/
     ** Checkout the latest stable version.  The trunk is used for active development.  For a stable version, look at the svn tags.  Right click on v0.3 -> find / checkout as -> find projects in the children of the selected resource
   * Create config.local project
-  We try to keep local configuration settings separate from checked-in code.  Create a java project named `config.local`, and create a `ytex.properties` file in the root of this project's source directory.  Use `${workspace_loc}/config/desc/ytex.properties.*.example` as a template.
+  We try to keep local configuration settings separate from checked-in code.  Create a java project named `config.local`, and create a `ytex.properties` file in the root of this project's source directory, i.e. `${workspace_loc}/config.local/src/ytex.properties`.  Use `${workspace_loc}/config/desc/ytex.properties.*.example` as a template.
   * Setup Workspace Preferences: 
   Go to Window -> Preferences
     ** Server -> Runtime Environment -> Add -> Apache Tomcat v6.0
