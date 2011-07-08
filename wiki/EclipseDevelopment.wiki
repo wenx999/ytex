@@ -28,8 +28,8 @@ This page describes checking YTEX out and setting up an eclipse development envi
   Go to Window -> Preferences
     ** Server -> Runtime Environment -> Add -> Apache Tomcat v6.0
     ** Set ytex.properties variable for Ant:
-       *** Ant -> Runtime -> Properties -> Add Property
-       *** Property Name: `ytex.properties`, value: `${workspace_loc}/config.local/src/ytex.properties`
+       **  Ant -> Runtime -> Properties -> Add Property
+       ** Property Name: `ytex.properties`, value: `${workspace_loc}/config.local/src/ytex.properties`
     ** Add `ant-contrib.jar` to the ant classpath:
     Ant -> Runtime -> Classpath -> Global Entries -> Add Jar, and add `ant-contrib.jar`
   * Setup config files: execute `templateToConfig` in build/build-setup.xml`
