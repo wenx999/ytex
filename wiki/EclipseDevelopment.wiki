@@ -39,6 +39,7 @@ This page describes checking YTEX out and setting up an eclipse development envi
   * Setup Database:
     ** copy database archive (e.g. `umls-mysql.zip`) to the directory that contains the workspace.
     ** execute `all` in `data/build.xml`
+  * Disable validators in ytex.web project.  For some reason, eclipse doesn't like the syntax of the JSPs (they work fine).  Right-click on ytex.web -> Properties -> Validation -> Disable All -> Apply -> OK
   * Select all projects -> Right Click -> Refresh
   Now everything should compile.
 
