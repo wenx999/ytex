@@ -54,3 +54,9 @@ This page describes checking YTEX out and setting up an eclipse development envi
     ** Classpath: Add libs.system to server classpath
 
 Everything should work
+
+== Testing ==
+You can launch UIMA and YTEX tools directly from eclipse.  If you look in the Debug Configurations (the bug icon), you should see several run configurations including 
+  * `ytex CPE` - run the Collection Processing Engine
+  * `ytex DBAnnotationViewer` - run the Annotation Viewer
+  * `ExportBagOfWords` - to run the ytex bag-of-words exporter
