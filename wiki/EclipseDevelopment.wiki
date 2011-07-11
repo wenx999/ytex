@@ -26,12 +26,15 @@ This page describes checking YTEX out and setting up an eclipse development envi
   We try to keep local configuration settings separate from checked-in code.  Create a java project named `config.local`, and create a `ytex.properties` file in the root of this project's source directory, i.e. `${workspace_loc}/config.local/src/ytex.properties`.  Use `${workspace_loc}/config/desc/ytex.properties.*.example` as a template.
   * Setup Workspace Preferences: 
   Go to Window -> Preferences
-    ** Server -> Runtime Environment -> Add -> Apache Tomcat v6.0
-    ** Set ytex.properties variable for Ant:
-       **  Ant -> Runtime -> Properties -> Add Property
-       ** Property Name: `ytex.properties`, value: `${workspace_loc}/config.local/src/ytex.properties`
-    ** Add `ant-contrib.jar` to the ant classpath:
-    Ant -> Runtime -> Classpath -> Global Entries -> Add Jar, and add `ant-contrib.jar`
+    ** Add tomcat: Server -> Runtime Environment -> Add -> Apache Tomcat v6.0
+    ** Add ant-contrib: Ant -> Runtime -> Classpath -> Global Entries 
+    ** Setup ant properties: Ant -> Runtime -> Properties -> Add Property, and add the following properties:
+|| name || value ||
+|| `ytex.properties` || `${workspace_loc}/config.local/src/ytex.properties` ||
+|| `ytex.home` || `${workspace_loc}` ||
+|| `mysql.home` || necessary only for mysql users.  location of mysql.exe, e.g. C:\Program Files\MySQL\MySQL Server 5.1\bin ||
+
+-> Add Jar, and add `ant-contrib.jar`
   * Setup config files: execute `templateToConfig` in build/build-setup.xml`
   * Setup lvg: 
     ** copy the `lvg2010.tgz` file to the directory that contains the workspace.  e.g. if your workspace is `c:\projects\ytex`, copy the lvg file to `c:\projects`.
