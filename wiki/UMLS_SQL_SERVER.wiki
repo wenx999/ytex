@@ -14,7 +14,7 @@ To simplify the import, we convert the RRF files into tab-delimited UCS2 files.
 
 This is how it works:
   # You must run MetamophoSys to create a subset of the UMLS.
-  See http://www.ncbi.nlm.nih.gov/books/NBK9683/
+  See http://www.ncbi.nlm.nih.gov/books/NBK9683/.
   Metamorphosys will create RRF files with the table data.
   Metamorphosys will create directories of the form 2010AB/META and 2010AB/NET
   that contain RRF files.
