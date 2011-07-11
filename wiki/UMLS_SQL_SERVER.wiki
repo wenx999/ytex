@@ -35,7 +35,7 @@ properties control the import:
   * umls.catalog: the catalog (database) to install the umls in.  
   This defaults to the ytex database (db.name)
   * umls.schema: the schema to install the umls in. 
-  Defaults to the ytex schema (ytex.schema)
+  Defaults to the ytex schema (db.schema)
   * meta.tables: comma-delimited list of UMLS metathesaurus tables to import.  
   Defaults to: MRCUI,MRDOC,MRSAB,MRSTY,MRCONSO,MRREL
   * net.tables: comma-delimted list of UMLS semantic network tables to import.
