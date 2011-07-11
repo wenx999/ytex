@@ -4,7 +4,7 @@
 NLM does not provide scripts/utilities for importing tables into SQL Server.
 To import tables into SQL Server, we have adapted the database table creation 
 scripts from other platforms to SQL Server.  We reformat the output
-of MetamorphoSys to enable import using the SQL Server bcp utility.
+of [http://www.ncbi.nlm.nih.gov/books/NBK9683/  NLM's MetamorphoSys] to enable import using the SQL Server bcp utility.
 
 MetamorphoSys creates RRF files, which are pipe (|) delimited UTF-8 files.
 SQL Server does not support UTF-8, but does support UCS2 (unicode).
