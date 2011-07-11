@@ -7,7 +7,7 @@ YTEX v0.4 is under development.  We have implemented the following features:
 
   * Support for Linux.  We have tested YTEX on Linux w/ MySQL.
 
-  * Support for updated UMLS.  For previous versions, we sent users UMLS data for named entity recognition based on an older version of the UMLS, and using only the SNOMED, ICD, and NCI vocabularies.  For this version, we use the [http://www.ncbi.nlm.nih.gov/books/NBK9685/#ch03.I31_Data_Files UMLS tables] directly.  This requires that you install UMLS locally.
+  * Support for updated UMLS.  For previous versions, we sent users UMLS data for named entity recognition based on an older version of the UMLS, and using only the SNOMED, ICD, and NCI vocabularies.  For this version, we use the [http://www.ncbi.nlm.nih.gov/books/NBK9685/#ch03.I31_Data_Files UMLS tables] directly.  This requires that you install UMLS in your database.
 
   * Support for exporting data to R, Matlab, SAS, Libsvm, and SVMLight
 
@@ -15,6 +15,8 @@ YTEX is distributed with a tiny subset of the UMLS for demonstration purposes.  
 
 == Prerequisites ==
 [Installation#Prerequisites Same as for v0.3]
+
+As mentioned above, you must install UMLS in your database.  NLM provides scripts for installing UMLS in MySQL and Oracle.  Refer to [UMLS_SQL_SERVER UMLS SQL Server Installation] for instructions on how to install UMLS in MS SQL Server.
 
 
 == Installation ==
@@ -31,24 +33,17 @@ c:\java\clinicalnlp
 }}}
 
   # Download the following archives to the installation directory: 
-    * YTEX Archive: ytex-with-dependencies.zip 
+    * YTEX Archive: `ytex-with-dependencies-vX.Y.zip`
     Download from this site 
-    * LVG 2010 Archive: lvg2010lite.tgz (optional) 
+    * LVG 2010 Archive: `lvg2010lite.tgz` (optional) 
     ([http://lexsrv3.nlm.nih.gov/LexSysGroup/Projects/lvg/2010/release/lvg2010lite.tgz download]). Make sure you save this file as lvg2010lite.tgz (Internet Explorer may rename this). The lvg is required for stemming; if you do not download this file, stemming will not be performed. 
-  # Extract <tt>ytex-with-dependencies.zip</tt> to the installation directory; this will create a ytex subdirectory, e.g. windows <tt>c:\java\clinicalnlp\ytex</tt> / linux <tt>${HOME}/clinicalnlp/ytex</tt>, referred to subsequently as YTEX_HOME.
+    * If you get UMLS from us, place the archive (`umls-<platform>.zip`) in this directory as well
+  # Extract `ytex-with-dependencies-vX.Y.zip` to the installation directory; this will create a ytex subdirectory, e.g. windows `c:\java\clinicalnlp\ytex` / linux `${HOME}/clinicalnlp/ytex`, referred to subsequently as YTEX_HOME.
   # Edit environment batch/shell script, and Fix the path references to match your environment
     * windows <tt>YTEX_HOME\setenv.cmd</tt>
     * linux <tt>YTEX_HOME/ytex.profile</tt>
-  # Create YTEX_HOME\config\desc\ytex.properties: In this file, you specify the database connection parameters. Use YTEX_HOME\config\desc\ytex.properties.<db type>.example as a template.
-  # Execute the setup script.  The script does the following:
-Open a command prompt, navigate to YTEX_HOME, and execute setup.cmd all. This will call the ant script build-setup.xml, which does the following:
-    * Generates configuration files from templates
-    * Sets up YTEX Database Objects 
-    The installation executes SQL scripts located in the YTEX_HOME\data directory, and imports umls tables. All YTEX database objects will be dropped and recreated. If this is the initial installation, ignore the errors about objects not existing when they are being dropped. 
-    * Unpacks lvg data files
-    * Generates <tt>umls_aui_fword</tt> table
-    * Sets up Semantic Search Web Application 
-    The semantic search web application will be deployed to a tomcat server under YTEX_HOME\web\catalina. 
+  # Create `YTEX_HOME\config\desc\ytex.properties`: In this file, you specify the database connection parameters. Use `YTEX_HOME\config\desc\ytex.properties.<db type>.example` as a template.
+  # Execute the setup script.  
     * *windows*: Open a command prompt, navigate to YTEX_HOME, and execute setup script:
 {{{
 cd /d c:\clinicalnlp\ytex
@@ -65,8 +60,16 @@ ant -buildfile build-setup.xml -Dytex.home=${YTEX_HOME} all > setup.out 2>&1 &
 tail -f setup.out
 }}}
 
+This will call the ant script `build-setup.xml`, which does the following:
+    * Unpacks lvg data files
+    * Generates configuration files from templates
+    * Sets up Semantic Search Web Application 
+    The semantic search web application will be deployed to a tomcat server under `YTEX_HOME\web\catalina`. 
+    * Sets up YTEX Database Objects 
+    The installation executes SQL scripts located in the `YTEX_HOME\data` directory, and imports umls tables (if they are not already in the database). All YTEX database objects will be dropped and recreated. If this is the initial installation, ignore the errors about objects not existing when they are being dropped. 
+
 == Notes on UMLS Installation ==
-YTEX is distributed with a tiny subset of the UMLS.  During setup, we try to see if the UMLS is installed in the database (we look for the MRCONSO table); if we don't find it, we look for a <tt>umls-(platform).zip</tt> file with the tables; if we don't find that we load the sample data files included in the YTEX distribution.  If you are unable / too lazy to install the UMLS in your database, we can send you a <tt>umls-(platform).zip</tt> that contains a larger subset of the UMLS if you send us your UMLS license confirmation.
+YTEX is distributed with a tiny subset of the UMLS.  During setup, we try to see if the UMLS is installed in the database (we look for the MRCONSO table); if we don't find it, we look for a <tt>umls-(platform).zip</tt> file with the tables. If we don't find that we load the sample data files included in the YTEX distribution.  If you are unable / too lazy to install the UMLS in your database.
 
 The cTAKES Database Lookup algorithm requires a table/view that contains the first word of a concept, a concept code, and the full text of the concept.  The <tt>MRCONSO</tt> table contains concept codes (CUI field) and the full text of the concept (STR field).  We generate a table <tt>umls_aui_fword</tt> that contains the first word of every concept in the <tt>MRCONSO</tt> table.  We then join the <tt>umls_aui_fword</tt> and <tt>MRCONSO</tt> tables, to create a view ([MySQL for mysql a table]) that contains a subset of the UMLS.  You are free to replace this view with subsets of the UMLS of your liking; refer to <tt>YTEX_HOME/data/mysql/umls/create_view.template.sql</tt>.
 
@@ -77,7 +80,7 @@ In contrast, YTEX uses only a database table for lookup, and only stores the UML
   * Performance
   Using the RXNORM lucene index incurs some memory requirements (1gb heap).  For each UMLS concept it finds, cTAKES executes another query to find the corresponding SNOMED codes.  Therefore, for each word that it tries to map, cTAKES is running 2 queries (snomed + rxnorm lookups) + n queries (cui to snomed lookup).  YTEX in contrast looks in a single database table.  Thus, the dictionary lookup in YTEX runs just 1 query (umls lookup).
   * Cleaner Data Model
-  YTEX is DB-oriented, and storing only the UMLS CUI corresponds to a normalized data model.  To map UMLS CUIs to codes from any source vocabulary (e.g. SNOMED-CT/RXNORM), you can simply join the <tt>ytex.anno_ontology_concept</tt> and <tt>umls.mrconso</tt> tables.
+  YTEX is DB-oriented, and storing only the UMLS CUI corresponds to a normalized data model.  To map UMLS CUIs to codes from any source vocabulary (e.g. SNOMED-CT/RXNORM), you can simply join the <tt>ytex.anno_ontology_concept</tt> and <tt>umls.mrconso</tt> tables.  By default, YTEX creates a view for named entity recognition that uses the SNOMED-CT and RXNORM vocabularies.
 
 If you like the way cTAKES is doing things, you can configure YTEX to get the same functionality.  Refer to [http://ohnlp.sourceforge.net/cTAKES/#boost_performance the cTAKES documentation] for information on setting up the tables / lucene indices and configuration the Dictionary Lookup Annotator.
 
