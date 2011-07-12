@@ -78,7 +78,7 @@ You are free to use whatever dictionary you like with cTAKES/ARC/YTEX.  'By defa
 
 In contrast, YTEX uses only a database table for lookup, and only stores the UMLS CUIs.  The reasons for this include:
   * Performance
-  Using the RXNORM lucene index incurs some memory requirements (1gb heap).  For each UMLS concept it finds, cTAKES executes another query to find the corresponding SNOMED codes.  Therefore, for each word that it tries to map, cTAKES is running 2 queries (snomed + rxnorm lookups) + n queries (cui to snomed lookup).  YTEX in contrast looks in a single database table.  Thus, the dictionary lookup in YTEX runs just 1 query (umls lookup).
+  Using the RXNORM lucene index incurs some memory requirements (you need a 1gb heap at least to load the lucene index).  For each UMLS concept it finds, cTAKES executes another query to find the corresponding SNOMED codes.  Therefore, for each word that cTAKES tries to map, cTAKES is running 2 queries (snomed + rxnorm lookups) + n queries (cui to snomed lookup).  YTEX in contrast looks in a single database table.  Thus, the dictionary lookup in YTEX runs just 1 query (umls lookup).
   * Cleaner Data Model
   cTAKES/ARC store the SNOMED-CT code and the UMLS CUI.  YTEX in contrast stores only the UMLS CUI: YTEX is DB-oriented, and storing only the UMLS CUI corresponds to a normalized data model.  To map UMLS CUIs to codes from any source vocabulary (e.g. SNOMED-CT/RXNORM), you can simply join the <tt>ytex.anno_ontology_concept</tt> and <tt>umls.mrconso</tt> tables.  
 
