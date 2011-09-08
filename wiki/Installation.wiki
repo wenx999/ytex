@@ -23,7 +23,7 @@ This assumes a Windows installation.  YTEX should work on unices (tests and inst
     * LVG 2010 Archive: `lvg2010lite.tgz` (optional)
     ([http://lexsrv3.nlm.nih.gov/LexSysGroup/Projects/lvg/2010/release/lvg2010lite.tgz download]).  Make sure you save this file as `lvg2010lite.tgz` (Internet Explorer may rename this).  The lvg is required for stemming; if you do not download this file, stemming will not be performed.
     * UMLS Database Export
-    UMLS is used for Named Entity Recognition.  The YTEX distribution includes a small subset of the UMLS that contains only concepts for the examples. To get the complete UMLS for use with YTEX, do the following:
+    UMLS is used for Named Entity Recognition.  The YTEX distribution includes a small subset of the UMLS that contains only concepts for the examples. To obtain a larger subset of the UMLS for use with YTEX, do the following:
       ** If you have not done so already, obtain a UMLS License and create a UMLS Technology Services (UTS) Account, available free of charge: [https://uts.nlm.nih.gov/home.html]
       ** Download the YTEX UMLS Database Archive from [http://umlsdownload.ytex-nlp.org/secure/index.jsp].  A valid UTS Login is required.
   # Extract `ytex-with-dependencies.zip` to the installation directory; this will create a `ytex` subdirectory, e.g. `c:\java\clinicalnlp\ytex`, referred to subsequently as `YTEX_HOME`.
