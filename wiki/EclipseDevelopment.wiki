@@ -6,6 +6,7 @@ This page describes checking YTEX out and setting up an eclipse development envi
 == Prerequisites ==
   * Eclipse Galileo or higher (Helios)
   * [http://www.eclipse.org/subversive/ Eclipse SVN Plugins]
+  * [http://www.eclipse.org/m2e/ Eclipse Maven Plugin]
   * [http://tomcat.apache.org/download-60.cgi Apache Tomcat v6.x]
   * [http://sourceforge.net/projects/ant-contrib/ Ant-Contrib] (included with ytex-with-dependencies)
   * Jdbc Drivers (included with ytex-with-dependencies, see [Installation])
@@ -22,8 +23,12 @@ This page describes checking YTEX out and setting up an eclipse development envi
   * Checkout
     ** Setup Repository: https://ytex.googlecode.com/svn/
     ** Checkout the latest stable version.  The trunk is used for active development.  For a stable version, look at the svn tags.  Right click on v0.3 -> find / checkout as -> find projects in the children of the selected resource
+  * v0.4 and higher: starting with this version, we manage dependencies using maven; you must download required libraries using maven.  Run the `process-sources` goal on `ytex.web/pom.xml` file.  There is a run configuration named `ytex.web process-sources` - run this.
   * Create config.local project
-  We try to keep local configuration settings separate from checked-in code.  Create a java project named `config.local`, and create a `ytex.properties` file in the root of this project's source directory, i.e. `${workspace_loc}/config.local/src/ytex.properties`.  Use `${workspace_loc}/config/desc/ytex.properties.*.example` as a template.
+  We try to keep local configuration settings separate from checked-in code.  Create a java project named `config.local`, and create a `ytex.properties` file in the root of this project's source directory, i.e. `${workspace_loc}/config.local/src/ytex.properties`.  Use `${workspace_loc}/config/desc/ytex.properties.*.example` as a template.  Also add the following property:
+{{{
+kernel.cp=kernel.cp.dev
+}}}
   * Setup Workspace Preferences: 
   Go to Window -> Preferences
     ** Add tomcat: Server -> Runtime Environment -> Add -> Apache Tomcat v6.0
@@ -37,7 +42,7 @@ This page describes checking YTEX out and setting up an eclipse development envi
 -> Add Jar, and add `ant-contrib.jar`
   * Setup config files: execute `templateToConfig` in build/build-setup.xml`
   * Setup lvg: 
-    ** copy the `lvg2010.tgz` file to the directory that contains the workspace.  e.g. if your workspace is `c:\projects\ytex`, copy the lvg file to `c:\projects`.
+    ** copy the `lvg2010.tgz` (ytex v0.3) or `lvg2011.tgz` (ytex v0.4 or higer) file to the directory that contains the workspace.  e.g. if your workspace is `c:\projects\ytex`, copy the lvg file to `c:\projects`.
     ** execute `setup.lvg` in build/build-setup.xml`
   * Setup Database:
     ** copy database archive (e.g. `umls-mysql.zip`) to the directory that contains the workspace.
