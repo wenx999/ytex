@@ -35,7 +35,7 @@ kernel.cp=kernel.cp.dev
     ** Add ant-contrib: Ant -> Runtime -> Classpath -> Global Entries 
     ** Setup ant properties: Ant -> Runtime -> Properties -> Add Property, and add the following properties:
 || name || value ||
-|| `config.local`|| `${workspace_loc}/config.local/src ||
+|| `config.local`|| `${workspace_loc}/config.local/src` ||
 || `ytex.properties` || `${workspace_loc}/config.local/src/ytex.properties` ||
 || `ytex.home` || `${workspace_loc}` ||
 || `mysql.home` || necessary only for mysql users.  location of mysql.exe, e.g. C:\Program Files\MySQL\MySQL Server 5.1\bin ||
