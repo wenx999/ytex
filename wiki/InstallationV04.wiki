@@ -7,16 +7,24 @@ YTEX v0.4 is under development.  We have implemented the following features:
 
   * Support for Linux.  We have tested YTEX on Linux w/ MySQL.
 
-  * Support for updated UMLS.  For previous versions, we sent users UMLS data for named entity recognition based on an older version of the UMLS, and using only the SNOMED, ICD, and NCI vocabularies.  For this version, we use the [http://www.ncbi.nlm.nih.gov/books/NBK9685/#ch03.I31_Data_Files UMLS tables] directly.  This requires that you install UMLS in your database.
+  * Support for updated UMLS.  For previous versions, we sent users UMLS data for named entity recognition based on an older version of the UMLS, and using only the SNOMED, ICD, and NCI vocabularies.  For this version, we use the [http://www.ncbi.nlm.nih.gov/books/NBK9685/#ch03.I31_Data_Files UMLS tables] directly.  We recommend that you install UMLS in your database.  We also provide a subset of the UMLS 2010AB that contains SNOMED and RXNORM for users that do not want to/are unable to install the UMLS locally.
 
   * Support for exporting data to R, Matlab, SAS, Libsvm, and SVMLight
 
-YTEX is distributed with a tiny subset of the UMLS for demonstration purposes.  For production use, [http://www.nlm.nih.gov/research/umls/implementation_resources/scripts/README_RRF_MySQL_Output_Stream.html you must install UMLS locally] (if you ask us nicely - vngarla at gmail.com - we can send you a dump of our UMLS database tables).  YTEX currently uses the <tt>MRCONSO</tt> and <tt>MRSTY</tt> tables.  We have developed scripts for loading the UMLS into SQL Server (NLM only provides scripts for Oracle & MySQL).
+
 
 == Prerequisites ==
-[Installation#Prerequisites Same as for v0.3]
+  * Database Utilities
+  YTEX supports MS SQL Server 2008, MySQL version 5.x, and Oracle versions 10gR2 and above.  To set up database objects, the installation requires database-specific utilities:
+    ** MS SQL Server: [http://www.microsoft.com/downloads/details.aspx?familyid=08E52AC2-1D62-45F6-9A4A-4B76A8564A2B&displaylang=en SQL Server Tools] and [http://www.microsoft.com/downloads/en/details.aspx?FamilyId=C6C3E9EF-BA29-4A43-8D69-A2BED18FE73C&displaylang=en SQL Server Command-Line Utilities]
+    ** Oracle: SQL*Plus and SQL*Loader
+    ** MySQL: mysql installation 
+  * Database User and Schema.
+  Create a database user (and schema) for use with ytex.  
+  * JDK 1.6 [http://java.sun.com/javase/downloads/widget/jdk6.jsp download]
+  * Atleast 2 GB of free disk space
 
-As mentioned above, you must install UMLS in your database.  NLM provides scripts for installing UMLS in MySQL and Oracle.  Refer to [UMLS_SQL_SERVER UMLS SQL Server Installation] for instructions on how to install UMLS in MS SQL Server.
+As mentioned above, [http://www.nlm.nih.gov/research/umls/implementation_resources/scripts/README_RRF_MySQL_Output_Stream.html we suggest that you install UMLS in your database].  NLM provides scripts for installing UMLS in MySQL and Oracle.  Refer to [UMLS_SQL_SERVER UMLS SQL Server Installation] for instructions on how to install UMLS in MS SQL Server.
 
 
 == Installation ==
@@ -35,14 +43,18 @@ c:\java\clinicalnlp
   # Download the following archives to the installation directory: 
     * YTEX Archive: `ytex-with-dependencies-vX.Y.zip`
     Download from this site 
-    * LVG 2010 Archive: `lvg2010lite.tgz` (optional) 
-    ([http://lexsrv3.nlm.nih.gov/LexSysGroup/Projects/lvg/2010/release/lvg2010lite.tgz download]). Make sure you save this file as lvg2010lite.tgz (Internet Explorer may rename this). The lvg is required for stemming; if you do not download this file, stemming will not be performed. 
-    * If you get UMLS from us, place the archive (`umls-<platform>.zip`) in this directory as well
+    * LVG 2011 Archive: `lvg2011lite.tgz` (optional) 
+    ([http://lexsrv3.nlm.nih.gov/LexSysGroup/Projects/lvg/2011/release/lvg2011lite.tgz download]). Make sure you save this file as lvg2011lite.tgz (Internet Explorer may rename this). The lvg is required for stemming; if you do not download this file, stemming will not be performed.
+     * UMLS Database Export (Required if you do not have UMLS installed in your DB)
+    UMLS is used for Named Entity Recognition.  The YTEX distribution includes a tiny subset of the UMLS for demonstration purposes.  For production use, [http://www.nlm.nih.gov/research/umls/implementation_resources/scripts/README_RRF_MySQL_Output_Stream.html we suggest that you install UMLS locally].  If you cannot/don't want to install UMLS, you can get a subset of the UMLS 2010AB that contains SNOMED-CT and RXNORM from us:
+      ** If you have not done so already, obtain a UMLS License and create a UMLS Technology Services (UTS) Account, available free of charge: [https://uts.nlm.nih.gov/home.html]
+      ** Download the YTEX UMLS Database Archive from [http://umlsdownload.ytex-nlp.org/secure/index.jsp].  A valid UTS Login is required. 
+      ** If you get UMLS from us, place the archive (`umls-<platform>.zip`) in the installation directory as well
   # Extract `ytex-with-dependencies-vX.Y.zip` to the installation directory; this will create a ytex subdirectory, e.g. windows `c:\java\clinicalnlp\ytex` / linux `${HOME}/clinicalnlp/ytex`, referred to subsequently as YTEX_HOME.
   # Edit environment batch/shell script, and Fix the path references to match your environment
-    * windows <tt>YTEX_HOME\setenv.cmd</tt>
-    * linux <tt>YTEX_HOME/ytex.profile</tt>
-  # Create `YTEX_HOME\config\desc\ytex.properties`: In this file, you specify the database connection parameters. Use `YTEX_HOME\config\desc\ytex.properties.<db type>.example` as a template.
+    * windows edit <tt>YTEX_HOME\setenv.cmd</tt>
+    * linux move <tt>YTEX_HOME/ytex.profile</tt> to <tt>${HOME}/ytex.profile</tt>
+  # Create `YTEX_HOME\config\desc\ytex.properties`: In this file, you specify the database connection parameters. Use `YTEX_HOME\config\desc\ytex.properties.<db type>.example` as a template.  If you have UMLS installed on your database, specify the `umls.schema` and `umls.catalog` properties (see the properties file for an explanation of what these are).
   # Execute the setup script.  
     * *windows*: Open a command prompt, navigate to YTEX_HOME, and execute setup script:
 {{{
