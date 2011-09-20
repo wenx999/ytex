@@ -33,27 +33,45 @@ Clinical Documents from an EMR are typically stored in a database.  We developed
   # read all document unique ids into an internal list
   # iterate through each id in the list, and retrieve the document for annotation.
 
-Documents in a database typically are given a Unique ID, and are cross-referenced with other information (e.g. patient id, document type, document date, etc.).  This unique id can be stored as a document annotation, which in turn will be stored in the database, along with other document annotations.  This allows you to cross-reference annotation data with other document data.
+Documents in a database typically are given a Unique ID, and are cross-referenced with other information (e.g. patient id, document type, document date, etc.).  This unique id can be stored in the database along with other document annotations.  This allows you to cross-reference annotation data with other document data.
+
+By default, YTEX supports an integer document unique identifier; YTEX can be configured to support additional/different document identifiers (see [DocKey_v0_4 Document Key Example]).  
+
+The YTEX DBCollection reader is parameterized by 2 queries: a key query and a document query.  The key query  loads document unique ids from a database, and the document query loads a document for a given unique id.  For more information, refer to the example below.
 
 === Example ===
-To illustrate this, we can simply retrieve documents we stored in the database when we ran the UIMA Document Analyzer above.  To configure and execute the CPE, do the following:
-  * Start CPE
-  Execute `YTEX_HOME\ytexCPE.bat`, 
-  * Clear Settings 
-  In case of any settings are specified File->Clear All 
-  * Configure DBCollectionReader
-  For the Descriptor, specify `YTEX_HOME\config\desc\ytex\vacs\uima\DBCollectionReader.xml`.
-  The 'Query Document Keys' and 'Query Get Document' parameters will appear.
-    ** Specify query to retrieve document keys.  
+To illustrate this, we can simply retrieve sample documents stored in the `fracture_demo` table.  To configure and execute the CPE, do the following:
+  * Start CPE Configuration Tool
+  Windows: run `YTEX_HOME\ytexCPE.bat`, Linux: from YTEX_HOME run `./ytexTools.sh CPE`
+  * Clear the CPE Configuration: File->Clear
+  * Configure the Collection Reader: In the Collection Reader section click the Browse Button.  For the Descriptor, specify `YTEX_HOME\config\desc\ytex\uima\DBCollectionReader.xml`.
+  * Configure Queries: The 'Query Document Keys' and 'Query Get Document' parameters will appear.  Specify queries to retrieve keys and documents.  The key query returns a integer key, named `uid`.  The document query has a `uid` parameter.  The `uid` is stored in the ytex document table, allowing you to link annotations to the source document.  Here are the queries for the fracture demo:
+     ** MS SQL Server
+Document Key Query (replace schema to match your configuration)
 {{{
-    select document_id uid
-		from document
+    select note_id uid from <schema>.fracture_demo
 }}}
-    ** Specify query to retrieve individual document:
+Document Query
 {{{
-		select doc_text 
-		from document
-		where document_id = :uid
+    select note_text from <schema>.fracture_demo where note_id = :uid
+}}}
+     ** MySQL
+Document Key Query
+{{{
+    select note_id uid from  fracture_demo
+}}}
+Document Query
+{{{
+    select note_text from fracture_demo where note_id = :uid
+}}}
+     ** Oracle
+Document Key Query
+{{{
+    select note_id ¨uid¨ from fracture_demo
+}}}
+Document Query
+{{{
+    select note_text from fracture_demo where note_id = :uid
 }}}
   * Configure Analysis Engine
   Click on the 'Add' button in the 'Analysis Engine' section, and select `YTEX_HOME\config\desc\ytex\uima\YTEXPipeline.xml`
@@ -65,7 +83,10 @@ To illustrate this, we can simply retrieve documents we stored in the database w
   select * from 
   v_document where analysis_batch = 'test2'
   }}}
-  You will note that the uid column is set, and refers to the source document_id.
+  Notice that the uid column is set, and refers to the `fracture_demo.note_id`.
+
+==UIMA Collection Processing Engine w/ FileSystemCollectionReader==
+You can also load documents from the file system.  See [FileSystemCPE_v0_4 Using the CPE to load documents from the file system].
 
 =Retrieving Documents=
 
@@ -105,46 +126,6 @@ By default, YTEX annotates documents with SNOMED concepts.
 The UMLS and SNOMED are quite expansive; nevertheless, these vocabularies may lack certain synonyms/lexical variants for clinical concepts, are lack concepts completely.  
 
 To annotate (new) concepts using new lexical variants, do the following:
-  * Add concepts to the UMLS lookup table
-YTEX uses cTAKES JDBC DictionaryLookup algorithm, which searches the UMLS lookup table using the first word of each phrase which can be mapped to a concept.  To add a lexical variant to the lookup table, simply insert a row, e.g.:
-{{{
-insert into <schema>.umls_ms_2009 (  cui, fword, text, code, sourcetype, tui)
-values ('ESLD_MASS','hypodense','hypodense area','ESLD_MASS','ESLD','T060');
-}}}
-
-|| column || description ||
-|| cui || Intended as the UMLS CUI, but can be used as an arbitrary concept id ||
-|| fword || the 1st word of the phrase to be mapped to a concept ||
-|| text || the full text of the (potentially multiword) phrase to be mapped ||
-|| code || Intended for SNOMED code, but not used by YTEX ||
-|| sourcetype || Source vocabulary (e.g. SNOMED, NCI).  Set this to the a project-specific code (ESLD for end-stage liver disease) ||
-|| tui || umls semantic type.  used to filter concepts (see below regarding the view) ||
-
-  * Modify the view used by YTEX to search for concepts
-YTEX retrieves concepts from the `v_snomed_fword_lookup` view.  Simply modify the view definition to include your concepts:
-{{{
-drop view <schema>.v_snomed_fword_lookup;
-
-create view <schema>.v_snomed_fword_lookup
-as
-select fword, cui, text
-from ytex.umls_ms_2009
-where 
-(
-	tui in 
-	(
-	'T021','T022','T023','T024','T025','T026','T029','T030','T031',
-	'T059','T060','T061',
-	'T019','T020','T037','T046','T047','T048','T049','T050','T190','T191',
-	'T033','T034','T040','T041','T042','T043','T044','T045','T046','T056','T057','T184'
-	)
-	and sourcetype = 'SNOMEDCT'
-) 
-or
-sourcetype = 'ESLD'
-}}}
-In the example above, the view is modified to include all terms from the `ESLD` source, in addition to `SNOMED`.
-
 ==Named Entity Recognition Regexs==
 The UMLS lookup table may not be flexible enough to identify all variants of a concept; YTEX can also identify concepts using regular expressions.  Simply add a row to the `ref_named_entity_regex` table:
 {{{
