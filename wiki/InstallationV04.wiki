@@ -98,3 +98,17 @@ If prefer the way cTAKES is doing things, you can configure YTEX to get the same
 
 == Notes on running examples on linux ==
 We've created .sh files for many of the .cmd files.  For the others, you should be able to figure out what to do by looking at the .cmd files.
+
+== DB Platform Specific Notes ==
+=== Oracle ===
+As documented [http://www.nlm.nih.gov/research/umls/implementation_resources/scripts/index.html here] your database must use the UTF-8 charset.
+
+Make sure you use a tablespace with enough room; e.g. create the ytex user and schema like this:
+{{{
+create tablespace TBS_YTEX datafile 'C:/oracle/oradata/orcl/TBS_YTEX.dbf' size 1000M autoextend on online;
+create user ytex identified by ytex default tablespace TBS_YTEX;
+grant connect, resource to ytex;
+}}}
+
+=== MySQL ===
+The `document` table uses the `text` and `blob` datatypes for the doc_text column that holds the document text.  If you are processing large documents, you may need to use longtext the datatype instead.  Furthermore, you may have to increase the [http://dev.mysql.com/doc/refman/5.5/en/packet-too-large.html maximum packet size].
