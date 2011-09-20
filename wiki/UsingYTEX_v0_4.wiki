@@ -67,7 +67,7 @@ Document Query
      ** Oracle
 Document Key Query
 {{{
-    select note_id ¨uid¨ from fracture_demo
+    select note_id "uid" from fracture_demo
 }}}
 Document Query
 {{{
