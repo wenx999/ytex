@@ -28,7 +28,7 @@ cd ${YTEX_HOME}
  * Click Run
  * You can then view the anaysis results by double-clicking individual documents.
 
-==UIMA Collection Processing Engine w/ DBCollectionReader==
+==UIMA CPE - loading document from the database==
 Clinical Documents from an EMR are typically stored in a database.  We developed an UIMA CollectionReader that retrieves these documents for annotation (thereby avoiding exporting the documents to the file system).  The DBCollection reader works as follows:
   # read all document unique ids into an internal list
   # iterate through each id in the list, and retrieve the document for annotation.
@@ -85,8 +85,101 @@ Document Query
   }}}
   Notice that the uid column is set, and refers to the `fracture_demo.note_id`.
 
-==UIMA Collection Processing Engine w/ FileSystemCollectionReader==
-You can also load documents from the file system.  See [FileSystemCPE_v0_4 Using the CPE to load documents from the file system].
+=== Example - Custom Key Mapping ===
+This example demonstrates how to use custom document keys.  Let's assume that clinical documents have a unique identifier that comprises 2 fields - `note_id` (integer) and `site_id` (character) - and that these documents are stored in the `fracture_demo` table.  We would like to link our annotations to the original document, so we need to store both the `note_id` and `site_id` in the ytex `document` table.  In this example, we map these columns to the `uid` and `site_id` columns in the `document` table.
+
+To run this example, do the following:
+  * modify the ytex document table and add a site_id column. e.g. for MS SQL Server:
+{{{
+alter table document add site_id varchar(20)
+}}} 
+
+  * Start the collection processing engine
+  Windows: Run YTEX_HOME/ytexCPE.cmd
+  Unix: from a shell run the following commands
+{{{
+. ${HOME}/ytex.profile
+cd ${YTEX_HOME}
+./ytexTools.sh CPE 
+}}}
+  * Open the CPE Descriptor
+  Go to File->Open, and select `YTEX_HOME/examples/cpe-fracture/fracture-demo.[platform].cpe.xml`.  The query to get the keys looks like this (notice how note_id was renamed to uid):
+{{{
+select note_id uid, site_id from fracture_demo
+}}}
+  The query to get the document looks like this:
+{{{
+select note_text from fracture_demo where note_id = :uid and site_id = :site_id
+}}}
+  The CPE config "Store Doc Text" checkbox is unchecked: we will note store the document text in the document.doc_text column, because it is already in the database - we can join the document and fracture_demo tables on the uid/site_id columns to get the corresponding text.
+
+  * Run the CPE
+  Press the play button
+
+  * Verify that the uid and site_id fields have been set
+{{{
+select * from document where analysis_batch = 'cpe-fracture'
+}}} 
+
+
+==UIMA CPE - loading document from the file system==
+Instead of using the DBCollectionReader to load documents from the database, you can use the FileSystemCollectionReader to load documents from the file system.
+
+=== Example ===
+This example demonstrates annotating documents with the Collection Processing Engine (CPE).  We annotate the contents of the `YTEX_HOME\examples\pubmed\abstracts` directory that contains a handful of pubmed abstracts.
+
+To run this example, do the following:
+  * open a command prompt / shell
+  * change to the `YTEX_HOME\examples\pubmed` directory
+  * start the UIMA CPE configurator.  Windows:
+{{{
+..\..\ytexCPE.cmd
+}}}
+Unix:
+{{{
+. ${HOME}/ytex.profile
+${YTEX_HOME}/ytexTools.sh CPE
+}}}
+  * click the 'Play' button
+
+YTEX will annotate the documents and store them in the database.  
+To take a quick look at the concept annotations, run the following query against your database:
+{{{
+select * from v_document_cui_sent where analysis_batch = 'pubmed'
+}}}
+
+== YTEX Pipeline Configuration Parameters ==
+The UIMA CPE Configurator (yes it is ugly) allows you to override parameters defined in the UIMA Pipeline.  Some of these properties are:
+
+  * Patterns
+  Regex used by the paragraph annotator to split paragraphs.
+
+  * analysis_batch
+The `analysis_batch` is a way to identify document annotation runs or groups of documents.  It is stored in the `document.analysis_batch` column.
+
+  * Store CAS
+  Should the UIMA XML representation of document annotations be stored in the database?  The gzipped uima xml is stored in the `document.cas` column.
+ 
+  * Store Doc Text
+  Should the document text be stored in the database?  The document text is stored in the `document.doc_text` column.
+
+  * XMI Output Directory
+  Directory where UIMA XML representations of document annotations should be stored; if empty they will not be stored in the file system.
+
+  * Types to Ignore
+  UIMA annotations that should not be stored in the database. 
+Take a look at the `ref_uima_type` table for a list of types stored in the database. The class name should give you an idea of what each annotation represents.
+
+== DBCollectionReader Configuration Parameters ==
+  * Query Document Keys
+  This query retrieves the document keys - the way to uniquely identify each document.
+
+  * Query Get Document
+  This query retrieves the document using a key.  
+  Key parameters are specified using `:`.
+  The column names returned from the document key query must match the parameter names exactly (case sensitive).  Oracle users: oracle will return all column names as uppercase, unless you rename them using a quoted string (as in the uid column in the example above). 
+  * Key to document column mapping
+  We match key values to columns in the `document` table by column name (case-insensitive) and data type.  We have tested this with non-decimal numeric types (short, int, bigint ...) and character types (char, varchar, ...).  Problems may arise with illegal column names that require escaping.
 
 =Retrieving Documents=
 
