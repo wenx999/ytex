@@ -246,3 +246,98 @@ insert into <schema>.ref_segment_regex (segment_id, regex) values('FINDINGS', '\
 || segment_id || the segment identifier ||
 || regex || the regular expression that finds the section heading, or finds the entire section ||
 || limit_to_regex || 0 - false - the regular expression only identifies the section heading. In this case, the section will span the text from the heading to the next section. 1 - true - the regular expression identifies the entire section.  The section spans from the beginning to the end of the text covered by the regular expression ||
+
+= Data Mining =
+For data mining purposes, text can be represented as a 'Bag-of-Words': a matrix with 'words' as columns and documents as rows.  The value of the column represents the (weighted) word frequency, or is an indicator representing the presence of the word in the document.  The words can be the raw natural language word, the stemmed word, or concept identifiers.  This is typically a very high-dimensional feature space, i.e. the number of columns (distinct words) can be very large.  This space is typically sparse: most of the words assume the value 0.
+
+To deal with sparse, high-dimensional spaces efficiently, data mining packages support a sparse file format.  YTEX currently supports exporting sparse matrices in the following formats:
+  * Arff (for use with Weka)
+  * Sparse Matrix format  (for use with R/Matlab)
+  * Libsvm format.
+
+YTEX provides great flexibility in choosing which features or class of features to export.  Before we get into details, you should run either the WEKA or R example.  
+
+== Example ==
+In this example, we develop a classifier that identifies documents that assert the presence of a fracture.  The documents and their class labels are stored in the `fracture_demo` table.  We decided to use 2/3 of the notes as a training set, and 1/3 as a test set, and store this assignment in the `fracture_demo` table as well.
+
+Before going through the following steps, please annotate the fracture documents using the YTEX collection processing engine as documented above (Example - Custom Key Mapping).
+
+In this example, we annotate documents, export two different representations of these documents, and train classifiers using either R or Weka.  We export a bag-of-cuis representation where each variable represents the frequency of an affirmed UMLS concept within a document; we also export a bag-of-words representation where each variable represents the frequency of a stemmed word.
+
+
+The SparseDataExporter takes a Java property file as input; the property file specifies the SQL queries used to obtain instances (i.e. documents), their class labels, and their 'attributes'.
+
+=== 1. Export Bag-of-Words ===
+Start a command prompt/shell, change to the `YTEX_HOME\examples\fracture\cui` or `YTEX_HOME\examples\fracture\word` directory (for the bag-of-cuis vs. bag-of-words example respectively), and run the following commands.
+Windows:
+{{{
+..\..\..\setenv.cmd
+..\..\..\ytexTools.cmd SparseDataExporter -Dprop=export.[platform].xml -Dtype=[type]
+}}}
+Linux:
+{{{
+${HOME}/ytex.profile
+../../../ytexTools.sh SparseDataExporter -Dprop=export.[platform].xml -Dtype=[type]
+}}}
+`export.[platform].xml` contains the queries for the respective datatabase platform.
+`[type]` is either `weka` or `sparsematrix` (for R or matlab)
+
+==== Weka ====
+After executing this you should see 2 arff files in this directory corresponding to the training and test sets.
+
+  * start the WEKA Gui Chooser: call startWeka.bat
+{{{
+startWeka.bat
+}}}
+  * start Explorer: click on `Explorer`
+  * open an arff file: click on 'open file' and select e.g. `fracture-word.arff`
+  * you should see a list of all the attributes
+
+The rest is standard WEKA usage.  
+  * Here is one suggestion: filter for the top 50 attributes ranked by mutual information
+  * Train the J48 decision tree on train.arff, evaluate on test.arff
+  * If you are new to WEKA, refer to the [http://iweb.dl.sourceforge.net/project/weka/documentation/3.5.x/ExplorerGuide-3-5-8.pdf Explorer Guide]
+
+==== R ====
+You should see 3 files: 
+  * attributes.txt contains attribute names, e.g. cui
+  * instance.txt contains the instance_id (i.e. fracture_demo.note_id), the class of the note (fracture/no fracture), and an indicator if this belongs to the training or test set.
+  * data.txt contains a sparse representation of the data matrix 3 columns: row index, column index, and cell value 
+
+What all this is should become clear if you look at `YTEX_HOME\examples\fracture\classify.R`
+
+To train and test a classifier, do the following
+  * start R, change to the directory where you exported data
+  * run the following:
+{{{
+source("../classify.R")
+}}}
+
+This will train a decision tree on the training data, print out the decision tree, run the decision tree on the test data, and print the results.
+
+== Details ==
+The `SparseDataExporter` is parameterized by java properties that contain queries that determine how data will be exported.  Refer to `export.[platform].xml` for sample queries.
+
+The queries return data in instance-attribute-value triples.
+
+=== instanceClassQuery ===
+Retrieves instance ids (i.e. document ids) and their class labels.  This query must return the following columns: 
+   * instance id: Long
+   * class label: String
+   * train/test indicator (optional): does the document belong to the training or test set?
+
+=== numericWordQuery ===
+Retrieves numeric instance attributes for all attribute-instance combinations.  Must return 3 columns:
+  # instance_id (Long)
+  # attribute name (string)
+  # attribute value (double)
+
+=== nominalWordQuery ===
+Either a numericWordQuery, a nominalWordQuery, or both must be specified. Retrieves nominal instance attributes for all attribute-instance combinations.  Must return 3 columns:
+  # instance_id (Long)
+  # attribute name (string)
+  # attribute value (string)
+For weka, nominal attributes are created in the ARFF file.  For the sparsematrix format, each nominal attribute level is turned into a numeric attribute with a binary indicator.
+
+=== arffRelation ===
+Applicable only to Weka. This is the internal 'name' of the dataset
