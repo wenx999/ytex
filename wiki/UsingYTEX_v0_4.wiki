@@ -39,7 +39,7 @@ By default, YTEX supports an integer document unique identifier; YTEX can be con
 
 The YTEX DBCollection reader is parameterized by 2 queries: a key query and a document query.  The key query  loads document unique ids from a database, and the document query loads a document for a given unique id.  For more information, refer to the example below.
 
-=== Example ===
+=== CPE DBCollectionReader Example ===
 To illustrate this, we can simply retrieve sample documents stored in the `fracture_demo` table.  To configure and execute the CPE, do the following:
   * Start CPE Configuration Tool
   Windows: run `YTEX_HOME\ytexCPE.bat`, Linux: from YTEX_HOME run `./ytexTools.sh CPE`
@@ -125,7 +125,7 @@ select * from document where analysis_batch = 'cpe-fracture'
 ==UIMA CPE - loading document from the file system==
 Instead of using the DBCollectionReader to load documents from the database, you can use the FileSystemCollectionReader to load documents from the file system.
 
-=== Example ===
+=== CPE File System Example ===
 This example demonstrates annotating documents with the Collection Processing Engine (CPE).  We annotate the contents of the `YTEX_HOME\examples\pubmed\abstracts` directory that contains a handful of pubmed abstracts.
 
 To run this example, do the following:
@@ -257,7 +257,7 @@ To deal with sparse, high-dimensional spaces efficiently, data mining packages s
 
 YTEX provides great flexibility in choosing which features or class of features to export.  Before we get into details, you should run either the WEKA or R example.  
 
-== Example ==
+== Data Mining Example ==
 In this example, we develop a classifier that identifies documents that assert the presence of a fracture.  The documents and their class labels are stored in the `fracture_demo` table.  We decided to use 2/3 of the notes as a training set, and 1/3 as a test set, and store this assignment in the `fracture_demo` table as well.
 
 Before going through the following steps, please annotate the fracture documents using the YTEX collection processing engine as documented above (Example - Custom Key Mapping).
