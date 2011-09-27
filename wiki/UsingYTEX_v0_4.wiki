@@ -1,4 +1,5 @@
 #summary Using YTEX v0.4
+#labels Phase-Deploy,Featured
 <wiki:toc max_depth="2" />
 
 =Using YTEX=
