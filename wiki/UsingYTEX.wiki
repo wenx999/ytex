@@ -1,5 +1,5 @@
 #summary Using YTEX v0.3
-#labels Phase-Deploy,Featured,Phase-Implementation
+#labels Phase-Deploy,Phase-Implementation
 <wiki:toc max_depth="2" />
 
 =Using YTEX=
