@@ -1,4 +1,4 @@
-#summary WEKA Integration
+#summary WEKA Integration v0.3
 
 = Introduction =
 WEKA is a powerful, open-source, java-based data mining toolkit.  It implements a wide variety of clustering, classification, and regression algorithms, and is very easy to use.  This article describes using YTEX with WEKA.
@@ -106,4 +106,3 @@ This is the internal 'name' of the dataset
 
 == arffFile ==
 This is the name of the file to be generated.
-
