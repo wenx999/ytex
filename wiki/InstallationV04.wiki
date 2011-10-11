@@ -54,7 +54,7 @@ c:\java\clinicalnlp
   # Edit environment batch/shell script, and Fix the path references to match your environment
     * windows edit <tt>YTEX_HOME\setenv.cmd</tt>
     * linux move <tt>YTEX_HOME/ytex.profile</tt> to <tt>${HOME}/ytex.profile</tt>
-  # Create `YTEX_HOME\config\desc\ytex.properties`: In this file, you specify the database connection parameters. Use `YTEX_HOME\config\desc\ytex.properties.<db type>.example` as a template.  If you have UMLS installed on your database, specify the `umls.schema` and `umls.catalog` properties (see the properties file for an explanation of what these are).
+  # Create `YTEX_HOME\config\desc\ytex.properties`: In this file, you specify the database connection parameters. Use `YTEX_HOME\config\desc\ytex.properties.<db type>.example` as a template.  If you have UMLS installed on your database, specify the `umls.schema` and `umls.catalog` properties (see the properties file for an explanation of what these are).  For oracle, set the change the `db.isolationLevel` property to `READ_COMMITTED` (to be fixed in a future version).
   # Execute the setup script.  
     * *windows*: Open a command prompt, navigate to YTEX_HOME, and execute setup script:
 {{{
