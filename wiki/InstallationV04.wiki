@@ -3,7 +3,7 @@
 
 = Introduction =
 
-YTEX v0.4 is under development.  We have implemented the following features:
+In YTEX v0.4 we've implemented the following features:
 
   * Support for Linux.  We have tested YTEX on Linux w/ MySQL.
 
