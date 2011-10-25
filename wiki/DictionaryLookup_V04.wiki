@@ -3,7 +3,7 @@
 
 = Introduction =
 
-This page describes the cTAKES dictionary lookup algorithm and its configuration in YTEX.  The dictionary lookup is very simple; this simplicity is both a blessing and a curse.  It's simplicity makes it very easy to configure and troubleshoot; however this also limits it's functionality.
+This page describes the cTAKES dictionary lookup algorithm and its configuration in YTEX.  The dictionary lookup is very simple; this simplicity is both a blessing and a curse.  It's simplicity makes it very easy to configure and troubleshoot; however this also limits its functionality.
 
 The cTAKES dictionary lookup algorithm relies on a table that contains the first word of a term, the full text of a term, and the term's identifier.  The dictionary lookup takes text in a lookup window; for each word in the lookup window it searches the dictionary for a match to first word column.  For each hit, it tries to match subsequent words from the lookup window to subsequent words in the term.  For example, if the lookup window contains the text 'congestive heart failure', cTAKES will search for 'congestive', 'heart', and 'failure', and try to match all sequences of words to terms in the dictionary.  Depending on your dictionary, this will result in separate annotations for 'heart', 'heart failure', and 'congestive heart failure'.
 
@@ -55,4 +55,4 @@ By default the DictionaryLookupAnnotator is configured to use a view called 'v_s
 {{{select * from v_snomed_fword_lookup where fword = 'taxol'}}}
 
   * Check Lookup Window
-If you are sure that the word is in your dictionary (i.e. in the view), perform this step.  The cTAKES dictionary lookup algorithm tries to match word(s) that lie within a configured Lookup Window annotation.  By default, YTEX uses the Sentence as a lookup Window.  There might be a problem in sentence splitting that causes the word to fall outside a sentence.  Open the document that contains taxol in the DBAnnotationViewer and verify that it is in a sentence.
+If you are sure that the word is in your dictionary (i.e. in `v_snomed_fword_lookup`), perform this step.  The cTAKES dictionary lookup algorithm tries to match word(s) that lie within a configured Lookup Window annotation.  By default, YTEX uses the Sentence as a lookup Window.  There might be a problem in sentence splitting that causes the word to fall outside a sentence.  Open the document that contains taxol in the DBAnnotationViewer and verify that it is in a sentence.
