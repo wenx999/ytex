@@ -3,17 +3,14 @@
 
 = Introduction =
 
-This page describes the cTAKES dictionary lookup algorithm and its configuration in YTEX.  cTAKES' dictionary lookup algorithm is very simple; this simplicity is both a blessing and a curse.  It's simplicity makes it very easy to configure and troubleshoot; however this also limits it's functionality.
+This page describes the cTAKES dictionary lookup algorithm and its configuration in YTEX.  The dictionary lookup is very simple; this simplicity is both a blessing and a curse.  It's simplicity makes it very easy to configure and troubleshoot; however this also limits it's functionality.
 
-The cTAKES dictionary lookup algorithm relies on a table that contains the first word of a term, the full text of a term, and the term's identifier.  The cTAKES dictionary lookup algorithm takes text in a lookup window; for each word in the lookup window it searches the dictionary for a match to first word column.  For each hit, it tries to match subsequent words from the lookup window to subsequent words in the term.  For example, if the lookup window contains the text 'congestive heart failure', cTAKES will search for 'congestive', 'heart', and 'failure', and try to match all sequences of words to terms in the dictionary.  Depending on your dictionary, this will result in separate annotations for 'heart', 'heart failure', and 'congestive heart failure'.
-
-
+The cTAKES dictionary lookup algorithm relies on a table that contains the first word of a term, the full text of a term, and the term's identifier.  The dictionary lookup takes text in a lookup window; for each word in the lookup window it searches the dictionary for a match to first word column.  For each hit, it tries to match subsequent words from the lookup window to subsequent words in the term.  For example, if the lookup window contains the text 'congestive heart failure', cTAKES will search for 'congestive', 'heart', and 'failure', and try to match all sequences of words to terms in the dictionary.  Depending on your dictionary, this will result in separate annotations for 'heart', 'heart failure', and 'congestive heart failure'.
 
 = Configuration =
 
 == Lookup Window ==
-The Dictionary Lookup algorithm uses text within a configured annotation type.  By default, YTEX is configured to use the sentence as a lookup window.  cTAKES also has a LookupWindowAnnotation; you can configure the dictionary lookup to look in LookupWindowAnnotation to increase precision at the expense of recall.  This is configured in `YTEX_HOME/config/desc/ytex/uima/annotators/LookupDesc_SNOMED.xml`
-
+The Dictionary Lookup algorithm searches text that lies within a configured annotation type.  By default, YTEX is configured to use the sentence as a lookup window.  cTAKES also has a LookupWindowAnnotation; you can configure the dictionary lookup to look in LookupWindowAnnotation to increase precision at the expense of recall.  This is configured in `YTEX_HOME/config/desc/ytex/uima/annotators/LookupDesc_SNOMED.xml`
 
 == Default YTEX Dictionary Lookup Table ==
 During installation YTEX creates a table `umls_aui_fword` with the first word of every term from the UMLS `MRCONSO` table.  It creates a view `v_snomed_fword_lookup` (in mysql a table) that joins the `umls_aui_fword` and `MRCONSO` tables.  The SQL for this view is:
@@ -43,19 +40,19 @@ This view includes only the SNOMED and RXNORM vocabularies, and limits the seman
 You can create your own dictionary: you just need to create a table with the 3 fields (first word, concept text, and concept id) and point the dictionary lookup annotator at it.  The table/view that is queried is configured in `YTEX_HOME/config/desc/ytex/uima/annotators/LookupDesc_SNOMED.xml`
 
 = Debugging Dictionary Lookup =
-In case the concepts you expect to be annotated aren't being annotated, perform the following steps.  For this example, we'll assume that the term 'Taxol' is not being annotated.
+In case the concepts you expect aren't being annotated, perform the following steps.  For this example, we'll assume that the term 'Taxol' is not being annotated.
 
   * Check MRCONSO:
 The simplest explanation would be that the term you are using is missing from the MRCONSO table; check this with the following query:
-select * from umls.MRCONSO where str = 'Taxol'
+{{{select * from umls.MRCONSO where str = 'Taxol'}}}
 
   * Check umls_aui_fword:
 YTEX sets up a table 'umls_aui_fword' that has the first word of every term from MRCONSO; there might have been a problem setting this table up.  To check this table run this following query:
-select * from umls_aui_fword where fword = 'taxol';
+{{{select * from umls_aui_fword where fword = 'taxol'}}}
 
   * Check v_snomed_fword_lookup:
 By default the DictionaryLookupAnnotator is configured to use a view called 'v_snomed_fword_lookup' (in mysql this is a table).  This view joins the umls_aui_fword and MRCONSO tables.  This view might exclude the vocabulary or semantic type that Taxol belongs to.  To check this, simply try:
-select * from v_snomed_fword_lookup where fword = 'taxol'
+{{{select * from v_snomed_fword_lookup where fword = 'taxol'}}}
 
   * Check Lookup Window
-Make sure the term is in a sentence or lookup window So, if you are sure that the word is in your dictionary (i.e. in the view), perform this step.  The cTAKES dictionary lookup algorithm tries to match word(s) that lie within a configured Lookup Window annotation.  By default, YTEX uses the Sentence as a lookup Window.  There might be a problem in sentence splitting that causes the word to fall outside a sentence.  Open the document that contains taxol in the DBAnnotationViewer and verify that it is in a sentence.
+If you are sure that the word is in your dictionary (i.e. in the view), perform this step.  The cTAKES dictionary lookup algorithm tries to match word(s) that lie within a configured Lookup Window annotation.  By default, YTEX uses the Sentence as a lookup Window.  There might be a problem in sentence splitting that causes the word to fall outside a sentence.  Open the document that contains taxol in the DBAnnotationViewer and verify that it is in a sentence.
