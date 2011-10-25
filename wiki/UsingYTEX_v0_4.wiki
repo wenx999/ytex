@@ -215,13 +215,11 @@ To use the semantic search web app,
   # login with username 'scott' and password 'wombat'
 
 =Configuring YTEX=
-==Named Entity Lookup Table==
-By default, YTEX annotates documents with SNOMED concepts.
-The UMLS and SNOMED are quite expansive; nevertheless, these vocabularies may lack certain synonyms/lexical variants for clinical concepts, are lack concepts completely.  
+==Dictionary Lookup==
+By default, YTEX configures the cTAKES DictionaryLookup algorithm to annotate documents with concepts from the SNOMED and RXNORM vocabularies.  These vocabularies are quite expansive; nevertheless, they may lack certain concepts relevant to your project.  Refer to [DictionaryLookup_V04 Dictionary Lookup Configuration] for information on how to configure the dictionary lookup algorithm.
 
-To annotate (new) concepts using new lexical variants, do the following:
 ==Named Entity Recognition Regexs==
-The UMLS lookup table may not be flexible enough to identify all variants of a concept; YTEX can also identify concepts using regular expressions.  Simply add a row to the `ref_named_entity_regex` table:
+The Dictionary Lookup Algorithm may not be flexible enough to identify all variants of a concept; YTEX can also identify concepts using regular expressions.  Simply add a row to the `ref_named_entity_regex` table:
 {{{
 insert into <schema>.ref_named_entity_regex (regex, coding_scheme, code)
 values ('(?i)\bREFER\s+TO\s+.*#{0,1}+\s*\d+','ESLD','DOCREF')
