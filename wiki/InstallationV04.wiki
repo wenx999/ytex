@@ -108,6 +108,14 @@ Make sure you use a tablespace with enough room; e.g. create the ytex user and s
 create tablespace TBS_YTEX datafile 'C:/oracle/oradata/orcl/TBS_YTEX.dbf' size 1000M autoextend on online;
 create user ytex identified by ytex default tablespace TBS_YTEX;
 grant connect, resource to ytex;
+grant create materialized view to ytex;
+grant create view to ytex;
+}}}
+
+You must also grant ytex select permissions on umls tables; e.g. assuming that umls tables are in the umls schema:
+{{{
+grant select on umls.MRCONSO to ytex;
+grant select on umls.MRSTY to ytex;
 }}}
 
 === MySQL ===
