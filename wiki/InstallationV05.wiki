@@ -1,17 +1,14 @@
-#summary Installation for YTEX v0.4
+#summary Installation for YTEX v0.5
 #labels Phase-Deploy
 
 = Introduction =
 
-In YTEX v0.4 we've implemented the following features:
+In YTEX v0.5 we've implemented the following features:
 
-  * Support for Linux.  We have tested YTEX on Linux w/ MySQL.
-
-  * Support for updated UMLS.  For previous versions, we sent users UMLS data for named entity recognition based on an older version of the UMLS, and using only the SNOMED, ICD, and NCI vocabularies.  For this version, we use the [http://www.ncbi.nlm.nih.gov/books/NBK9685/#ch03.I31_Data_Files UMLS tables] directly.  We recommend that you install UMLS in your database.  We also provide a subset of the UMLS 2010AB that contains SNOMED and RXNORM for users that do not want to/are unable to install the UMLS locally.
-
-  * Support for exporting data to R, Matlab, SAS, Libsvm, and SVMLight
-
-
+  * Support for Dictionary Lookup using stemmed words
+  cTAKES' dictionary lookup algorithm requires an exact match to the text of a concept in a dictionary.  We've extended this to also support matching to stemmed text to the dictionary.
+  * Negation detection on words
+  cTAKES only supports negation detection for Named Entities.  We've extended cTAKES to perform negation detection on words using the negex algorithm.
 
 == Prerequisites ==
   * Database Utilities
