@@ -6,7 +6,7 @@ This page describes the cTAKES dictionary lookup algorithm and its configuration
 
 The cTAKES dictionary lookup algorithm relies on a table that contains the first word of a term, the full text of a term, and the term's identifier.  The dictionary lookup takes text in a lookup window; for each word in the lookup window it searches the dictionary for a match to first word column.  For each hit, it tries to match subsequent words from the lookup window to subsequent words in the term.  For example, if the lookup window contains the text 'congestive heart failure', cTAKES will search for 'congestive', 'heart', and 'failure', and try to match all sequences of words to terms in the dictionary.  Depending on your dictionary, this will result in separate annotations for 'heart', 'heart failure', and 'congestive heart failure'.
 
-One potential drawback to the cTAKES dictionary lookup algorithm is that it requires an exact match to the text in the dictionary.  For example, the cTAKES DictionaryLookupAlgorithm will not match the text 'Transplanted organ' to the concept 'Transplanted organ' (cui C0524930).  With YTEX v0.5, we implemented an additional dictionary lookup algorithm that matches uninflected (stemmed) text to UMLS Concepts.
+One potential drawback to the cTAKES dictionary lookup algorithm is that it requires an exact match to the text in the dictionary.  For example, the cTAKES DictionaryLookupAlgorithm will not match the text 'Transplant organ' to the concept 'Transplanted organ' (cui C0524930).  With YTEX v0.5, we implemented an additional dictionary lookup algorithm that matches uninflected (stemmed) text to UMLS Concepts.
 
 = Configuration =
 
