@@ -42,6 +42,9 @@ You can create your own dictionary: you just need to create a table with the 3 f
 = Debugging Dictionary Lookup =
 In case the concepts you expect aren't being annotated, perform the following steps.  For this example, we'll assume that the term 'Taxol' is not being annotated.
 
+  * Check tokenization
+If the text contains a punctuation symbol (e.g. - or '), then named entity recognition may fail in v0.4.  cTAKES' dictionary lookup algorithm requires a space-delimited tokenized string for matching.  cTAKES splits some hyphenated words into different tokens, and splits most other punctuation marks into different tokens.  We have resolved this in version 0.5.
+
   * Check MRCONSO:
 The simplest explanation would be that the term you are using is missing from the MRCONSO table; check this with the following query:
 {{{select * from umls.MRCONSO where str = 'Taxol'}}}
