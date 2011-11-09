@@ -1,4 +1,4 @@
-#summary Dictionary Lookup configuration for v0.4 and higher
+#summary Dictionary Lookup configuration for v0.4
 #labels Phase-Deploy
 
 = Introduction =
