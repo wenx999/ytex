@@ -1,4 +1,5 @@
 #summary Dictionary Lookup configuration for v0.5 and higher
+#labels Phase-Deploy
 
 = Introduction =
 
@@ -39,7 +40,9 @@ and exists
 This view includes only the SNOMED and RXNORM vocabularies, and limits the semantic types (T0XX...).  You are free to modify this view to include other UMLS source vocabularies, and other semantic types.
 
 == Using your own dictionary ==
-You can create your own dictionary: you just need to create a table with the 3 fields (first word, tokenized concept text, and concept id) and point the dictionary lookup annotator at it.  The table/view that is queried is configured in `YTEX_HOME/config/desc/ytex/uima/annotators/LookupDesc_SNOMED.xml`
+You can create your own dictionary: you just need to create a table with the 3 fields (first word, tokenized concept text, and concept id) and point the dictionary lookup annotator at it.  The table/view that is queried is configured in `YTEX_HOME/config/desc/ytex/uima/annotators/LookupDesc_SNOMED.xml`.
+
+Care must be taken with concepts that include punctuation characters: the tokens that comprise the concept must be separated according to the cTAKES tokenizer.  This splits words on all punctuation characters, with the exception of hyphens and apostrophes.  In a future release, we will provide a utility to generate dictionaries from user-defined concepts.
 
 == Dictionary lookup with stemmed words ==
 To perform dictionary lookup with stemmed words, replace `YTEX_HOME/config/desc/ytex/uima/annotators/LookupDesc_SNOMED.xml` with `YTEX_HOME/config/desc/ytex/uima/annotators/LookupDesc_stem_SNOMED.xml`.
