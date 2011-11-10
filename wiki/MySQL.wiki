@@ -1,10 +1,10 @@
-#summary YTEX w/ MySQL
+#summary YTEX v0.3 w/ MySQL
 
 = Introduction =
 
 View performance in MySQL is [http://www.mysqlperformanceblog.com/2007/08/12/mysql-view-as-performance-troublemaker/ very poor].  However, by default, the Named Entity Recognition annotator (DBLookup) is configured to use views.
 
-If you plan on using MySQL with YTEX, you should replace the view with a table.  In future versions of YTEX, we will implement this change.
+If you plan on using MySQL with YTEX, you should replace the view with a table.  This has been addressed in later versions of YTEX (v0.4 and above).
 
 = Creating the lookup table =
 YTEX uses the <tt>V_SNOMED_FWORD_LOOKUP</tt> view for named entity recognition.  To replace this with a table, execute the statements below.  Keep in mind that changes to the underlying table <tt>umls_ms_2009</tt> will not be reflected in this new table.
