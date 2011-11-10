@@ -17,7 +17,7 @@ In YTEX v0.5 we've implemented the following features:
     ** Oracle: SQL*Plus and SQL*Loader
     ** MySQL: mysql installation 
   * Database User and Schema.
-  Create a database user (and schema) for use with ytex.  See [DB Platform Specific Notes] below.
+  Create a database user (and schema) for use with ytex.  See DB Platform Specific Notes below.
   * JDK 1.6 [http://java.sun.com/javase/downloads/widget/jdk6.jsp download]
   * Atleast 2 GB of free disk space
 
