@@ -4,6 +4,15 @@
 =Using YTEX=
 This document presumes familiarity with [http://uima.apache.org/index.html UIMA] and [http://ohnlp.sourceforge.net/cTAKES/ cTAKES].
 
+== Differences between YTEX and cTAKES ==
+  * Sentence Splitting: cTAKES considers all newlines to be sentence boundaries; YTEX doesn't.  In addition to the maximum entropy sentence splitter, YTEX uses regular expressions to split text.
+  * Negation Detection: cTAKES uses a negation detection algorithm based on Negex, but does not have all the features.  YTEX uses the Java Negex package.
+  * Dictionary Lookup: By default, YTEX uses the same algorithm as cTAKES.  YTEX provides tools for creating a dictionary from the UMLS.  In addition, you can configure YTEX to use uninflected word forms for the dictionary lookup; refer to [DictionaryLookup_V05 Dictionary Lookup Configuration]
+  * Additional features:
+    ** Regular-expression based section detection
+    ** Regular-expression based named entity recognition
+    ** Storage of annotations in a relational database
+
 =Annotating Documents=
 YTEX is based on UIMA, and standard UIMA Tools can be used to annotate documents with YTEX: you can annotate documents using the standard UIMA Document Analyzer and Collection Processing Engine.  YTEX is distributed with the `YTEXPipeline.xml` analysis engine configuration based on the cTAKES/ARC pipeline with the following modifications:
   * `SentenceAnnotator`: modified to not break sentences on newlines, and to break sentences at (certain) periods.
