@@ -1,11 +1,12 @@
 #summary Using YTEX v0.5
+#labels Phase-Deploy
 <wiki:toc max_depth="2" />
 
 =Using YTEX=
 This document presumes familiarity with [http://uima.apache.org/index.html UIMA] and [http://ohnlp.sourceforge.net/cTAKES/ cTAKES].
 
 == Differences between YTEX and cTAKES ==
-  * Sentence Splitting: cTAKES considers all newlines to be sentence boundaries; YTEX doesn't.  In addition to the maximum entropy sentence splitter, YTEX uses regular expressions to split text.
+  * Sentence Splitting: cTAKES considers all newlines to be sentence boundaries; YTEX doesn't.  In addition to the maximum entropy sentence splitter, YTEX uses regular expressions to split sentences.
   * Negation Detection: cTAKES uses a negation detection algorithm based on Negex, but does not have all the features.  YTEX uses the Java Negex package.
   * Dictionary Lookup: By default, YTEX uses the same algorithm as cTAKES.  YTEX provides tools for creating a dictionary from the UMLS.  In addition, you can configure YTEX to use uninflected word forms for the dictionary lookup; refer to [DictionaryLookup_V05 Dictionary Lookup Configuration]
   * Additional features:
