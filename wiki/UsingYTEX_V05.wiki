@@ -2,7 +2,7 @@
 #labels Phase-Deploy
 <wiki:toc max_depth="2" />
 
-=Using YTEX=
+=Using YTEX v0.5=
 This document presumes familiarity with [http://uima.apache.org/index.html UIMA] and [http://ohnlp.sourceforge.net/cTAKES/ cTAKES].
 
 == Differences between YTEX and cTAKES ==
