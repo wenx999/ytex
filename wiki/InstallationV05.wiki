@@ -9,6 +9,8 @@ In YTEX v0.5 we've implemented the following features:
   cTAKES' dictionary lookup algorithm requires an exact match to the text of a concept in a dictionary.  We've extended this to also support matching to stemmed text to the dictionary.
   * Negation detection on words
   cTAKES only supports negation detection for Named Entities.  We've extended cTAKES to perform negation detection on words using the negex algorithm.
+  * Tokenizer enhancements
+  cTAKES' tokenizer does not split words at certain punctuation marks.  We modified the tokenizer to always split words at the following characters: `.,:;`
 
 == Prerequisites ==
   * Database Utilities
@@ -80,7 +82,7 @@ This will call the ant script `build-setup.xml`, which does the following:
 == Notes on UMLS Installation ==
 During setup, we try to see if the UMLS is installed in the database (we look for the MRCONSO table); if we don't find it, we look for a <tt>umls-(platform).zip</tt> file with the tables. If we don't find that we load the sample data files included in the YTEX distribution - this contains a tiny subset of the UMLS for use with the YTEX examples.
 
-The cTAKES Database Lookup algorithm requires a table/view that contains the first word of a concept, a concept code, and the full text of the concept.  The <tt>MRCONSO</tt> table contains concept codes (CUI field) and the tokenzied text of the concept (tokenized version of STR field).  We generate a table <tt>umls_aui_fword</tt> that contains the first word and tokenized text of every concept in the <tt>MRCONSO</tt> table.  We then join the <tt>umls_aui_fword</tt> and <tt>MRCONSO</tt> tables, to create a table that contains a subset of the UMLS (by default, the SNOMED-CT and RXNORM vocabularies).  You are free to replace this with subsets of the UMLS of your liking; refer to <tt>YTEX_HOME/data/mysql/umls/create_view.template.sql</tt>.
+The cTAKES Database Lookup algorithm requires a table/view that contains the first word of a concept, a concept code, and the full text of the concept.  The <tt>MRCONSO</tt> table contains concept codes (CUI field) and the tokenized text of the concept (tokenized version of STR field).  We generate a table <tt>umls_aui_fword</tt> that contains the first word and tokenized text of every concept in the <tt>MRCONSO</tt> table.  We then join the <tt>umls_aui_fword</tt> and <tt>MRCONSO</tt> tables, to create a table that contains a subset of the UMLS (by default, the SNOMED-CT and RXNORM vocabularies).  You are free to replace this with subsets of the UMLS of your liking; refer to <tt>YTEX_HOME/data/mysql/umls/create_view.template.sql</tt>.
 
 === Differences between cTAKES/ARC/YTEX ===
 You are free to use whatever dictionary you like with cTAKES/ARC/YTEX.  'By default' cTAKES/ARC are configured to use a database table for SNOMED-CT, and a lucene index for RXNORM.  In addition cTAKES/ARC store the SNOMED Codes for concepts.
