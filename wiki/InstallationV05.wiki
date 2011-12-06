@@ -80,7 +80,7 @@ This will call the ant script `build-setup.xml`, which does the following:
 == Notes on UMLS Installation ==
 During setup, we try to see if the UMLS is installed in the database (we look for the MRCONSO table); if we don't find it, we look for a <tt>umls-(platform).zip</tt> file with the tables. If we don't find that we load the sample data files included in the YTEX distribution - this contains a tiny subset of the UMLS for use with the YTEX examples.
 
-The cTAKES Database Lookup algorithm requires a table/view that contains the first word of a concept, a concept code, and the full text of the concept.  The <tt>MRCONSO</tt> table contains concept codes (CUI field) and the full text of the concept (STR field).  We generate a table <tt>umls_aui_fword</tt> that contains the first word of every concept in the <tt>MRCONSO</tt> table.  We then join the <tt>umls_aui_fword</tt> and <tt>MRCONSO</tt> tables, to create a view ([MySQL for mysql a table]) that contains a subset of the UMLS (by default, the SNOMED-CT and RXNORM vocabularies).  You are free to replace this view with subsets of the UMLS of your liking; refer to <tt>YTEX_HOME/data/mysql/umls/create_view.template.sql</tt>.
+The cTAKES Database Lookup algorithm requires a table/view that contains the first word of a concept, a concept code, and the full text of the concept.  The <tt>MRCONSO</tt> table contains concept codes (CUI field) and the tokenzied text of the concept (tokenized version of STR field).  We generate a table <tt>umls_aui_fword</tt> that contains the first word and tokenized text of every concept in the <tt>MRCONSO</tt> table.  We then join the <tt>umls_aui_fword</tt> and <tt>MRCONSO</tt> tables, to create a table that contains a subset of the UMLS (by default, the SNOMED-CT and RXNORM vocabularies).  You are free to replace this with subsets of the UMLS of your liking; refer to <tt>YTEX_HOME/data/mysql/umls/create_view.template.sql</tt>.
 
 === Differences between cTAKES/ARC/YTEX ===
 You are free to use whatever dictionary you like with cTAKES/ARC/YTEX.  'By default' cTAKES/ARC are configured to use a database table for SNOMED-CT, and a lucene index for RXNORM.  In addition cTAKES/ARC store the SNOMED Codes for concepts.
@@ -118,13 +118,14 @@ grant select on umls.MRSTY to ytex;
 === MySQL ===
 To create the mysql user and database, login to mysql as root and run the following commands (change as necessary):
 {{{
-CREATE USER 'ytex'@'localhost' IDENTIFIED BY 'ytex';
 CREATE DATABASE ytex CHARACTER SET utf8;
+CREATE USER 'ytex'@'localhost' IDENTIFIED BY 'ytex';
 GRANT ALL PRIVILEGES ON ytex.* TO 'ytex'@'localhost';
 }}}
 Note that if ytex connects to the mysql server from a different machine, you should replace localhost with the host name or ip address of the machine you will connect from, or use the wildcard ('%'):
 {{{
 CREATE USER 'ytex'@'%' IDENTIFIED BY 'ytex';
+GRANT ALL PRIVILEGES ON ytex.* TO 'ytex'@'%';
 }}}
 
 The `document` table uses the `text` and `blob` datatypes for the doc_text column that holds the document text.  If you are processing large documents, you may need to use longtext the datatype instead.  Furthermore, you may have to increase the [http://dev.mysql.com/doc/refman/5.5/en/packet-too-large.html maximum packet size].
