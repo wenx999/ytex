@@ -128,3 +128,6 @@ CREATE USER 'ytex'@'%' IDENTIFIED BY 'ytex';
 }}}
 
 The `document` table uses the `text` and `blob` datatypes for the doc_text column that holds the document text.  If you are processing large documents, you may need to use longtext the datatype instead.  Furthermore, you may have to increase the [http://dev.mysql.com/doc/refman/5.5/en/packet-too-large.html maximum packet size].
+
+=== SQL Server ===
+YTEX has been tested with integrated authentication only.  You can use SQL Server Authentication for the YTEX runtime.  However, the YTEX setup requires integrated authentication.
