@@ -6,7 +6,7 @@
 In YTEX v0.5 we've implemented the following features:
 
   * Support for Dictionary Lookup using stemmed words
-  cTAKES' dictionary lookup algorithm requires an exact match to the text of a concept in a dictionary.  We've extended this to also support matching to stemmed text to the dictionary.
+  cTAKES' dictionary lookup algorithm requires an exact match to the text of a concept in a dictionary.  We've extended this to also support matching stemmed text to the dictionary.
   * Negation detection on words
   cTAKES only supports negation detection for Named Entities.  We've extended cTAKES to perform negation detection on words using the negex algorithm.
   * Tokenizer enhancements
@@ -124,7 +124,7 @@ CREATE DATABASE ytex CHARACTER SET utf8;
 CREATE USER 'ytex'@'localhost' IDENTIFIED BY 'ytex';
 GRANT ALL PRIVILEGES ON ytex.* TO 'ytex'@'localhost';
 }}}
-Note that if ytex connects to the mysql server from a different machine, you should replace localhost with the host name or ip address of the machine you will connect from, or use the wildcard ('%'):
+On mac you should use the 127.0.0.1 instead of localhost.  Note that if ytex connects to the mysql server from a different machine, you should replace localhost with the host name or ip address of the machine you will connect from, or use the wildcard ('%'):
 {{{
 CREATE USER 'ytex'@'%' IDENTIFIED BY 'ytex';
 GRANT ALL PRIVILEGES ON ytex.* TO 'ytex'@'%';
