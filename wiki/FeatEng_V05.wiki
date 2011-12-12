@@ -17,7 +17,7 @@ The main tools are:
   * SemanticSimilarityService: This computes the semantic similarity of a pair of concepts.  We currently implement the Leacock-Chodorow, Lin, and Supervised Lin measures.
   * CorpusKernelEvaluator: Evaluate a user-defined kernel on all pairs of documents in a corpus.  The kernel matrices can be exported to data mining tools such as Matlab, R, or Libsvm for machine learning.  We have implemented a semantic kernel that uses the SemanticSimilarityService.
 
-All tools are pure java and hence platform independent.  The tools currently require a MySQL 5.x database and the UMLS installed in your database.  All tools retrieve and store data from the MySQL database.  Your corpus data (document - concept relations and document - class relations) must be stored/imported into the MySQL database.  The YTEX NLP Pipeline stores data in the MySQL Database, thereby facilitating the use of these tools.  You are however not confined to the YTEX tables - you can get the relevant data from any table.
+All tools are pure java and hence platform independent.  The tools currently require a MySQL 5.x database and the UMLS installed in your database.  All tools retrieve and store data from the MySQL database.  The YTEX NLP Pipeline stores data in the MySQL Database, thereby facilitating the use of these tools.  You are however not confined to the YTEX tables - you can configure the tools to retrieve the required data from any table.
 
 These tools are plain old java programs; the I2B2 example shows how to call these programs.  We are currently developing tools and scripts to simplify the application of these methods to arbitrary user-defined corpora.
 
@@ -281,7 +281,12 @@ We call the `ImputedFeatureEvaluator` computes the propagated and imputed inform
 We generate stratified cross-validation folds and store them in the `cv_fold` and `cv_fold_instance` tables using the `FoldGeneratorImpl`.  There is only one document in the training set for some label/class combinations; such documents are duplicated in the cv train/test sets.
 
 ==Cross-Validation==
-TODO
-
-==Test==
-TODO
+The goal of the cross-validation is to identify the optimal model parameters from the i2b2 training dataset.  In addition to the SVM Cost parameter, the parameters we need to optimize are:
+  * Word hotspot cutoff
+  * Imputed cui hotspot cutoff
+  * Supervised Semantic Similarity imputed cui cutoff
+It is impractical to search a 4-dimensional hypercube for the optimal parameter.  Therefore, we optimize the parameters sequentially: 
+  * Word experiment: identify optimal word hotspot cutoff
+  * Cui experiment: use optimal word hotspot cutoff, identify optimal imputed cui hotspot cutoff
+  * Superlin experiment:  use optimal word and imputed cui hotspot cutoff, identify optimal supervised semantic similarity imputed cui cutoff.
+After each cross-validation experiment, we identify the optimal parameters for each label, and store them in the `cv_best_svm` table.
