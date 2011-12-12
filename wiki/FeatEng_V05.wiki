@@ -3,11 +3,18 @@
 = Introduction =
 For a high-level overview of the feature engineering methods we've developed, refer to our paper: Garla, V and Brandt, C. Ontology-Guided Feature Engineering for Clinical Text Classification (submitted).
 
-We developed a feature ranking method that utilizes the taxonomical structure of the UMLS to improve feature ranking; a context-dependent semantic similarity measure; and implemented a semantic kernel.  We improved the performance of the top-ranked machine learning-based system from the [https://www.i2b2.org/NLP/Obesity/ I2B2 2008 challenge] with these methods.  These feature engineering tools are included in YTEX.
+We developed a feature ranking method that utilizes the taxonomical structure of the UMLS to improve feature ranking; a context-dependent semantic similarity measure; and implemented a semantic kernel.  We improved the performance of the top-ranked machine learning-based system from the [https://www.i2b2.org/NLP/Obesity/ I2B2 2008 challenge] with these methods.  
 
-In our discussion, we refer to the I2B2 2008 challenge dataset, so please reproduce our results on this dataset before we get into details.  This requires little manual intervention, and will just run overnight.  
+These feature engineering tools are included in YTEX, but do not depend on the YTEX NLP Pipeline: they can be used in conjunction with any text mining or NLP system.
 
-We are currently developing tools to simplify the application of these methods to user-defined corpora.
+The main tools are:
+  * ConceptDaoImpl: This tool generates a concept graph from the UMLS.  You can declaratively define which UMLS source vocabularies and relationships to use to define this concept graph.  
+  * ImputedFeatureEvaluator: This computes the propagated and imputed information gain of all concepts in a corpus.
+  * SemanticSimilarityService: This computes the semantic similarity of a pair of concepts.  We currently implement the Leacock-Chodorow, Lin, and Supervised Lin measures.
+  * CorpusKernelEvaluator: Evaluate a user-defined kernel on all pairs of documents in a corpus.  The kernel matrices can be exported to data mining tools such as Matlab, R, or Libsvm for machine learning.  We have implemented a semantic kernel that uses the SemanticSimilarityService.
+
+
+In our discussion, we refer to the I2B2 2008 challenge dataset; you may want to reproduce our results on this dataset before getting into details.  Reproducing our results requires a little bit of setup, and will just run overnight.  We are currently developing tools to simplify the application of these methods to user-defined corpora.
 
 = I2B2 2008 =
 This section describes how to reproduce our results on the I2B2 2008 challenge dataset.
@@ -61,23 +68,31 @@ ytex.corpusName=i2b2.2008
 ytex.conceptSetName=ctakes
 }}}
 
-== Reproducing results ==
+== Reproduce results ==
+This is completely automated by an ant build script.  We have split this up unto several high-level steps:
+  * Setup: load and annotate the corpus, compute information-theoretic measures for all features (words, concepts) in the corpus.
+  * Cross-Validation: perform cross-validation on the i2b2 training set to find the optimal parameters.  We have obviously already done this, so you can skip this step if you prefer.
+  * Test: train models on the training set using optimal parameters, apply to test set.
+
+=== Setup ===
 To load and annotate the corpus, compute hotspots, open a command prompt, cd to the `YTEX_HOME/i2b2.2008` directory, and run the following from the commands (this will take ~4 hours w/ 4 cores):
 {{{
 ant -Dytex.home=%YTEX_HOME% setup.all 
 }}} 
 
+=== Cross-Validation and Test ===
 To run the cross validation and test, run the following (will take ~12 hours w/ 4 cores):
 {{{
 ant -Dytex.home=%YTEX_HOME% cv.all test.all
 }}}
 
+=== Test Only ===
 To run just the test using the optimal parameters we found (will take ~4 hours w/ 4 cores):
 {{{
 ant -Dytex.home=%YTEX_HOME% test.skip.cv test.all
 }}}
 
-== I2B2 Setup ==
+== Setup ==
 We did the following in the setup:
   * load i2b2: Load i2b2 data - the notes and class labels - into the database
   * setup v_i2b2_fword_lookup:  Created a dictionary lookup table from the umls 
