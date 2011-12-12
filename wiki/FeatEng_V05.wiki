@@ -1,4 +1,5 @@
 #summary Feature Engineering v0.5
+<wiki:toc max_depth="2" />
 
 = Introduction =
 For a high-level overview of the feature engineering methods we've developed, refer to our paper: Garla, V and Brandt, C. Ontology-Guided Feature Engineering for Clinical Text Classification (submitted).
