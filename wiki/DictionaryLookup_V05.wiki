@@ -1,5 +1,5 @@
 #summary Dictionary Lookup configuration for v0.5 and higher
-#labels Phase-Deploy
+#labels Phase-Deploy,Featured
 
 = Introduction =
 
