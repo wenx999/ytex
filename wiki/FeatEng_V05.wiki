@@ -62,17 +62,17 @@ ytex.conceptSetName=ctakes
 }}}
 
 == Reproducing results ==
-To load and annotate the corpus, compute hotspots, open a command prompt, cd `ytex.home/i2b2.2008` directory, and run the following from the commands (this will take ~5 hours w/ 4 cores):
+To load and annotate the corpus, compute hotspots, open a command prompt, cd to the `YTEX_HOME/i2b2.2008` directory, and run the following from the commands (this will take ~4 hours w/ 4 cores):
 {{{
 ant -Dytex.home=%YTEX_HOME% setup.all 
 }}} 
 
-To run the cross validation and test, run the following (will run an entire weekend):
+To run the cross validation and test, run the following (will take ~12 hours w/ 4 cores):
 {{{
 ant -Dytex.home=%YTEX_HOME% cv.all test.all
 }}}
 
-To run just the test using the optimal parameters we found (will take ~6 hours w/ 4 cores):
+To run just the test using the optimal parameters we found (will take ~4 hours w/ 4 cores):
 {{{
 ant -Dytex.home=%YTEX_HOME% test.skip.cv test.all
 }}}
@@ -218,4 +218,3 @@ order by r.rank ;
 
 === Generate Folds ===
 We generate stratified cross-validation folds and store them in the `cv_fold` and `cv_fold_instance` tables using the `FoldGeneratorImpl`.  There is only one document in the training set for some label/class combinations; such documents are duplicated in the cv train/test sets.
-
