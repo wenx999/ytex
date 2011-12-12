@@ -1,7 +1,7 @@
 #summary Feature Engineering v0.5
 <wiki:toc max_depth="2" />
 
-= Introduction =
+=Introduction=
 For a high-level overview of the feature engineering methods we've developed, refer to our paper: Garla, V and Brandt, C. Ontology-Guided Feature Engineering for Clinical Text Classification (submitted).
 
 We developed a feature ranking method that utilizes the taxonomical structure of the UMLS to improve feature ranking; a context-dependent semantic similarity measure; and implemented a semantic kernel.  We improved the performance of the top-ranked machine learning-based system from the [https://www.i2b2.org/NLP/Obesity/ I2B2 2008 challenge] with these methods.  
@@ -9,7 +9,7 @@ We developed a feature ranking method that utilizes the taxonomical structure of
 These feature engineering tools are included in YTEX, but do not depend on the YTEX NLP Pipeline: they can be used in conjunction with any text mining or NLP system.
 
 
-= Tool Overview =
+=Tool Overview=
 The main tools are:
   * ConceptDaoImpl: This tool generates a concept graph from the UMLS.  You can declaratively define which UMLS source vocabularies and relationships to use to generate this concept graph.
   * InfoContentEvaluatorImpl: This computes the information content of each concept in a corpus.
@@ -23,7 +23,7 @@ These tools are plain old java programs; the I2B2 example shows how to call thes
 
 In our discussion, we refer to the I2B2 2008 challenge dataset; you may want to reproduce our results on this dataset before getting into details.  Reproducing our results requires a tiny bit of configuration, and will just run overnight.
 
-== ConceptDaoImpl ==
+==ConceptDaoImpl==
 We generate a graph that represents the umls taxonomy, and store this concept graph for subsequent use.  The YTEX `ConceptDaoImpl` takes as input a properties file that specifies a query that retrieves all edges that will be used in the taxonomy, generates a graph, and removes cycles.  For the i2b2 corpus, we select edges using the following query: 
 {{{
 select cui1, cui2 
@@ -33,7 +33,7 @@ and rel in ('PAR', 'RB')
 }}}
 As you can see, you have a large degree of flexibility in choosing which concepts and edges to use in your concept graph - you can filter by source vocabulary (sab), relation type (rel), relation attribute (rela) and more.
 
-== InfoContentEvaluatorImpl ==
+==InfoContentEvaluatorImpl==
 We use infocontent to compute semantic similarity via the lin measure.  We evaluate the information content of each concept in a corpus using the `InfoContentEvaluatorImpl` and store this in the `feature_rank` and `feature_eval` tables.  The `InfoContentEvaluatorImpl` is parameterized by a query that retrieves the raw frequency of each concept in a corpus.  For the i2b2 corpus, we do the following:
 {{{
 select code, count(*)
@@ -45,7 +45,7 @@ group by code
 }}}
 As you can see, you have a great deal of flexibility in how to retrieve concept frequencies: if it's in your database, you can get it.
 
-== ImputedFeatureEvaluator ==
+==ImputedFeatureEvaluator==
 The `ImputedFeatureEvaluator` computes the propagated and imputed information gain of every concept in a corpus.  This is parameterized by queries that retrieve the document - class and document - concept relationships.  For example, for the I2B2 corpus
   * instanceClassQuery:  This query retrieves rows with the following fields:
     ** document id: numeric (long) document id
@@ -122,31 +122,31 @@ group by r.feature_name, r.evaluation, r.rank
 order by r.rank ;
 }}}
 
-== SemanticSimilarityService ==
+==SemanticSimilarityService==
 This currently does not have a command-line interface; it is used by the CorpusKernelEvaluator.  In a future release, we will implement a web-services interface to retrieve semantic similarity measures.
 
-== CorpusKernelEvaluator ==
+==CorpusKernelEvaluator==
 This tool evaluates a kernel on a corpus.  Kernels can be viewed as similarity measures on arbitrary objects (not necessarily vectors).  We export the objects to be classified (documents) as hierarchical data structures (trees), and apply [http://books.nips.cc/papers/files/nips14/AA58.pdf convolution kernels] to these trees.  As you can surmise from this mouthful, this subject is a bit complex; in this section we provide a short overview of how this works.  We will provide a more detailed description of our kernel implementation shortly.
 
-=== Exporting Trees ===
+===Exporting Trees===
 The first step in applying YTEX kernels is exporting documents as trees.  The YTEX `KernelLauncher` takes a property file that contains queries that retrieve the documents and their hierarchical attributes, and puts these attributes in a hierarchical tree structure, and exports these trees to the file system (creating a forest).  Refer to the I2B2 example below.
 
-=== Defining Kernels ===
+===Defining Kernels===
 We support the declarative definition of kernels using [http://martinfowler.com/articles/injection.html Spring Dependency Injection].  Kernels are basically collaborations of objects that implement the YTEX Kernel interface.  We have implemented a semantic kernel that calls the `SemanticSimilarityService`.
 
-=== Evaluating Kernels ===
+===Evaluating Kernels===
 The `CorpusKernelEvaluator` takes as input the document trees of a corpus and a kernel definition, and evaluates the kernel on all document pairs.  The number of evaluations is O(n^2); to speed things up, this can be parallelized across multiple processes (we actually parallelize kernel evaluations across an HPC cluster, making this very fast).  Kernel evaluations are stored in the `kernel_eval` and `kernel_instance_eval` tables.
 
-== Exporting Kernel Matrices ===
+===Exporting Kernel Matrices===
 Kernel machines such as SVMs can be trained on the matrix of pairwise kernel evaluations.  We have implemented tools to export these matrices to the libsvm format (`LibSVMGramMatrixExporterImpl`), and to a generic matrix format that can be used in tools such as Matlab and R (`RGramMatrixExporterImpl`).
 
-== Training and Testing SVMs ===
+===Training and Testing SVMs===
 We use LibSVM to train SVMs on kernel matrices.  We have implemented scripts that train and test LibSVM models, and store the prediction results in the database.  Prediction results are stored in the `classifier_eval*` tables.
 
-= I2B2 2008 =
+=I2B2 2008=
 This section describes how to reproduce our results on the I2B2 2008 challenge dataset.
 
-== Prerequisites ==
+==Prerequisites==
   * Quad Core workstation at the minimum; 8 cores would be better
   * [http://code.google.com/p/ytex/wiki/InstallationV05 Install umls 2010AB] or higher in your MySQL
   * [http://code.google.com/p/ytex/wiki/InstallationV05 Install YTEX v0.5] with MySQL (configured to use the UMLS)
@@ -168,7 +168,7 @@ cd data
 ant -Dytex.home=%YTEX_HOME kernel.create
 }}}
   
-== Configure ytex.properties ==
+==Configure ytex.properties==
 Add the following to your `ytex.properties` file:
 {{{
 # where challenge data was extracted
@@ -195,7 +195,7 @@ ytex.corpusName=i2b2.2008
 ytex.conceptSetName=ctakes
 }}}
 
-== Reproduce results ==
+==Reproduce results==
 This is completely automated by an ant build script.  We have split this up unto several high-level steps:
   * Setup: load and annotate the corpus, compute information-theoretic measures for all features (words, concepts) in the corpus.
   * Cross-Validation: perform cross-validation on the i2b2 training set to find the optimal parameters.  We have obviously already done this, so you can skip this step if you prefer.
@@ -203,25 +203,25 @@ This is completely automated by an ant build script.  We have split this up unto
 
 Summary results (F1 scores) are stored in the `YTEX_HOME/i2b2.2008/<experiment>-test/results.txt` file, where `<experiment>` is one of word, imputed, cui, lin, superlin.  The individual document classifications are stored in the `classifier_instance_eval` table.
 
-=== Setup ===
+===Setup===
 To load and annotate the corpus, compute hotspots, open a command prompt, cd to the `YTEX_HOME/i2b2.2008` directory, and run the following from the commands (this will take ~4 hours w/ 4 cores):
 {{{
 ant -Dytex.home=%YTEX_HOME% setup.all 
 }}} 
 
-=== Cross-Validation and Test ===
+===Cross-Validation and Test===
 To run the cross validation and test, run the following (will take ~12 hours w/ 4 cores):
 {{{
 ant -Dytex.home=%YTEX_HOME% cv.all test.all
 }}}
 
-=== Test Only ===
+===Test Only===
 To run just the test using the optimal parameters we found (will take ~4 hours w/ 4 cores):
 {{{
 ant -Dytex.home=%YTEX_HOME% test.skip.cv test.all
 }}}
 
-== Setup ==
+==Setup==
 We did the following in the setup:
   * load i2b2: Load i2b2 data - the notes and class labels - into the database
   * setup v_i2b2_fword_lookup:  Created a dictionary lookup table from the umls 
@@ -233,10 +233,10 @@ We did the following in the setup:
   * evaluate imputed infogain: compute imputed infogain of each concept for each label in the i2b2 corpus
   * generate folds: generate stratified cross-validation folds
 
-=== Load I2B2 Data ===
+===Load I2B2 Data===
 We load the i2b2 data into the `corpus_doc` and `corpus_label` tables, which hold the documents and their labels respectively.
 
-=== Setup v_i2b2_fword_lookup ===
+===Setup v_i2b2_fword_lookup===
 We create a dictionary lookup table that uses the following UMLS Source Vocabularies:
   * SRC
   * MTH
@@ -248,13 +248,13 @@ We create a dictionary lookup table that uses the following UMLS Source Vocabula
   * MEDCIN
 Refer to `YTEX_HOME\i2b2.2008\data\v_i2b2_fword_lookup.sql`
 
-=== Run CPE ===
+===Run CPE===
 We annotate the corpus with the YTEX pipeline.  We launch several CPE processes (as many cores as you have) in parallel to speed up processing.  We also only store the sentence, word, number, and named entity annotations to speed up processing.  Refer to `YTEX_HOME\i2b2.2008\desc\cpe.template.xml`.
 
-=== Setup tfidf ===
+===Setup tfidf===
 We compute tf-idf statistics on CUIs and store them in the `feature_eval` and `feature_rank` tables; refer to `YTEX_HOME\i2b2.2008\data\tfidf-cui.sql`.  Later during classification, we perform frequency thresholding on CUIs.
 
-=== Evaluate infogain ===
+===Evaluate infogain===
 We evaluate the infogain of all words wrt all i2b2 labels, using only the i2b2 training data.  This is done by the `WekaAttributeEvaluatorImpl` which calls the WEKA [http://weka.sourceforge.net/doc.dev/weka/attributeSelection/InfoGainAttributeEval.html `InfoGainAttributeEval`].  We store the evaluations in the `feature_eval` and `feature_rank` tables.  To view e.g. the top ranked words for hypertension, run the following query:
 {{{
 select r.feature_name, r.evaluation, r.rank
@@ -268,20 +268,20 @@ where fe.type = 'InfoGainAttributeEval'
 order by rank;
 }}}
 
-=== Generate Concept Graph ===
+===Generate Concept Graph===
 We call the `ConceptDaoImpl` (see above).
 
-=== Evaluate infocontent ===
+===Evaluate infocontent===
 We evaluate the information content of each concept in the i2b2 corpus using the `InfoContentEvaluatorImpl` and store this in the `feature_rank` and `feature_eval` tables  (see above).
 
-=== Evaluate imputed infogain ===
+===Evaluate imputed infogain===
 We call the `ImputedFeatureEvaluator` computes the propagated and imputed information gain of every concept in the i2b2 corpus  (see above).  
 
-=== Generate Folds ===
+===Generate Folds===
 We generate stratified cross-validation folds and store them in the `cv_fold` and `cv_fold_instance` tables using the `FoldGeneratorImpl`.  There is only one document in the training set for some label/class combinations; such documents are duplicated in the cv train/test sets.
 
-== I2B2 Cross-Validation ==
+==I2B2 Cross-Validation==
 TODO
 
-== I2B2 Test ==
+==I2B2 Test==
 TODO
