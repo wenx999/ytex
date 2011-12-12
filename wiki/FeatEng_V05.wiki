@@ -23,7 +23,7 @@ These tools are plain old java programs; the I2B2 example shows how to call thes
 
 In our discussion, we refer to the I2B2 2008 challenge dataset; you may want to reproduce our results on this dataset before getting into details.  Reproducing our results requires a tiny bit of configuration, and will just run overnight.
 
-==ConceptDaoImpl==
+== `ConceptDaoImpl` ==
 We generate a graph that represents the umls taxonomy, and store this concept graph for subsequent use.  The YTEX `ConceptDaoImpl` takes as input a properties file that specifies a query that retrieves all edges that will be used in the taxonomy, generates a graph, and removes cycles.  For the i2b2 corpus, we select edges using the following query: 
 {{{
 select cui1, cui2 
@@ -33,7 +33,7 @@ and rel in ('PAR', 'RB')
 }}}
 As you can see, you have a large degree of flexibility in choosing which concepts and edges to use in your concept graph - you can filter by source vocabulary (sab), relation type (rel), relation attribute (rela) and more.
 
-==InfoContentEvaluatorImpl==
+== `InfoContentEvaluatorImpl` ==
 We use infocontent to compute semantic similarity via the lin measure.  We evaluate the information content of each concept in a corpus using the `InfoContentEvaluatorImpl` and store this in the `feature_rank` and `feature_eval` tables.  The `InfoContentEvaluatorImpl` is parameterized by a query that retrieves the raw frequency of each concept in a corpus.  For the i2b2 corpus, we do the following:
 {{{
 select code, count(*)
@@ -45,7 +45,7 @@ group by code
 }}}
 As you can see, you have a great deal of flexibility in how to retrieve concept frequencies: if it's in your database, you can get it.
 
-==ImputedFeatureEvaluator==
+== `ImputedFeatureEvaluator` ==
 The `ImputedFeatureEvaluator` computes the propagated and imputed information gain of every concept in a corpus.  This is parameterized by queries that retrieve the document - class and document - concept relationships.  For example, for the I2B2 corpus
   * instanceClassQuery:  This query retrieves rows with the following fields:
     ** document id: numeric (long) document id
@@ -122,10 +122,10 @@ group by r.feature_name, r.evaluation, r.rank
 order by r.rank ;
 }}}
 
-==SemanticSimilarityService==
+== `SemanticSimilarityService` ==
 This currently does not have a command-line interface; it is used by the CorpusKernelEvaluator.  In a future release, we will implement a web-services interface to retrieve semantic similarity measures.
 
-==CorpusKernelEvaluator==
+== `CorpusKernelEvaluator` ==
 This tool evaluates a kernel on a corpus.  Kernels can be viewed as similarity measures on arbitrary objects (not necessarily vectors).  We export the objects to be classified (documents) as hierarchical data structures (trees), and apply [http://books.nips.cc/papers/files/nips14/AA58.pdf convolution kernels] to these trees.  As you can surmise from this mouthful, this subject is a bit complex; in this section we provide a short overview of how this works.  We will provide a more detailed description of our kernel implementation shortly.
 
 ===Exporting Trees===
@@ -143,7 +143,7 @@ Kernel machines such as SVMs can be trained on the matrix of pairwise kernel eva
 ===Training and Testing SVMs===
 We use LibSVM to train SVMs on kernel matrices.  We have implemented scripts that train and test LibSVM models, and store the prediction results in the database.  Prediction results are stored in the `classifier_eval*` tables.
 
-=I2B2 2008=
+= i2b2 2008 =
 This section describes how to reproduce our results on the I2B2 2008 challenge dataset.
 
 ==Prerequisites==
@@ -280,8 +280,8 @@ We call the `ImputedFeatureEvaluator` computes the propagated and imputed inform
 ===Generate Folds===
 We generate stratified cross-validation folds and store them in the `cv_fold` and `cv_fold_instance` tables using the `FoldGeneratorImpl`.  There is only one document in the training set for some label/class combinations; such documents are duplicated in the cv train/test sets.
 
-==I2B2 Cross-Validation==
+==Cross-Validation==
 TODO
 
-==I2B2 Test==
+==Test==
 TODO
