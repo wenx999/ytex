@@ -1,0 +1,67 @@
+#summary Feature Engineering v0.5
+
+= Introduction =
+For a high-level overview of the feature engineering methods we've developed, refer to our paper, Garla, V and Brandt, C. Ontology-Guided Feature Engineering for Clinical Text Classification (submitted).
+
+We developed a feature ranking method that utilizes the taxonomical structure of the UMLS to improve feature ranking; a context-dependent semantic similarity measure; and implemented a semantic kernel.  We improved the performance of the top-ranked machine learning-based system from the [https://www.i2b2.org/NLP/Obesity/ I2B2 2008 challenge] with these methods.  These feature engineering tools are included in YTEX.
+
+
+= I2B2 2008 =
+This section describes how to reproduce our results on the I2B2 2008 challenge dataset.
+
+== Prerequisites ==
+  * Quad Core workstation at the minimum; 8 cores would be better
+  * [http://code.google.com/p/ytex/wiki/InstallationV05 Install umls 2010AB] or higher in your MySQL
+  * [http://code.google.com/p/ytex/wiki/InstallationV05 Install YTEX v0.5] with MySQL (configured to use the UMLS)
+  * [http://www.csie.ntu.edu.tw/~cjlin/libsvm/ Install libsvm 3.1] or higher
+  * Download [https://www.i2b2.org/NLP/Obesity/ I2B2 2008 Challenge] data and extract all I2B2 2008 data files to some directory, referred to as `i2b2.dir`.  The following files are required:
+     * obesity_patient_records_training2.xml
+     * obesity_patient_records_test.xml
+     * obesity_standoff_annotations_training.xml
+     * obesity_standoff_annotations_test.xml
+     * obesity_standoff_annotations_training_addendum.xml
+     * obesity_standoff_annotations_training_addendum2.xml
+     * obesity_standoff_annotations_training_addendum3.xml
+  
+== Configure ytex.properties ==
+Add the following to your `ytex.properties` file:
+{{{
+# where challenge data was extracted
+i2b2.dir=C:/downloads/text mining/i2b2 2008 challenge
+# where libsvm binaries are located
+libsvm.bin=C:/java/libsvm-3.1/windows
+# where ytex is installed  
+ytex.home=C:/clinicalnlp/ytex
+# we generate a file that contains the umls concept graph 
+# this is where we store it, adjust to match your environment
+ytex.conceptGraphDir=E:/projects/ytex/conceptGraph
+# how many cores does your system have? 
+# should have atleast 4, or this will take more than a weekend
+kernel.threads=4
+# the slices should go from 1 ... kernel.threads
+kernel.slices=1,2,3,4
+# where to place temporary files
+kernel.eval.tmpdir=C:/temp
+# copy the rest as is
+parallel.folds=yes
+kernel.name=i2b2.2008
+ytex.conceptGraphName=rbpar
+ytex.corpusName=i2b2.2008
+ytex.conceptSetName=ctakes
+}}}
+
+== Reproducing results ==
+To load and annotate the corpus, compute hotspots, run the following (this will take 5-7 hours):
+{{{
+ant -Dytex.home=%YTEX_HOME% setup.all 
+}}} 
+
+To run the cross validation and test, run the following (will run an entire weekend):
+{{{
+ant -Dytex.home=%YTEX_HOME% cv.all test.all
+}}}
+
+To run just the test using the optimal parameters we found (will run overnight):
+{{{
+ant -Dytex.home=%YTEX_HOME% test.skip.cv test.all
+}}}
