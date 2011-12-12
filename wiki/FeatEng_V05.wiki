@@ -215,3 +215,7 @@ where fe.type = 'infogain-imputed'
 group by r.feature_name, r.evaluation, r.rank
 order by r.rank ;
 }}}
+
+=== Generate Folds ===
+We generate stratified cross-validation folds and store them in the `cv_fold` and `cv_fold_instance` tables using the `FoldGeneratorImpl`.  There is only one document in the training set for some label/class combinations; such documents are duplicated in the cv train/test sets.
+
