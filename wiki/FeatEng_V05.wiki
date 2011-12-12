@@ -1,7 +1,7 @@
 #summary Feature Engineering v0.5
 
 = Introduction =
-For a high-level overview of the feature engineering methods we've developed, refer to our paper, Garla, V and Brandt, C. Ontology-Guided Feature Engineering for Clinical Text Classification (submitted).
+For a high-level overview of the feature engineering methods we've developed, refer to our paper: Garla, V and Brandt, C. Ontology-Guided Feature Engineering for Clinical Text Classification (submitted).
 
 We developed a feature ranking method that utilizes the taxonomical structure of the UMLS to improve feature ranking; a context-dependent semantic similarity measure; and implemented a semantic kernel.  We improved the performance of the top-ranked machine learning-based system from the [https://www.i2b2.org/NLP/Obesity/ I2B2 2008 challenge] with these methods.  These feature engineering tools are included in YTEX.
 
