@@ -126,4 +126,92 @@ where fe.type = 'InfoGainAttributeEval'
 order by rank;
 }}}
 
+=== Generate Concept Graph ===
+We generate a graph that represents the umls taxonomy, and store this concept graph for subsequent use.  The YTEX `ConceptDaoImpl` takes as input a properties file that specifies a query that retrieves all edges that will be used in the taxonomy, generates a graph, and removes cycles.  For the i2b2 corpus, we select edges using the following query: 
+{{{
+	select cui1, cui2 
+	from umls.MRREL 
+	where sab in ('RXNORM', 'SNOMEDCT', 'SRC')
+	and rel in ('PAR', 'RB')
+}}}
+As you can see, you have a large degree of flexibility in choosing which concepts and edges to use in your concept graph - you can filter by source vocabulary (sab), relation type (rel), relation attribute (rela) and more.
 
+
+=== Evaluate infocontent ===
+We use infocontent to compute semantic similarity via the lin measure.  We evaluate the information content of each concept in the i2b2 corpus using the `InfoContentEvaluatorImpl` and store this in the `feature_rank` and `feature_eval` tables.  The `InfoContentEvaluatorImpl` is parameterized by a query that retrieves the raw frequency of each concept in the corpus:
+{{{
+select code, count(*)
+from anno_ontology_concept o
+inner join anno_base b on b.anno_base_id = o.anno_base_id
+inner join document d on d.document_id = b.document_id
+where d.analysis_batch in ('i2b2.2008')
+group by code
+}}}
+
+=== Evaluate imputed infogain ===
+The `ImputedFeatureEvaluator` computes the propagated and imputed information gain of every concept in the i2b2 corpus.  This is parameterized by queries that retrieve the document - class and document - concept relationships.
+  * Document - Class - Label:
+{{{
+select d.instance_id, a.class, 1, a.label
+from corpus_doc d
+inner join corpus_label a 
+on a.instance_id = d.instance_id 
+and a.corpus_name = d.corpus_name
+where d.doc_group = 'train'
+and d.corpus_name = 'i2b2.2008'
+}}}
+  * Document - Concept:
+{{{
+select *, 1
+from
+(
+    select distinct c.code, d.instance_id
+    from corpus_doc d
+    inner join corpus_label a 
+        on a.instance_id = d.instance_id 
+        and a.corpus_name = d.corpus_name    
+    inner join ytex.document yd 
+        on yd.uid = d.instance_id 
+        and yd.analysis_batch = d.corpus_name
+    inner join ytex.anno_base ac 
+        on ac.document_id = yd.document_id
+    inner join ytex.anno_ontology_concept c 
+        on ac.anno_base_id = c.anno_base_id
+    where d.doc_group = 'train'
+    and d.corpus_name = 'i2b2.2008'
+    and a.label = :label
+) s
+}}}
+As you can see, you have a wide degree of flexibility in defining the document-concept relationship and document-class relationship.
+
+The propagated and imputed infogain are stored in the `feature_rank` and `feature_eval` tables.  To view the propagated infogain for the hypertension label:
+{{{
+select r.feature_name, min(str), truncate(r.evaluation, 3), r.rank
+from feature_eval fe 
+inner join feature_rank r 
+    on r.feature_eval_id = fe.feature_eval_id
+left join umls.MRCONSO c 
+    on c.cui = r.feature_name 
+    and c.tty in ('PT', 'PN', 'BN', 'OCD') and lat = 'ENG'
+where fe.type = 'infogain-propagated' 
+    and fe.label = 'Hypertension'
+    and r.rank < 50
+group by r.feature_name, r.evaluation, r.rank
+order by r.rank ;
+}}}
+
+And to view the imputed infogain:
+{{{
+select r.feature_name, min(str), truncate(r.evaluation, 3), r.rank
+from feature_eval fe 
+inner join feature_rank r 
+    on r.feature_eval_id = fe.feature_eval_id
+left join umls.MRCONSO c 
+    on c.cui = r.feature_name 
+    and c.tty in ('PT', 'PN', 'BN', 'OCD') and lat = 'ENG'
+where fe.type = 'infogain-imputed' 
+    and fe.label = 'Hypertension'
+    and r.rank < 100
+group by r.feature_name, r.evaluation, r.rank
+order by r.rank ;
+}}}
