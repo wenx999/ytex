@@ -1,5 +1,5 @@
 #summary Installation for YTEX v0.5
-#labels Phase-Deploy
+#labels Phase-Deploy,Featured
 
 = Introduction =
 
