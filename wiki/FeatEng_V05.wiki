@@ -5,6 +5,9 @@ For a high-level overview of the feature engineering methods we've developed, re
 
 We developed a feature ranking method that utilizes the taxonomical structure of the UMLS to improve feature ranking; a context-dependent semantic similarity measure; and implemented a semantic kernel.  We improved the performance of the top-ranked machine learning-based system from the [https://www.i2b2.org/NLP/Obesity/ I2B2 2008 challenge] with these methods.  These feature engineering tools are included in YTEX.
 
+In our discussion, we refer to the I2B2 2008 challenge dataset, so please reproduce our results on this dataset before we get into details.  This requires little manual intervention, and will just run overnight.  
+
+We are currently developing tools to simplify the application of these methods to user-defined corpora.
 
 = I2B2 2008 =
 This section describes how to reproduce our results on the I2B2 2008 challenge dataset.
@@ -22,6 +25,14 @@ This section describes how to reproduce our results on the I2B2 2008 challenge d
      * obesity_standoff_annotations_training_addendum.xml
      * obesity_standoff_annotations_training_addendum2.xml
      * obesity_standoff_annotations_training_addendum3.xml
+  * Download i2b2-2008-v05.zip from this site, extract to your ytex home directory: you should have a folder `YTEX_HOME/i2b2.2008` when you are finished.
+  * Install ytex data mining tables: open a command prompt and run the following commands:
+{{{
+cd YTEX_HOME
+setenv.cmd
+cd data
+ant -Dytex.home=%YTEX_HOME kernel.create
+}}}
   
 == Configure ytex.properties ==
 Add the following to your `ytex.properties` file:
@@ -34,7 +45,7 @@ libsvm.bin=C:/java/libsvm-3.1/windows
 ytex.home=C:/clinicalnlp/ytex
 # we generate a file that contains the umls concept graph 
 # this is where we store it, adjust to match your environment
-ytex.conceptGraphDir=E:/projects/ytex/conceptGraph
+ytex.conceptGraphDir=C:/clinicalnlp/ytex/conceptGraph
 # how many cores does your system have? 
 # should have atleast 4, or this will take more than a weekend
 kernel.threads=4
@@ -51,7 +62,7 @@ ytex.conceptSetName=ctakes
 }}}
 
 == Reproducing results ==
-To load and annotate the corpus, compute hotspots, run the following (this will take 5-7 hours):
+To load and annotate the corpus, compute hotspots, open a command prompt, cd `ytex.home/i2b2.2008` directory, and run the following from the commands (this will take ~5 hours w/ 4 cores):
 {{{
 ant -Dytex.home=%YTEX_HOME% setup.all 
 }}} 
@@ -61,7 +72,58 @@ To run the cross validation and test, run the following (will run an entire week
 ant -Dytex.home=%YTEX_HOME% cv.all test.all
 }}}
 
-To run just the test using the optimal parameters we found (will run overnight):
+To run just the test using the optimal parameters we found (will take ~6 hours w/ 4 cores):
 {{{
 ant -Dytex.home=%YTEX_HOME% test.skip.cv test.all
 }}}
+
+= Feature Engineering =
+
+== Setup ==
+We did the following in the setup:
+  * load i2b2: Load i2b2 data - the notes and class labels - into the database
+  * setup v_i2b2_fword_lookup:  Created a dictionary lookup table from the umls 
+  * run cpe: annotated i2b2.2008 corpus with the YTEX Pipeline
+  * setup tfidf: compute tf-idf statistics on corpus
+  * evaluate infogain: compute infogain of each word for each label (disease) in the i2b2 corpus
+  * Generate Concept Graph: generate an acyclic directed graph representing the taxonomical relationships from the UMLS
+  * evaluate infocontent: compute information content of each concept in the i2b2 corpus
+  * evaluate imputed infogain: compute imputed infogain of each concept for each label in the i2b2 corpus
+  * generate folds: generate stratified cross-validation folds
+
+=== Load I2B2 Data ===
+We load the i2b2 data into the `corpus_doc` and `corpus_label` tables, which hold the documents and their labels respectively.
+
+=== Setup v_i2b2_fword_lookup ===
+We create a dictionary lookup table that uses the following UMLS Source Vocabularies:
+  * SRC
+  * MTH
+  * RXNORM
+  * SNOMEDCT
+  * MSH
+  * CSP
+  * MEDLINEPLUS
+  * MEDCIN
+Refer to `YTEX_HOME\i2b2.2008\data\v_i2b2_fword_lookup.sql`
+
+=== Run CPE ===
+We annotate the corpus with the YTEX pipeline.  We launch several CPE processes (as many cores as you have) in parallel to speed up processing.  We also only store the sentence, word, number, and named entity annotations to speed up processing.  Refer to `YTEX_HOME\i2b2.2008\desc\cpe.template.xml`.
+
+=== Setup tfidf ===
+We compute tf-idf statistics on CUIs and store them in the `feature_eval` and `feature_rank` tables; refer to `YTEX_HOME\i2b2.2008\data\tfidf-cui.sql`.  Later during classification, we perform frequency thresholding on CUIs.
+
+=== Evaluate infogain ===
+We evaluate the infogain of all words wrt all i2b2 labels, using only the i2b2 training data.  This is done by the `WekaAttributeEvaluatorImpl` which calls the WEKA [http://weka.sourceforge.net/doc.dev/weka/attributeSelection/InfoGainAttributeEval.html `InfoGainAttributeEval`].  We store the evaluations in the `feature_eval` and `feature_rank` tables.  To view e.g. the top ranked words for hypertension, run the following query:
+{{{
+select r.feature_name, r.evaluation, r.rank
+from feature_eval fe 
+inner join feature_rank r 
+    on r.feature_eval_id = fe.feature_eval_id
+where fe.type = 'InfoGainAttributeEval' 
+    and fe.label = 'Hypertension'
+    and fe.featureset_name = 'usword'
+    and r.rank < 11
+order by rank;
+}}}
+
+
