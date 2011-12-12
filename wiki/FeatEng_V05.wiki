@@ -16,9 +16,11 @@ The main tools are:
   * SemanticSimilarityService: This computes the semantic similarity of a pair of concepts.  We currently implement the Leacock-Chodorow, Lin, and Supervised Lin measures.
   * CorpusKernelEvaluator: Evaluate a user-defined kernel on all pairs of documents in a corpus.  The kernel matrices can be exported to data mining tools such as Matlab, R, or Libsvm for machine learning.  We have implemented a semantic kernel that uses the SemanticSimilarityService.
 
-All tools are pure java and hence platform independent.  The tools currently require a MySQL 5.x database and the UMLS installed in your database.  All tools retrieve and store data from the MySQL database: data regarding your corpus (document - concept relations and document - class relations) must be stored/imported into the MySQL database.  The YTEX NLP Pipeline stores data in the MySQL Database, thereby facilitating the use of these tools.  You are however not confined to the YTEX tables - you can get the relevant data from any table.
+All tools are pure java and hence platform independent.  The tools currently require a MySQL 5.x database and the UMLS installed in your database.  All tools retrieve and store data from the MySQL database.  Your corpus data (document - concept relations and document - class relations) must be stored/imported into the MySQL database.  The YTEX NLP Pipeline stores data in the MySQL Database, thereby facilitating the use of these tools.  You are however not confined to the YTEX tables - you can get the relevant data from any table.
 
-In our discussion, we refer to the I2B2 2008 challenge dataset; you may want to reproduce our results on this dataset before getting into details.  Reproducing our results requires a little bit of setup, and will just run overnight.  These tools are plain old java programs; the ant script for the I2B2 dataset shows how to call these programs.  We are currently developing tools to simplify the application of these methods to user-defined corpora.
+These tools are plain old java programs; the I2B2 example shows how to call these programs.  We are currently developing tools and scripts to simplify the application of these methods to arbitrary user-defined corpora.
+
+In our discussion, we refer to the I2B2 2008 challenge dataset; you may want to reproduce our results on this dataset before getting into details.  Reproducing our results requires a tiny bit of configuration, and will just run overnight.
 
 == ConceptDaoImpl ==
 We generate a graph that represents the umls taxonomy, and store this concept graph for subsequent use.  The YTEX `ConceptDaoImpl` takes as input a properties file that specifies a query that retrieves all edges that will be used in the taxonomy, generates a graph, and removes cycles.  For the i2b2 corpus, we select edges using the following query: 
@@ -198,6 +200,8 @@ This is completely automated by an ant build script.  We have split this up unto
   * Cross-Validation: perform cross-validation on the i2b2 training set to find the optimal parameters.  We have obviously already done this, so you can skip this step if you prefer.
   * Test: train models on the training set using optimal parameters, apply to test set.
 
+Summary results (F1 scores) are stored in the `YTEX_HOME/i2b2.2008/<experiment>-test/results.txt` file, where `<experiment>` is one of word, imputed, cui, lin, superlin.  The individual document classifications are stored in the `classifier_instance_eval` table.
+
 === Setup ===
 To load and annotate the corpus, compute hotspots, open a command prompt, cd to the `YTEX_HOME/i2b2.2008` directory, and run the following from the commands (this will take ~4 hours w/ 4 cores):
 {{{
@@ -276,5 +280,7 @@ We call the `ImputedFeatureEvaluator` computes the propagated and imputed inform
 We generate stratified cross-validation folds and store them in the `cv_fold` and `cv_fold_instance` tables using the `FoldGeneratorImpl`.  There is only one document in the training set for some label/class combinations; such documents are duplicated in the cv train/test sets.
 
 == I2B2 Cross-Validation ==
+TODO
 
 == I2B2 Test ==
+TODO
