@@ -77,9 +77,7 @@ To run just the test using the optimal parameters we found (will take ~4 hours w
 ant -Dytex.home=%YTEX_HOME% test.skip.cv test.all
 }}}
 
-= Feature Engineering =
-
-== Setup ==
+== I2B2 Setup ==
 We did the following in the setup:
   * load i2b2: Load i2b2 data - the notes and class labels - into the database
   * setup v_i2b2_fword_lookup:  Created a dictionary lookup table from the umls 
@@ -218,3 +216,7 @@ order by r.rank ;
 
 === Generate Folds ===
 We generate stratified cross-validation folds and store them in the `cv_fold` and `cv_fold_instance` tables using the `FoldGeneratorImpl`.  There is only one document in the training set for some label/class combinations; such documents are duplicated in the cv train/test sets.
+
+== I2B2 Cross-Validation ==
+
+== I2B2 Test ==
