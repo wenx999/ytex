@@ -8,7 +8,6 @@ We developed a feature ranking method that utilizes the taxonomical structure of
 
 These feature engineering tools are included in YTEX, but do not depend on the YTEX NLP Pipeline: they can be used in conjunction with any text mining or NLP system.
 
-
 =Tool Overview=
 The main tools are:
   * ConceptDaoImpl: This tool generates a concept graph from the UMLS.  You can declaratively define which UMLS source vocabularies and relationships to use to generate this concept graph.
@@ -281,12 +280,23 @@ We call the `ImputedFeatureEvaluator` computes the propagated and imputed inform
 We generate stratified cross-validation folds and store them in the `cv_fold` and `cv_fold_instance` tables using the `FoldGeneratorImpl`.  There is only one document in the training set for some label/class combinations; such documents are duplicated in the cv train/test sets.
 
 ==Cross-Validation==
-The goal of the cross-validation is to identify the optimal model parameters from the i2b2 training dataset.  In addition to the SVM Cost parameter, the parameters we need to optimize are:
-  * Word hotspot cutoff
-  * Imputed cui hotspot cutoff
-  * Supervised Semantic Similarity imputed cui cutoff
+We performed several experiments in which we trained SVMs using different feature representations.  We identified the optimal parameters by performing a 5x2 fold cross-validation on the training set.  The `YTEX_HOME\i2b2.2008\<experiment>` directory contains files related to each experiment.  We ran the following experiments:
+  * Bag-of-Words (word): This experiment represents a baseline with which we attempted to reproduce Ambert’s results.  
+  * Bag-of-Words + Imputed Hotspots (imputed): This experiment was designed to measure the contribution of imputed feature ranking.
+  * Bag-of-Words + Imputed Hotspots + CUIs (cui): This experiment was designed to measure the contribution of enriching the feature set with UMLS Concept Unique Identifiers (CUIs); previous experiments used only words as features.
+  * Semantic Kernel (lin): This experiment was designed to measure the contribution of unsupervised semantic similarity measures.
+  * Supervised Semantic Kernel (superlin): This experiment was designed to measure the contribution of supervised semantic similarity measures.
+
+In addition to the SVM Cost parameter, the parameters we need to optimize are:
+  * Word hotspot cutoff (for all experiments)
+  * Imputed cui hotspot cutoff (for all experiments beside word)
+  * Supervised Semantic Similarity imputed cui cutoff (for superlin)
 It is impractical to search a 4-dimensional hypercube for the optimal parameter.  Therefore, we optimize the parameters sequentially: 
   * Word experiment: identify optimal word hotspot cutoff
   * Cui experiment: use optimal word hotspot cutoff, identify optimal imputed cui hotspot cutoff
   * Superlin experiment:  use optimal word and imputed cui hotspot cutoff, identify optimal supervised semantic similarity imputed cui cutoff.
-After each cross-validation experiment, we identify the optimal parameters for each label, and store them in the `cv_best_svm` table.
+
+The results of each cross-validation run are stored in the `classifier_eval` tables.  After each cross-validation experiment, we identify the optimal parameters for each label, and store them in the `cv_best_svm` table.
+
+==Test==
+For each experiment, we train and evaluate SVMs on the feature representation obtained using the optimal parameters identified via the cross-validation.  We store the classification results in the `classifier_eval` tables and generate a report with aggregate results (macro-f1 scores).
