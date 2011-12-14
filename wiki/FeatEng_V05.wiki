@@ -159,12 +159,12 @@ This section describes how to reproduce our results on the I2B2 2008 challenge d
      * obesity_standoff_annotations_training_addendum2.xml
      * obesity_standoff_annotations_training_addendum3.xml
   * Download i2b2-2008-v05.zip from this site, extract to your ytex home directory: you should have a folder `YTEX_HOME/i2b2.2008` when you are finished.
-  * Install ytex data mining tables: open a command prompt and run the following commands:
+  * Install ytex data mining tables: open a command prompt and run the following commands (Unix users - you should be able to figure out the equivalent commands):
 {{{
 cd YTEX_HOME
 setenv.cmd
 cd data
-ant -Dytex.home=%YTEX_HOME kernel.create
+ant -Dytex.home=%YTEX_HOME% kernel.create
 }}}
   
 ==Configure ytex.properties==
@@ -192,6 +192,10 @@ kernel.name=i2b2.2008
 ytex.conceptGraphName=rbpar
 ytex.corpusName=i2b2.2008
 ytex.conceptSetName=ctakes
+
+# by default maxMemory is 1500m
+# with a 64-bit jvm you may have to up this to 2g
+# maxMemory=2g
 }}}
 
 ==Reproduce results==
@@ -203,8 +207,11 @@ This is completely automated by an ant build script.  We have split this up unto
 Summary results (F1 scores) are stored in the `YTEX_HOME/i2b2.2008/<experiment>-test/results.txt` file, where `<experiment>` is one of word, imputed, cui, lin, superlin.  The individual document classifications are stored in the `classifier_instance_eval` table.
 
 ===Setup===
-To load and annotate the corpus, compute hotspots, open a command prompt, cd to the `YTEX_HOME/i2b2.2008` directory, and run the following from the commands (this will take ~4 hours w/ 4 cores):
+To load and annotate the corpus, compute hotspots, open a command prompt, and run the following from the commands.  (This will take ~4 hours w/ 4 cores):
 {{{
+cd YTEX_HOME
+setenv.cmd
+cd i2b2.2008
 ant -Dytex.home=%YTEX_HOME% setup.all 
 }}} 
 
