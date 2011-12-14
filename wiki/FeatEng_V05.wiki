@@ -209,13 +209,13 @@ ant -Dytex.home=%YTEX_HOME% setup.all
 }}} 
 
 ===Cross-Validation and Test===
-To run the cross validation and test, run the following (will take ~12 hours w/ 4 cores):
+To run the cross validation and test, run the following (will take ~30 hours w/ 4 cores):
 {{{
 ant -Dytex.home=%YTEX_HOME% cv.all test.all
 }}}
 
 ===Test Only===
-To run just the test using the optimal parameters we found (will take ~4 hours w/ 4 cores):
+To run just the test using the optimal parameters we found (will take ~6 hours w/ 4 cores):
 {{{
 ant -Dytex.home=%YTEX_HOME% test.skip.cv test.all
 }}}
