@@ -4,7 +4,7 @@
 =Introduction=
 For a high-level overview of the feature engineering methods we've developed, refer to our paper: Garla, V and Brandt, C. Ontology-Guided Feature Engineering for Clinical Text Classification (submitted).
 
-We developed a feature ranking method that utilizes the taxonomical structure of the UMLS to improve feature ranking; a context-dependent semantic similarity measure; and implemented a semantic kernel.  We improved the performance of the top-ranked machine learning-based system from the [https://www.i2b2.org/NLP/Obesity/ I2B2 2008 challenge] with these methods.  
+We developed a feature ranking method that utilizes the taxonomical structure of the UMLS to improve upon univariate feature ranking methods.  We developed a context-dependent semantic similarity measure and implemented a semantic kernel.  We improved the performance of the top-ranked machine learning-based system from the [https://www.i2b2.org/NLP/Obesity/ I2B2 2008 challenge] with these methods.  
 
 These feature engineering tools are included in YTEX, but do not depend on the YTEX NLP Pipeline: they can be used in conjunction with any text mining or NLP system.
 
@@ -134,7 +134,7 @@ The first step in applying YTEX kernels is exporting documents as trees.  The YT
 We support the declarative definition of kernels using [http://martinfowler.com/articles/injection.html Spring Dependency Injection].  Kernels are basically collaborations of objects that implement the YTEX Kernel interface.  We have implemented a semantic kernel that calls the `SemanticSimilarityService`.
 
 ===Evaluating Kernels===
-The `CorpusKernelEvaluator` takes as input the document trees of a corpus and a kernel definition, and evaluates the kernel on all document pairs.  The number of evaluations is O(n^2); to speed things up, this can be parallelized across multiple processes (we actually parallelize kernel evaluations across an HPC cluster, making this very fast).  Kernel evaluations are stored in the `kernel_eval` and `kernel_instance_eval` tables.
+The `CorpusKernelEvaluator` takes as input the document trees of a corpus and a kernel definition, and evaluates the kernel on all document pairs.  The number of evaluations is quadratic in n; to speed things up, this can be parallelized across multiple processes (we actually parallelize kernel evaluations across an HPC cluster, making this very fast).  Kernel evaluations are stored in the `kernel_eval` and `kernel_instance_eval` tables.
 
 ===Exporting Kernel Matrices===
 Kernel machines such as SVMs can be trained on the matrix of pairwise kernel evaluations.  We have implemented tools to export these matrices to the libsvm format (`LibSVMGramMatrixExporterImpl`), and to a generic matrix format that can be used in tools such as Matlab and R (`RGramMatrixExporterImpl`).
@@ -146,7 +146,7 @@ We use LibSVM to train SVMs on kernel matrices.  We have implemented scripts tha
 This section describes how to reproduce our results on the I2B2 2008 challenge dataset.
 
 ==Prerequisites==
-  * Quad Core workstation at the minimum; 8 cores would be better
+  * Quad Core workstation at the minimum with at least 6 GB memory; 8 cores would be better
   * [http://code.google.com/p/ytex/wiki/InstallationV05 Install umls 2010AB] or higher in your MySQL
   * [http://code.google.com/p/ytex/wiki/InstallationV05 Install YTEX v0.5] with MySQL (configured to use the UMLS)
   * [http://www.csie.ntu.edu.tw/~cjlin/libsvm/ Install libsvm 3.1] or higher
