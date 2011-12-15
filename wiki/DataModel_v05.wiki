@@ -1,0 +1,28 @@
+#summary Data Model v0.5
+#labels Phase-Deploy
+
+=YTEX Data Model=
+This page discusses the YTEX data model.  The figure below provides an overview of the YTEX data model:
+
+http://ytex.googlecode.com/svn/trunk/workspace/doc/images/dbdiagram.jpg
+
+YTEX maps cTAKES annotations to a relational database using the Table-Per-Subclass object-relational mapping paradigm.  Basically, a table exists for each class in the annotation hierarchy.  All UIMA annotations are subclasses of the `Annotation` class, which is mapped to the `anno_base` table: attributes of the `Annotation` class are mapped to columns in `anno_base` table.  cTAKES annotations such as `WordToken` is a subclass of the `BaseToken` annotation, which in turn is a subclass of `Annotation`; the additional properties of `BaseToken` and `WordToken` are mapped to columns of the `anno_base_token` and `anno_word_token` tables respectively.  To get all the attributes of a `WordToken` annotation, simply join the `anno_base`, `anno_base_token`, and `anno_word_token` tables.  
+
+Our strategy for mapping annotations to the database was to perform a 1-to-1 mapping: what you see in the database should correspond exactly to what you see in the UIMA CAS viewer.
+
+Here, we detail a few of the main annotation types / tables.
+
+= `document` =
+The `document` table represents a single note/document.  The columns are
+  * `document_id` - unique generated id
+  * `uid` - 'user' id - i.e. a numeric reference to the document in your system.  
+  * `analysis_batch` - a user-defined 'document group'
+  * `cas` - the xml representation of the cas, gzipped 
+  * `doc_text` - the text of the document
+Refer to the UserGuide for details on how to configure the YTEX Pipeline to update the document table.
+
+= `anno_base` =
+An `anno_base` record represents an UIMA `Annotation`; there is a one-to-many relationship between `document` and `anno_base`.  The columns are:
+  * `anno_base_id` - unique generated id
+  * `document_id` - foreign key to `document` table
+  * `span_begin` - corresponds to [http://uima.apache.org/downloads/releaseDocs/2.3.0-incubating/docs/api/org/apache/uima/jcas/tcas/Annotation.html#getBegin%28%29 `Annotation`.`begin`] attribute
