@@ -39,7 +39,7 @@ This is mapped to the `ytex.uima.types.WordToken`, which extends cTAKES' `edu.ma
   * `negated` - 1 - word is negated, 0 - word is not negated  (based on negex)
   * `possible` - 1 - possible (from negex)
 
-= `named_entity` =
+= `anno_named_entity` =
 This is mapped to the cTAKES `NamedEntity` annotation.  Most of the attributes of this annotation are always empty/set to the same value and are thus useless.  However, we map attributes from the annotation to the database, even if it doesn't make sense (we want to model as closely as possible, even if the data is meaningless).  The only useful attribute is the certainty which represents the negation status:
   * `anno_base_id` - foreign key to `anno_base`, also primary key for this table
   * `certainty` - -1 - negated (via negex), 0 - not negated
