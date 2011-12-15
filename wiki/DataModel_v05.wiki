@@ -25,8 +25,8 @@ Refer to the [UsingYTEX_V05#YTEX_Pipeline_Configuration_Parameters UserGuide] fo
 An `anno_base` record represents an UIMA `Annotation`; there is a one-to-many relationship between `document` and `anno_base`.  The columns are:
   * `anno_base_id` - unique generated id
   * `document_id` - foreign key to `document` table
-  * `span_begin` - corresponds to [http://uima.apache.org/downloads/releaseDocs/2.3.0-incubating/docs/api/org/apache/uima/jcas/tcas/Annotation.html#getBegin%28%29 `Annotation.begin`] attribute
-  * `span_end` - `Annotation.end`] attribute
+  * `span_begin` - corresponds to [http://uima.apache.org/downloads/releaseDocs/2.3.0-incubating/docs/api/org/apache/uima/jcas/tcas/Annotation.html#getBegin%28%29 Annotation.begin] attribute
+  * `span_end` - `Annotation.end` attribute
   * `uima_type_id` - Foreign key to `ref_uima_type`, which contains the fully class name of the `Annotation` to which this record is mapped.
   * `covered_text` - The text covered by this annotation (i.e. the text between begin and end).  This is only stored (and indexed) for certain annotations; this can be configured by the `DBConsumer.typesStoreCoveredText` configuration parameter.
 
