@@ -199,6 +199,8 @@ where code = 'C0024228'
 and certainty = -1
 }}}
 
+Refer to the [DataModel_v05 YTEX Data Model] page for more information.
+
 ==Using YTEX DBAnnotationViewer==
 For a graphical representation of document annotations, use the DBAnnotationViewer.  This modified viewer retrieves the document CAS from the database (as opposed to the plain-vanilla AnnotationViewer which retrieves the CAS from the file system).
   * Execute `YTEX_HOME\ytexDBAnnotationViewer.bat`
