@@ -25,4 +25,37 @@ Refer to the UserGuide for details on how to configure the YTEX Pipeline to upda
 An `anno_base` record represents an UIMA `Annotation`; there is a one-to-many relationship between `document` and `anno_base`.  The columns are:
   * `anno_base_id` - unique generated id
   * `document_id` - foreign key to `document` table
-  * `span_begin` - corresponds to [http://uima.apache.org/downloads/releaseDocs/2.3.0-incubating/docs/api/org/apache/uima/jcas/tcas/Annotation.html#getBegin%28%29 `Annotation`.`begin`] attribute
+  * `span_begin` - corresponds to [http://uima.apache.org/downloads/releaseDocs/2.3.0-incubating/docs/api/org/apache/uima/jcas/tcas/Annotation.html#getBegin%28%29 `Annotation.begin`] attribute
+  * `span_end` - `Annotation.end`] attribute
+  * `uima_type_id` - Foreign key to `ref_uima_type`, which contains the fully class name of the `Annotation` to which this record is mapped.
+  * `covered_text` - The text covered by this annotation (i.e. the text between begin and end).  This is only stored (and indexed) for certain annotations; this can be configured by the `DBConsumer.typesStoreCoveredText` configuration parameter.
+
+= `anno_word_token` =
+This is mapped to the `ytex.uima.types.WordToken`, which extends cTAKES' `edu.mayo.bmi.uima.core.ae.type.WordToken` annotation with attributes that indicate the negation status of the word.
+  * `anno_base_id` - foreign key to `anno_base`, also primary key for this table
+  * `capitalization` - 0 - no caps, 1 - 1 cap letter in word, 2 - 2 cap letters in word, 3 - 3 or more cap letters in word
+  * `num_position` - 1st position of number within word
+  * `canonical_form` - uninflected lower case word form, set by LVGAnnotator
+  * `negated` - 1 - word is negated, 0 - word is not negated  (based on negex)
+  * `possible` - 1 - possible (from negex)
+
+= `named_entity` =
+This is mapped to the cTAKES `NamedEntity` annotation.  Most of the attributes of this annotation are always empty/set to the same value and are thus useless.  However, we map attributes from the annotation to the database, even if it doesn't make sense (we want to model as closely as possible, even if the data is meaningless).  The only useful attribute is the certainty which represents the negation status:
+  * `anno_base_id` - foreign key to `anno_base`, also primary key for this table
+  * `certainty` - -1 - negated (via negex), 0 - not negated
+  * `discovery technique` - always 1
+  * `status` - always 0
+  * `type_id` - always 0
+  * `segment_id` - always null
+
+= `anno_ontology_concept` =
+This is mapped to the cTAKES `OntologyConceptArr` of the `NamedEntity` annotation; these are the CUIs of a Named Entity:
+  * `anno_ontology_concept_id` - unique system generated id
+  * `anno_base_id` - foreign key to `named_entity`
+  * `code` - CUI
+  * `coding_scheme` - always 'UMLS'
+  * `oid` - always null
+
+
+
+  
