@@ -13,18 +13,60 @@ In YTEX v0.5 we've implemented the following features:
   cTAKES' tokenizer does not split words at certain punctuation marks.  We modified the tokenizer to always split words at the following characters: `.,:;`
 
 == Prerequisites ==
-  * Database Utilities
-  YTEX supports MS SQL Server 2008, MySQL version 5.x, and Oracle versions 10gR2 and above.  To set up database objects, the installation requires database-specific utilities:
-    ** MS SQL Server: [http://www.microsoft.com/downloads/details.aspx?familyid=08E52AC2-1D62-45F6-9A4A-4B76A8564A2B&displaylang=en SQL Server Tools] and [http://www.microsoft.com/downloads/en/details.aspx?FamilyId=C6C3E9EF-BA29-4A43-8D69-A2BED18FE73C&displaylang=en SQL Server Command-Line Utilities]
-    ** Oracle: [http://docs.oracle.com/cd/E11882_01/server.112/e16604/apd.htm#CHDCHJJJ SQL*Plus] and [http://docs.oracle.com/cd/E11882_01/server.112/e22490/ldr_concepts.htm#SUTIL003 SQL*Loader]
-    ** MySQL: mysql installation.  We use the [http://dev.mysql.com/doc/refman/5.0/en/mysql.html mysql command line tool]; as far as we know, this is only distributed as part of a full MySQL server installation.  Note that YTEX and MySQL can be installed on separate servers.
-  * Database User and Schema.
-  Create a database user (and schema) for use with ytex.  See DB Platform Specific Notes below.
-  * JDK 1.6 [http://java.sun.com/javase/downloads/widget/jdk6.jsp download]
+  * JDK 1.6 or higher [http://java.sun.com/javase/downloads/widget/jdk6.jsp download]
   * Atleast 2 GB of free disk space
 
 As mentioned above, [http://www.nlm.nih.gov/research/umls/implementation_resources/scripts/README_RRF_MySQL_Output_Stream.html we suggest that you install UMLS in your database].  NLM provides scripts for installing UMLS in MySQL and Oracle.  Refer to [UMLS_SQL_SERVER UMLS SQL Server Installation] for instructions on how to install UMLS in MS SQL Server.
 
+== Database Prerequisites ==
+YTEX supports MS SQL Server 2008, MySQL version 5.x, and Oracle versions 10gR2 and above.  To set up database objects, the installation requires database-specific utilities:
+    ** MS SQL Server: [http://www.microsoft.com/downloads/details.aspx?familyid=08E52AC2-1D62-45F6-9A4A-4B76A8564A2B&displaylang=en SQL Server Tools] and [http://www.microsoft.com/downloads/en/details.aspx?FamilyId=C6C3E9EF-BA29-4A43-8D69-A2BED18FE73C&displaylang=en SQL Server Command-Line Utilities]
+    ** Oracle: [http://docs.oracle.com/cd/E11882_01/server.112/e16604/apd.htm#CHDCHJJJ SQL*Plus] and [http://docs.oracle.com/cd/E11882_01/server.112/e22490/ldr_concepts.htm#SUTIL003 SQL*Loader]
+    ** MySQL: mysql installation.  We use the [http://dev.mysql.com/doc/refman/5.0/en/mysql.html mysql command line tool]; as far as we know, this is only distributed as part of a full MySQL server installation.  Note that YTEX and MySQL can be installed on separate servers.
+
+Create a database user (and schema) for use with ytex.  See platform specific notes below.
+
+=== Oracle ===
+As documented [http://www.nlm.nih.gov/research/umls/implementation_resources/scripts/index.html here] your database must use the UTF-8 charset.
+
+Make sure you use a tablespace with enough room; e.g. create the ytex user and schema like this:
+{{{
+create tablespace TBS_YTEX datafile 'C:/oracle/oradata/orcl/TBS_YTEX.dbf' size 1000M autoextend on online;
+create user ytex identified by ytex default tablespace TBS_YTEX;
+grant connect, resource to ytex;
+grant create materialized view to ytex;
+grant create view to ytex;
+}}}
+
+If you have installed the UMLS locally, you must also grant ytex select permissions on umls tables; e.g. assuming that umls tables are in the umls schema:
+{{{
+grant select on umls.MRCONSO to ytex;
+grant select on umls.MRSTY to ytex;
+}}}
+
+=== MySQL ===
+To create the mysql user and database, login to mysql as root and run the following commands (change as necessary):
+{{{
+CREATE DATABASE ytex CHARACTER SET utf8;
+CREATE USER 'ytex'@'localhost' IDENTIFIED BY 'ytex';
+GRANT ALL PRIVILEGES ON ytex.* TO 'ytex'@'localhost';
+}}}
+On mac you should use the 127.0.0.1 instead of localhost.  Note that if ytex connects to the mysql server from a different machine, you should replace localhost with the host name or ip address of the machine you will connect from, or use the wildcard ('%'):
+{{{
+CREATE USER 'ytex'@'%' IDENTIFIED BY 'ytex';
+GRANT ALL PRIVILEGES ON ytex.* TO 'ytex'@'%';
+}}}
+If you have installed UMLS in your database, you must give the ytex user select permission on these tables:
+{{{
+GRANT SELECT on umls.* to 'ytex'@'%';
+}}}
+
+The `document` table uses the `text` and `blob` datatypes for the doc_text column that holds the document text.  If you are processing large documents, you may need to use longtext the datatype instead.  Furthermore, you may have to increase the [http://dev.mysql.com/doc/refman/5.5/en/packet-too-large.html maximum packet size].
+
+=== SQL Server ===
+YTEX has been tested with integrated authentication only.  You can use SQL Server Authentication for the YTEX runtime.  However, the YTEX setup requires integrated authentication.  You (remember integrated authentication), must have select permissions on the UMLS tables, and the permission to create database objects in the YTEX database and schema.
+
+If you don't have these permissions, ask your DBA to add you the `db_datareader` role for the UMLS database, and the `db_ddladmin` & `db_datawriter` roles for the YTEX database.
 
 == Installation ==
   # Create a directory where ytex will be installed, e.g
@@ -109,44 +151,3 @@ If prefer the way cTAKES is doing things, you can configure YTEX to get the same
 
 == Notes on running examples on linux ==
 We've created .sh files for many of the .cmd files.  For the others, you should be able to figure out what to do by looking at the .cmd files.
-
-== DB Platform Specific Notes ==
-=== Oracle ===
-As documented [http://www.nlm.nih.gov/research/umls/implementation_resources/scripts/index.html here] your database must use the UTF-8 charset.
-
-Make sure you use a tablespace with enough room; e.g. create the ytex user and schema like this:
-{{{
-create tablespace TBS_YTEX datafile 'C:/oracle/oradata/orcl/TBS_YTEX.dbf' size 1000M autoextend on online;
-create user ytex identified by ytex default tablespace TBS_YTEX;
-grant connect, resource to ytex;
-grant create materialized view to ytex;
-grant create view to ytex;
-}}}
-
-You must also grant ytex select permissions on umls tables; e.g. assuming that umls tables are in the umls schema:
-{{{
-grant select on umls.MRCONSO to ytex;
-grant select on umls.MRSTY to ytex;
-}}}
-
-=== MySQL ===
-To create the mysql user and database, login to mysql as root and run the following commands (change as necessary):
-{{{
-CREATE DATABASE ytex CHARACTER SET utf8;
-CREATE USER 'ytex'@'localhost' IDENTIFIED BY 'ytex';
-GRANT ALL PRIVILEGES ON ytex.* TO 'ytex'@'localhost';
-}}}
-On mac you should use the 127.0.0.1 instead of localhost.  Note that if ytex connects to the mysql server from a different machine, you should replace localhost with the host name or ip address of the machine you will connect from, or use the wildcard ('%'):
-{{{
-CREATE USER 'ytex'@'%' IDENTIFIED BY 'ytex';
-GRANT ALL PRIVILEGES ON ytex.* TO 'ytex'@'%';
-}}}
-If you have installed UMLS in your database, you must give the ytex user select permission on these tables:
-{{{
-GRANT SELECT on umls.* to 'ytex'@'%';
-}}}
-
-The `document` table uses the `text` and `blob` datatypes for the doc_text column that holds the document text.  If you are processing large documents, you may need to use longtext the datatype instead.  Furthermore, you may have to increase the [http://dev.mysql.com/doc/refman/5.5/en/packet-too-large.html maximum packet size].
-
-=== SQL Server ===
-YTEX has been tested with integrated authentication only.  You can use SQL Server Authentication for the YTEX runtime.  However, the YTEX setup requires integrated authentication.
