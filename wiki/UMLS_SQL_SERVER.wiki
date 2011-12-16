@@ -19,9 +19,11 @@ This is how it works:
   Metamorphosys will create directories of the form 2010AB/META and 2010AB/NET
   that contain RRF files.
   # In `ytex.properties`, define `umls.catalog` and `umls.schema`, and set them to the catalog (database) and schema where the umls should be installed.
-  # Run the ant script `build-mssql-umls.xml`, and specify the directory which contains the META and NET directories via the rrf.home option.  Open a command prompt, change to the YTEX_HOME/data directory, and execute the following command:
+  # Run the ant script `build-mssql-umls.xml`, and specify the directory which contains the META and NET directories via the rrf.home option.  Open a command prompt, change to the YTEX_HOME directory, and execute the following commands:
 {{{
-ant -Drrf.home=c:\temp\2010AB -f build-mssql-umls.xml all
+setenv.cmd
+cd data
+ant -Dytex.home=%YTEX_HOME% -Drrf.home=c:\temp\2010AB -f build-mssql-umls.xml all
 }}}
 
 This does the following:
