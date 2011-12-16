@@ -17,7 +17,7 @@ In YTEX v0.5 we've implemented the following features:
   YTEX supports MS SQL Server 2008, MySQL version 5.x, and Oracle versions 10gR2 and above.  To set up database objects, the installation requires database-specific utilities:
     ** MS SQL Server: [http://www.microsoft.com/downloads/details.aspx?familyid=08E52AC2-1D62-45F6-9A4A-4B76A8564A2B&displaylang=en SQL Server Tools] and [http://www.microsoft.com/downloads/en/details.aspx?FamilyId=C6C3E9EF-BA29-4A43-8D69-A2BED18FE73C&displaylang=en SQL Server Command-Line Utilities]
     ** Oracle: SQL*Plus and SQL*Loader
-    ** MySQL: mysql installation 
+    ** MySQL: mysql installation.  We use the [http://dev.mysql.com/doc/refman/5.0/en/mysql.html mysql command line tool]; as far as we know, this is only distributed as part of a full MySQL server installation.  Note that YTEX and MySQL can be installed on separate servers.
   * Database User and Schema.
   Create a database user (and schema) for use with ytex.  See DB Platform Specific Notes below.
   * JDK 1.6 [http://java.sun.com/javase/downloads/widget/jdk6.jsp download]
@@ -53,7 +53,19 @@ c:\java\clinicalnlp
   # Edit environment batch/shell script, and Fix the path references to match your environment
     * windows edit <tt>YTEX_HOME\setenv.cmd</tt>
     * linux move <tt>YTEX_HOME/ytex.profile</tt> to <tt>${HOME}/ytex.profile</tt>
-  # Create `YTEX_HOME\config\desc\ytex.properties`: In this file, you specify the database connection parameters. Use `YTEX_HOME\config\desc\ytex.properties.<db type>.example` as a template.  If you have UMLS installed on your database, specify the `umls.schema` and `umls.catalog` properties (see the properties file for an explanation of what these are).
+  # Create `YTEX_HOME\config\desc\ytex.properties`: In this file, you specify the database connection parameters. Use `YTEX_HOME\config\desc\ytex.properties.<db type>.example` as a template.  If you have UMLS installed on your database, specify the `umls.schema` and `umls.catalog` properties (see the properties file for an explanation of what these are).  Before you continue, verify that you can connect to your database using the native database utilities.  `${xxx}` refers to properties `ytex.properties`.  Open a command prompt/shell and run the following commands (you may have to specify the full path to the executable).  If you cannot connect to your database using this command, then you must fix your configuration before proceeding.
+   * MySQL:
+{{{
+mysql --user=${db.username} --password=${db.password} --host=${db.host} ${db.schema}
+}}}
+   * Oracle:
+{{{
+sqlplus ${db.username}/${db.password}@${db.name}
+}}}
+   * SQL Server:
+{{{
+sqlcmd -d ${db.name} -E -S ${db.host}
+}}}
   # Execute the setup script.  
     * *windows*: Open a command prompt, navigate to YTEX_HOME, and execute setup script:
 {{{
