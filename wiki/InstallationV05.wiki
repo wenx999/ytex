@@ -16,7 +16,7 @@ In YTEX v0.5 we've implemented the following features:
   * Database Utilities
   YTEX supports MS SQL Server 2008, MySQL version 5.x, and Oracle versions 10gR2 and above.  To set up database objects, the installation requires database-specific utilities:
     ** MS SQL Server: [http://www.microsoft.com/downloads/details.aspx?familyid=08E52AC2-1D62-45F6-9A4A-4B76A8564A2B&displaylang=en SQL Server Tools] and [http://www.microsoft.com/downloads/en/details.aspx?FamilyId=C6C3E9EF-BA29-4A43-8D69-A2BED18FE73C&displaylang=en SQL Server Command-Line Utilities]
-    ** Oracle: SQL*Plus and SQL*Loader
+    ** Oracle: [http://docs.oracle.com/cd/E11882_01/server.112/e16604/apd.htm#CHDCHJJJ SQL*Plus] and [http://docs.oracle.com/cd/E11882_01/server.112/e22490/ldr_concepts.htm#SUTIL003 SQL*Loader]
     ** MySQL: mysql installation.  We use the [http://dev.mysql.com/doc/refman/5.0/en/mysql.html mysql command line tool]; as far as we know, this is only distributed as part of a full MySQL server installation.  Note that YTEX and MySQL can be installed on separate servers.
   * Database User and Schema.
   Create a database user (and schema) for use with ytex.  See DB Platform Specific Notes below.
