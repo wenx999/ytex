@@ -64,9 +64,9 @@ GRANT SELECT on umls.* to 'ytex'@'%';
 The `document` table uses the `text` and `blob` datatypes for the doc_text column that holds the document text.  If you are processing large documents, you may need to use longtext the datatype instead.  Furthermore, you may have to increase the [http://dev.mysql.com/doc/refman/5.5/en/packet-too-large.html maximum packet size].
 
 === SQL Server ===
-YTEX has been tested with integrated authentication only.  You can use SQL Server Authentication for the YTEX runtime.  However, the YTEX setup requires integrated authentication.  You (remember integrated authentication), must have select permissions on the UMLS tables, and the permission to create database objects in the YTEX database and schema.
+YTEX has been tested with integrated authentication only.  You can use SQL Server Authentication for the YTEX runtime.  However, the YTEX setup requires integrated authentication.  You must have the permission to create database objects in the YTEX database and schema.  If you don't have these permissions, ask your DBA to add you to the `db_ddladmin` & `db_datawriter` roles for the YTEX database.
 
-If you don't have these permissions, ask your DBA to add you the `db_datareader` role for the UMLS database, and the `db_ddladmin` & `db_datawriter` roles for the YTEX database.
+If you want to install the UMLS in your SQL Server, you may want to use a different database/schema from the YTEX database.  If that is the case, you need permissions on the UMLS database/schema as well.
 
 == Installation ==
   # Create a directory where ytex will be installed, e.g
@@ -81,12 +81,15 @@ Windows:
 c:\java\clinicalnlp
 }}}
 
-  # Download the following archives to the installation directory: 
+  # Download the following archives to the installation directory:
+
     * YTEX Archive: `ytex-with-dependencies-vX.Y.zip`
     Download from this site 
+
     * LVG 2011 Archive: `lvg2011lite.tgz` (optional) 
-    ([http://lexsrv3.nlm.nih.gov/LexSysGroup/Projects/lvg/2011/release/lvg2011lite.tgz download]). Make sure you save this file as lvg2011lite.tgz (Internet Explorer may rename this). The lvg is required for stemming; if you do not download this file, stemming will not be performed.
-     * UMLS Database Export (Required if you do not have UMLS installed in your DB)
+    ([http://lexsrv3.nlm.nih.gov/LexSysGroup/Projects/lvg/2011/release/lvg2011lite.tgz download]). Make sure you save this file as lvg2011lite.tgz (your browser may decompress or expand this file). The lvg is required for stemming; if you do not download this file, stemming will not be performed.
+
+    * UMLS Database Export (Required if you do not have UMLS installed in your DB)
     UMLS is used for Named Entity Recognition.  The YTEX distribution includes a tiny subset of the UMLS for demonstration purposes.  For production use, [http://www.nlm.nih.gov/research/umls/implementation_resources/scripts/README_RRF_MySQL_Output_Stream.html we suggest that you install UMLS locally].  If you cannot/don't want to install UMLS, you can get a subset of the UMLS 2010AB that contains SNOMED-CT and RXNORM from us:
       ** If you have not done so already, obtain a UMLS License and create a UMLS Technology Services (UTS) Account, available free of charge: [https://uts.nlm.nih.gov/home.html]
       ** Download the YTEX UMLS Database Archive from [http://umlsdownload.ytex-nlp.org/secure/index.jsp].  A valid UTS Login is required. 
