@@ -141,6 +141,10 @@ On mac you should use the 127.0.0.1 instead of localhost.  Note that if ytex con
 CREATE USER 'ytex'@'%' IDENTIFIED BY 'ytex';
 GRANT ALL PRIVILEGES ON ytex.* TO 'ytex'@'%';
 }}}
+If you have installed UMLS in your database, you must give the ytex user select permission on these tables:
+{{{
+GRANT SELECT on umls.* to 'ytex'@'%';
+}}}
 
 The `document` table uses the `text` and `blob` datatypes for the doc_text column that holds the document text.  If you are processing large documents, you may need to use longtext the datatype instead.  Furthermore, you may have to increase the [http://dev.mysql.com/doc/refman/5.5/en/packet-too-large.html maximum packet size].
 
