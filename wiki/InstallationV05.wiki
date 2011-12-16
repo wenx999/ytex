@@ -53,8 +53,8 @@ c:\java\clinicalnlp
   # Edit environment batch/shell script, and Fix the path references to match your environment
     * windows edit <tt>YTEX_HOME\setenv.cmd</tt>
     * linux move <tt>YTEX_HOME/ytex.profile</tt> to <tt>${HOME}/ytex.profile</tt>
-  # Create `YTEX_HOME\config\desc\ytex.properties`: In this file, you specify the database connection parameters. Use `YTEX_HOME\config\desc\ytex.properties.<db type>.example` as a template.  If you have UMLS installed on your database, specify the `umls.schema` and `umls.catalog` properties (see the properties file for an explanation of what these are).  Before you continue, verify that you can connect to your database using the native database utilities.  `${xxx}` refers to properties `ytex.properties`.  Open a command prompt/shell and run the following commands (you may have to specify the full path to the executable).  If you cannot connect to your database using this command, then you must fix your configuration before proceeding.
-   * MySQL:
+  # Create `YTEX_HOME\config\desc\ytex.properties`: In this file, you specify the database connection parameters. Use `YTEX_HOME\config\desc\ytex.properties.<db type>.example` as a template.  If you have UMLS installed on your database, specify the `umls.schema` and `umls.catalog` properties (see the properties file for an explanation of what these are).  Before you continue, verify that you can connect to your database using the native database utilities.  Open a command prompt/shell and run the following commands (you may have to specify the full path to the executable).  If you cannot connect to your database using this command, then you must fix your configuration before proceeding.
+   * MySQL (`${xxx}` refers to properties in `ytex.properties`):
 {{{
 mysql --user=${db.username} --password=${db.password} --host=${db.host} ${db.schema}
 }}}
