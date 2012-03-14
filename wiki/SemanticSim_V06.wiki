@@ -74,15 +74,67 @@ The `ConceptSimilarityServiceImpl` java program accepts a list of concept pairs,
   * `-metrics`: required, comma separated list of metrics (see above in for valid values)
   * `-out`: optional file to send output to.  if not specified will send output to standard out.
   * `-lcs`: should the least common subsumer and paths be output for each concept pair?
-  * `-concepts`: a list of concept pairs, or a file with concept pairs.  For a list of concept pairs, separate each concept by a comma, each pair by a semicolon:
+  * `-concepts`: a list of concept pairs, or a file with concept pairs.  For a file place each concept pair on a separate line, separate concepts by whitespace or commas.  For a list of concept pairs, separate each concept by a comma, each pair by a semicolon:
 {{{
-java ytex.kernel.metric.ConceptSimilarityServiceImpl -concepts C0018787,C0024109;C0034069,C0242379 -metrics LCH,INTRINSIC_LCH
+cd <YTEX_HOME>
+java -classpath config/desc:libs/ytex.kernel.jar ytex.kernel.metric.ConceptSimilarityServiceImpl -concepts C0018787,C0024109;C0034069,C0242379 -metrics LCH,INTRINSIC_LCH
 }}}
 
-For a file place each concept pair on a separate line, separate concepts by whitespace or commas.
+The concept graph that will be used is defined in <YTEX_HOME>/config/desc/ytex.properties with the 'ytex.conceptGraphName` key.
  
 = Configuration =
-Creating a Concept Graph.
+1) Create a properties file that defines the required parameters:
+`sct-umls.xml`:
+{{{
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<entry key="ytex.conceptGraphName">sct-umls</entry>
+	<entry key="ytex.conceptGraphQuery"><![CDATA[
+	select distinct cui1, cui2 
+	from umls.MRREL 
+	where sab in ('SNOMEDCT')
+	and rel in ('PAR')
+	order by cui1, cui2
+	]]></entry>
+</properties>
+}}}
+
+2) Run the `ConceptDaoImpl`:
+The `ConceptDaoImpl` java class generates a concept graph using the query defined in the specified properties file; stores the concept graph in a binary format; and computes the depth and intrinsic information content of each concept and stores this in the database.  
+{{{
+cd <YTEX_HOME>
+java -Xmx1g -classpath config/desc:libs/ytex.kernel.jar ytex.kernel.dao.ConceptDaoImpl sct-umls.xml
+}}}
+
+The concept graph will be stored in `<YTEX_HOME>/conceptGraph` directory; the infocontent and depth will be stored in the `feature_eval` and `feature_rank` tables.
+
+3) Compute corpus information content
+
+(TODO)
 
 = Similarity Benchmark =
 Running the similarity benchmark.
+  * Prerequisites:
+    ** MySQL.  Tested on MySQL.  The UMLS only part of the benchmark scripts will work with Oracle & SQL Server.  We load SNOMED-CT and MeSH into the datbase; this has only been tested on MySQL
+    ** CRAN R with Plyr package for statistical analyses.
+    ** UMLS installed in database.  Default install with SNOMED-CT and all restriction free source vocabularies.  Test with 2011AB
+    ** SNOMED-CT international release.  Tested with 2011-07 version
+    ** MeSH 2012
+  * Extract files simbenchmark.  Extract under `<YTEX_HOME>`; will create the `<YTEX_HOME>/simbenchmark` directory
+  * Configure `ytex.properties`
+  * Run ant
+
+What this does:
+  * Loads SNOMED-CT into database from SNOMED-CT source files
+  * Parses MeSH XML files, loads MeSH into database
+  * Generates concept graphs
+  * Computes similarity using each benchmark, measure, and concept graph combination.  Benchmark data under `<YTEX_HOME>/simbenchmark/data`
+  * Computes spearman correlation with R
+
+Output:
+Under `<YTEX_HOME>/simbenchmark/data`
+  * simbenchmark-summary.csv
+  * simbenchmark-cg-significance.csv
+  * simbenchmark-spearman.csv
+  * sim.txt
