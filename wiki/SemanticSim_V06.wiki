@@ -15,9 +15,9 @@ YTEX allows the declarative definition of concept graphs in which nodes represen
   * umls: concepts from all restriction free (level 0) UMLS source vocabularies and SNOMED-CT
 You can configure additional concept graphs (documented see below).
 
-The YTEX demo application has 2 concept graphs configured: 
-  * SNOMED-CT concept graph derived from the 2011-07 SNOMED-CT international release
-  * SNOMED-CT concept graph derived from UMLS 2011AB
+The YTEX demo application (http://sim.ytex-nlp.org) has 2 concept graphs configured: 
+  * sct: SNOMED-CT concept graph derived from the 2011-07 SNOMED-CT international release
+  * sct-umls: SNOMED-CT concept graph derived from UMLS 2011AB
 
 == Similarity Web App ==
 The similarity web app allows you to select
@@ -28,7 +28,7 @@ The similarity web app allows you to select
 The similarity web application has two pages:
 
 === Similarity Single ===
-Compute the similarity between two pairs of concepts.  In addition to the similarity values, this page outputs the path between concepts.  You can enter the text of the concept, and the application will attempt to find the corresponding concept id (CUI).  Alternatively, you can simply enter the concept id.
+Compute similarities for a single concept pair.  In addition to the similarity values, this page outputs the path between concepts.  You can enter the text of the concept, and the application will attempt to find the corresponding concept id (CUI).  Alternatively, you can simply enter the concept id.
 
 === Similarity Multiple ===
 Similarity Multiple: Compute the similarity between multiple pairs of concepts.  Enter each concept pair on a different line, and separate concepts by a comma or whitespace.  The output can be exported to a CSV file or Excel spreadsheet.
@@ -69,8 +69,15 @@ To get the 'default' concept graph: http://sim.ytex-nlp.org/ytex.web/services/re
 === Web Services interface ===
 The Web Services interface is analogous to the restful interface, but allows the computation of similarities fro multiple concept pairs.  See http://sim.ytex-nlp.org/ytex.web/services/conceptSimilarityWebService?wsdl
 
-== Similarity Command-Line Interface ==
-
+== Command-Line Interface ==
+The `ConceptSimilarityServiceImpl` java program accepts a list of concept pairs, and outputs their similarities in a tab-delimited format.  It accepts the following arguments:
+  * `-metrics`: required, comma separated list of metrics (see above in for valid values)
+  * `-out`: optional file to send output to.  if not specified will send output to standard out.
+  * `-lcs`: should the least common subsumer and paths be output for each concept pair?
+  * `-concepts`: a list of concept pairs, or a file with concept pairs.  For a list of concept pairs, separate each concept by a comma, each pair by a semicolon:
+`java ytex.kernel.metric.ConceptSimilarityServiceImpl -concepts C0018787,C0024109;C0034069,C0242379 -metrics LCH,INTRINSIC_LCH`
+For a file place each concept pair on a separate line, separate concepts by whitespace or commas.
+ 
 = Configuration =
 Creating a Concept Graph.
 
