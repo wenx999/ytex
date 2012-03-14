@@ -75,7 +75,10 @@ The `ConceptSimilarityServiceImpl` java program accepts a list of concept pairs,
   * `-out`: optional file to send output to.  if not specified will send output to standard out.
   * `-lcs`: should the least common subsumer and paths be output for each concept pair?
   * `-concepts`: a list of concept pairs, or a file with concept pairs.  For a list of concept pairs, separate each concept by a comma, each pair by a semicolon:
-`java ytex.kernel.metric.ConceptSimilarityServiceImpl -concepts C0018787,C0024109;C0034069,C0242379 -metrics LCH,INTRINSIC_LCH`
+{{{
+java ytex.kernel.metric.ConceptSimilarityServiceImpl -concepts C0018787,C0024109;C0034069,C0242379 -metrics LCH,INTRINSIC_LCH
+}}}
+
 For a file place each concept pair on a separate line, separate concepts by whitespace or commas.
  
 = Configuration =
