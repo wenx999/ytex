@@ -1,0 +1,78 @@
+#summary Semantic Similarity Tools for V0.6 and above
+#labels Phase-Deploy
+
+= Introduction =
+
+Semantic relatedness refers to human judgments of the degree to which a given pair of concepts is related.  Automated measures of semantic relatedness estimate the similarity between pairs of concepts, and play an important role in a variety of text processing tasks.  Semantic similarity measures include path finding measures based purely on path distances, and information-content based measures based on taxonomic relationships and information content (IC) of concepts, a measure of concept frequency.  [http://www.sciencedirect.com/science/article/pii/S1532046406000645 Previous studies] that took advantage of a large, annotated medical corpus to estimate concept frequencies showed that information content based measures of semantic similarity outperform path finding measures.  Unfortunately, large annotated corpora are not typically available for many applications.  To overcome the problems inherent to corpus IC based measures, some authors have proposed computing IC from the taxonomic structure of an ontology; this is referred to as the intrinsic information content (intrinsic IC).  The underlying assumption is that concepts with few children and many parents are less frequent (have a higher IC). Intrinsic IC based measures have been [http://www.sciencedirect.com/science/article/pii/S1532046411000645 shown to rival that of corpus-based measures].
+
+YTEX provides a generalizable framework for the computation of path finding, corpus & intrinsic information content based semantic similarity measures from any domain ontology.  This page describes the usage and configuration of the YTEX Semantic Similarity Tools
+
+= Usage =
+YTEX provides a web application client, web services interface, RESTful interface, and command-line interface to compute similarity measures.  The demo similarity web app is available under http://sim.ytex-nlp.org; if you plan to use this application extensively, please install ytex locally.  Please refer to [http://www.sciencedirect.com/science/article/pii/S1532046411000645 Sanchez & Batet] for an excellent overview of similarity measures in general, and intrinsic information content (IC) based measures in particular.  We scale all measures to the unit interval.
+
+YTEX allows the declarative definition of concept graphs in which nodes represent concepts and edges taxonomical relationships, and can compute the similarity between nodes in these graphs.  YTEX comes with two concept graphs derived from the UMLS (version 2011AB)
+  * sct-msh-csp-aod: concepts from the SNOMED-CT, MeSH, CRISP, and Alcohol and Drug thesaurus
+  * umls: concepts from all restriction free (level 0) UMLS source vocabularies and SNOMED-CT
+You can configure additional concept graphs (documented see below).
+
+The YTEX demo application has 2 concept graphs configured: 
+  * SNOMED-CT concept graph derived from the 2011-07 SNOMED-CT international release
+  * SNOMED-CT concept graph derived from UMLS 2011AB
+
+== Similarity Web App ==
+The similarity web app allows you to select
+  * select a concept graph against which measures should be computed
+  * specify concept pair(s)
+  * specify measures
+
+The similarity web application has two pages:
+
+=== Similarity Single ===
+Compute the similarity between two pairs of concepts.  In addition to the similarity values, this page outputs the path between concepts.  You can enter the text of the concept, and the application will attempt to find the corresponding concept id (CUI).  Alternatively, you can simply enter the concept id.
+
+=== Similarity Multiple ===
+Similarity Multiple: Compute the similarity between multiple pairs of concepts.  Enter each concept pair on a different line, and separate concepts by a comma or whitespace.  The output can be exported to a CSV file or Excel spreadsheet.
+
+== Similarity Web/RESTful Services ==
+As with the web application, you can specify the concept graph, concept pairs, and measures for which similarities should be computed.  Both methods accept a list of measures; these are:
+  * Path-Finding Measures
+    ** WUPALMER: Wu & Palmer
+    ** LCH: Leacock & Chodorow
+    ** PATH: Path
+    ** RADA: Rada
+  * Corpus IC Based Measures:
+    ** LIN: Lin
+  * Intrinsic IC Based Measures:
+    ** INTRINSIC_LIN: Intrinsic IC based Lin
+    ** INTRINSIC_LCH: Intrinsic IC based Leacock & Chodorow
+    ** INTRINSIC_PATH: Intrinsic IC based Path, identical to Jiang & Conrath
+    ** INTRINSIC_RADA: Intrinsic IC based Rada
+    ** JACCARD: Intrinsic IC based Jaccard
+    ** SOKAL: Intrinsic IC based Sokal & Sneath
+
+=== RESTful interface ===
+To get the similarity between a pair of concepts using the concept graph `sct-umls`, and the LCH and Intrinsic LCH measures:
+http://sim.ytex-nlp.org/ytex.web/services/rest/similarity?conceptGraph=sct-umls&concept1=C0018787&concept2=C0024109&metrics=LCH,INTRINSIC_LCH&lcs=true
+
+The parameters are:
+  * concept1/concept2 the concept ids
+  * metrics comma-separated list of metrics
+  * conceptGraph (optional) concept graph to use; if not specified will use the default
+  * lcs (optional) set to true to get the paths through the Least Common Subsumer.
+Will return XML with a list of similarities corresponding to the list of metrics.  See the WSDL for the corresponding web service for the schema.
+
+To get a list of concept graphs: 
+http://sim.ytex-nlp.org/ytex.web/services/rest/getConceptGraphs
+
+To get the 'default' concept graph: http://sim.ytex-nlp.org/ytex.web/services/rest/getDefaultConceptGraph
+
+=== Web Services interface ===
+The Web Services interface is analogous to the restful interface, but allows the computation of similarities fro multiple concept pairs.  See http://sim.ytex-nlp.org/ytex.web/services/conceptSimilarityWebService?wsdl
+
+== Similarity Command-Line Interface ==
+
+= Configuration =
+Creating a Concept Graph.
+
+= Similarity Benchmark =
+Running the similarity benchmark.
