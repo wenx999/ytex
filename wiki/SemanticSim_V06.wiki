@@ -107,7 +107,7 @@ cd <YTEX_HOME>
 java -Xmx1g -classpath config/desc:libs/ytex.kernel.jar ytex.kernel.dao.ConceptDaoImpl sct-umls.xml
 }}}
 
-The concept graph will be stored in `<YTEX_HOME>/conceptGraph` directory; the infocontent and depth will be stored in the `feature_eval` and `feature_rank` tables.
+The concept graph will be stored in {{{<YTEX_HOME>/conceptGraph}}} directory; the infocontent and depth will be stored in the `feature_eval` and `feature_rank` tables.
 
 3) Compute corpus information content
 
