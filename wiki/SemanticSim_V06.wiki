@@ -119,15 +119,79 @@ You will get warnings about removing cycles.  The concept graph will be stored i
 
 = Similarity Benchmark =
 Running the similarity benchmark.
-  * Prerequisites:
-    ** MySQL.  Tested on MySQL.  The UMLS only part of the benchmark scripts will work with Oracle & SQL Server.  We load SNOMED-CT and MeSH into the datbase; this has only been tested on MySQL
-    ** CRAN R with Plyr package for statistical analyses.
-    ** UMLS installed in database.  Default install with SNOMED-CT and all restriction free source vocabularies.  Test with 2011AB
-    ** SNOMED-CT international release.  Tested with 2011-07 version
-    ** MeSH 2012
-  * Extract files simbenchmark.  Extract under `<YTEX_HOME>`; will create the `<YTEX_HOME>/simbenchmark` directory
-  * Configure `ytex.properties`
-  * Run ant
+== Prerequisities ==
+Tested on windows and linux.
+
+=== MySQL ===
+We test with version 5.1.  The UMLS-only part of the benchmark scripts will work with Oracle & SQL Server.  We load SNOMED-CT and MeSH into the datbase; this has only been tested on MySQL
+
+=== UMLS Install ===
+Install UMLS in MySQL As documented in [http://www.nlm.nih.gov/research/umls/implementation_resources/metamorphosys/help.html MetamorphoSys Help], 
+and in [http://www.nlm.nih.gov/research/umls/implementation_resources/scripts/index.html Load Scripts].  We used UMLS 2011AB with the default 'SNOMED-CT + Level 0 vocabularies' option.
+
+=== YTEX Install ===
+Obviously.
+
+=== CRAN R ===
+Used for statistical analysis (computing spearman correlation).  Install Plyr.
+
+=== SNOMED-CT download ===
+Download and extract SNOMED-CT from http://www.nlm.nih.gov/research/umls/licensedcontent/snomedctfiles.html (we used 20110731, available from http://download.nlm.nih.gov/umls/kss/IHTSDO20110731/SnomedCT_RF2Release_INT_20110731.zip)
+  
+=== MeSH download ===
+Download following files, and extract the zip files to ${mesh.home}:
+  * [http://www.nlm.nih.gov/mesh/termscon.html desc2012.zip]  (extract desc2012.xml from this file) 
+  * [http://www.nlm.nih.gov/mesh/termscon.html supp2012.zip]  (extract supp2012.xml from this file) 
+  * [http://www.nlm.nih.gov/mesh/2012/download/desc2012.dtd desc2012.dtd]
+  * [http://www.nlm.nih.gov/mesh/2012/download/supp2012.dtd supp2012.dtd]
+
+== Running the Benchmark ==
+Setup some properties in ytex, run a couple scripts, and you're done.
+
+== YTEX Properties == 
+In YTEX_HOME/config/desc/ytex.properties 
+  * set sct.home property to full path of the Snapshot/Terminology directory, and sct.version to the version date.
+  * set mesh.home to directory containing desc2012.xml, desc2012.dtd, supp2012.xml, and supp2012.dtd. 
+  * set R.bin to directory that contains R executable
+{{{
+sct.home=E:/temp/SnomedCT_RF2Release_INT_20110731/Snapshot/Terminology
+sct.version=20110731
+mesh.home=c:/temp/mesh
+R.bin=C:/Program Files/R/R-2.13.1/bin/x64
+}}}
+
+== Load SNOMED-CT into database == 
+Linux:
+{{{
+. ${HOME}/ytex.profile
+cd ${YTEX_HOME}/data
+ant -Dytex.home=${YTEX_HOME} sct.all > sct.out 2>&1 &
+}}}
+
+Windows:
+{{{
+cd ${YTEX_HOME}/data
+../setenv.cmd
+ant -Dytex.home=%YTEX_HOME% sct.all > sct.out 2>&1 &
+}}}
+
+== Install the precomputed concept graphs == 
+TODO
+{{{
+cd ${YTEX_HOME}/data
+../setenv.cmd
+ant -Dytex.home=%YTEX_HOME% ic.all > ic.out 2>&1 &
+}}}
+
+== Run the benchmark == 
+Unpack simbenchmark-vX.Y.zip in your `<YTEX_HOME>` and run the ant script
+{{{
+cd ${YTEX_HOME}
+unzip simbenchmark-v0.6.zip
+cd simbenchmark
+nohup ant -DmaxMemory=8g -Dytex.home=${YTEX_HOME} all > simbenchmark.out 2>&1 &  
+}}}
+If you did not install the precomputed concept graphs, set -DmaxMemory to as much memory as you can spare, as computing the intrinsic infocontent for the entire UMLS is very memory intensive.
 
 What this does:
   * Loads SNOMED-CT into database from SNOMED-CT source files
@@ -138,7 +202,7 @@ What this does:
 
 Output:
 Under `<YTEX_HOME>/simbenchmark/data`
-  * simbenchmark-summary.csv
-  * simbenchmark-cg-significance.csv
-  * simbenchmark-spearman.csv
-  * sim.txt
+  * simbenchmark-summary.csv: consolidated results with spearman correlation for each concept graph / benchmark / measure combination.
+  * simbenchmark-cg-significance.csv: significance of differences between intrinsic lch measures on different concept graphs.
+  * simbenchmark-spearman.csv: spearman correlations and p-values
+  * sim.txt: similarity computations for each concept pair/measure/concept graph/benchmark 
