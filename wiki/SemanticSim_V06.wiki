@@ -148,7 +148,7 @@ Download following files, and extract the zip files to ${mesh.home}:
 == Running the Benchmark ==
 Setup some properties in ytex, run a couple scripts, and you're done.
 
-== YTEX Properties == 
+=== Setup YTEX Properties === 
 In YTEX_HOME/config/desc/ytex.properties 
   * set sct.home property to full path of the Snapshot/Terminology directory, and sct.version to the version date.
   * set mesh.home to directory containing desc2012.xml, desc2012.dtd, supp2012.xml, and supp2012.dtd. 
@@ -160,7 +160,7 @@ mesh.home=c:/temp/mesh
 R.bin=C:/Program Files/R/R-2.13.1/bin/x64
 }}}
 
-== Load SNOMED-CT into database == 
+=== Load SNOMED-CT into database ===
 Linux:
 {{{
 . ${HOME}/ytex.profile
@@ -175,7 +175,8 @@ cd %YTEX_HOME%\data
 ant -Dytex.home=%YTEX_HOME% sct.all > sct.out 2>&1 &
 }}}
 
-== Install the precomputed concept graphs == 
+=== Install the precomputed concept graphs ===
+TODO move to install instructions.
 
 Linux:
 {{{
@@ -191,7 +192,7 @@ cd %YTEX_HOME%\data
 ant -Dytex.home=%YTEX_HOME% ic.all > ic.out 2>&1 &
 }}}
 
-== Run the benchmark == 
+=== Run the benchmark === 
 Unpack simbenchmark-vX.Y.zip in your `<YTEX_HOME>` and run the ant script
 Linux:
 {{{
@@ -205,11 +206,10 @@ Windows:
 ant -DmaxMemory=8g -Dytex.home=${YTEX_HOME} all > simbenchmark.out 2>&1 
 }}}
 
-If you did not install the precomputed concept graphs, set -DmaxMemory to as much memory as you can spare, as computing the intrinsic infocontent for the entire UMLS is very memory intensive.
+If you did not install the precomputed concept graphs, set `-DmaxMemory` to as much memory as you can spare, as computing the intrinsic infocontent for the entire UMLS is very memory intensive.
 
 What this does:
-  * Loads SNOMED-CT into database from SNOMED-CT source files
-  * Parses MeSH XML files, loads MeSH into database
+  * Parses MeSH XML files, loads into database
   * Generates concept graphs
   * Computes similarity using each benchmark, measure, and concept graph combination.  Benchmark data under `<YTEX_HOME>/simbenchmark/data`
   * Computes spearman correlation with R
