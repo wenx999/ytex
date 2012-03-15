@@ -120,7 +120,7 @@ You will get warnings about removing cycles.  The concept graph will be stored i
 = Similarity Benchmark =
 Running the similarity benchmark.
 == Prerequisities ==
-Tested on windows and linux.
+Tested on windows and linux using the 64-bit jdk.
 
 === MySQL ===
 We test with version 5.1.  The UMLS-only part of the benchmark scripts will work with Oracle & SQL Server.  We load SNOMED-CT and MeSH into the datbase; this has only been tested on MySQL
@@ -170,27 +170,41 @@ ant -Dytex.home=${YTEX_HOME} sct.all > sct.out 2>&1 &
 
 Windows:
 {{{
-cd ${YTEX_HOME}/data
-../setenv.cmd
+cd %YTEX_HOME%\data
+..\setenv.cmd
 ant -Dytex.home=%YTEX_HOME% sct.all > sct.out 2>&1 &
 }}}
 
 == Install the precomputed concept graphs == 
-TODO
+
+Linux:
 {{{
+. ${HOME}/ytex.profile
 cd ${YTEX_HOME}/data
-../setenv.cmd
+ant -Dytex.home=${YTEX_HOME} ic.all > sct.out 2>&1 &
+}}}
+
+Windows
+{{{
+cd %YTEX_HOME%\data
+..\setenv.cmd
 ant -Dytex.home=%YTEX_HOME% ic.all > ic.out 2>&1 &
 }}}
 
 == Run the benchmark == 
 Unpack simbenchmark-vX.Y.zip in your `<YTEX_HOME>` and run the ant script
+Linux:
 {{{
 cd ${YTEX_HOME}
 unzip simbenchmark-v0.6.zip
 cd simbenchmark
 nohup ant -DmaxMemory=8g -Dytex.home=${YTEX_HOME} all > simbenchmark.out 2>&1 &  
 }}}
+Windows:
+{{{
+ant -DmaxMemory=8g -Dytex.home=${YTEX_HOME} all > simbenchmark.out 2>&1 
+}}}
+
 If you did not install the precomputed concept graphs, set -DmaxMemory to as much memory as you can spare, as computing the intrinsic infocontent for the entire UMLS is very memory intensive.
 
 What this does:
