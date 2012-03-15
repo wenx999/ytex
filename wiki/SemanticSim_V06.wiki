@@ -77,14 +77,24 @@ The `ConceptSimilarityServiceImpl` java program accepts a list of concept pairs,
   * `-concepts`: a list of concept pairs, or a file with concept pairs.  For a file place each concept pair on a separate line, separate concepts by whitespace or commas.  For a list of concept pairs, separate each concept by a comma, each pair by a semicolon:
 {{{
 cd <YTEX_HOME>
-java -classpath config/desc:libs/ytex.kernel.jar ytex.kernel.metric.ConceptSimilarityServiceImpl -concepts C0018787,C0024109;C0034069,C0242379 -metrics LCH,INTRINSIC_LCH
+java -Xmx1500m -Dlog4j.configuration=file:./config/desc/log4j.properties -classpath libs.system/ytex.kernel.jar ytex.kernel.metric.ConceptSimilarityServiceImpl -concepts C0018787,C0024109;C0034069,C0242379 -metrics LCH,INTRINSIC_LCH
 }}}
 
-The concept graph that will be used is defined in <YTEX_HOME>/config/desc/ytex.properties with the 'ytex.conceptGraphName` key.
+The concept graph that will be used is defined in `<YTEX_HOME>/config/desc/ytex.properties` with the 'ytex.conceptGraphName` key; alternatively, you can specify the concept graph with the java `-Dytex.conceptGraphName=<concept graph>` option.  The amount of memory needed depends on the concept graph; SNOMED-CT fits comfortably in a 500 MB heap.  The larger `sct-msh-csp-aod` and `umls` graphs need 1500m (-Xmx option).
  
 = Configuration =
+To create a concept graph, you specify a properties file that contains a query that retrieves all the edges from a taxonomy.  The `ConceptDaoImpl` does the following:
+  * executes this query
+  * builds a concept graph
+  * removes edges that induce cycles
+  * writes the concept graph to the file system
+  * computes the depth and intrinsic information content of each node in the graph, stores this in the `feature_eval` and `feature_rank` tables
+Computing the intrinsic IC is very memory intensive - give this task all the memory that you have for large concept graphs.  Computing the intrinsic IC for the entire UMLS takes 1.5 hours with an 8GB java heap.
+
+As an example, here is what you do to create a concept graph with just the SNOMED-CT vocabulary from the UMLS:
+
 1) Create a properties file that defines the required parameters:
-`sct-umls.xml`:
+`<YTEX_HOME>\sct-umls.xml`:
 {{{
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
@@ -101,17 +111,11 @@ The concept graph that will be used is defined in <YTEX_HOME>/config/desc/ytex.p
 }}}
 
 2) Run the `ConceptDaoImpl`:
-The `ConceptDaoImpl` java class generates a concept graph using the query defined in the specified properties file; stores the concept graph in a binary format; and computes the depth and intrinsic information content of each concept and stores this in the database.  
 {{{
 cd <YTEX_HOME>
-java -Xmx1g -classpath config/desc:libs/ytex.kernel.jar ytex.kernel.dao.ConceptDaoImpl sct-umls.xml
+java -Xmx500m -Dlog4j.configuration=file:./config/desc/log4j.properties -classpath libs.system\ytex.kernel.jar ytex.kernel.dao.ConceptDaoImpl -prop sct-umls.xml
 }}}
-
-The concept graph will be stored in {{{<YTEX_HOME>/conceptGraph}}} directory; the infocontent and depth will be stored in the `feature_eval` and `feature_rank` tables.
-
-3) Compute corpus information content
-
-(TODO)
+You will get warnings about removing cycles.  The concept graph will be stored in {{{<YTEX_HOME>/conceptGraph}}} directory.
 
 = Similarity Benchmark =
 Running the similarity benchmark.
