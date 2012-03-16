@@ -15,7 +15,7 @@ YTEX allows the declarative definition of concept graphs in which nodes represen
   * umls: concepts from all restriction free (level 0) UMLS source vocabularies and SNOMED-CT
 You can configure additional concept graphs (documented see below).
 
-The YTEX demo application (http://sim.ytex-nlp.org) has 2 concept graphs configured: 
+The YTEX demo application (http://www.ytex-nlp.org/ytex.web) has 2 concept graphs configured: 
   * sct: SNOMED-CT concept graph derived from the 2011-07 SNOMED-CT international release
   * sct-umls: SNOMED-CT concept graph derived from UMLS 2011AB
 
@@ -32,6 +32,72 @@ Compute similarities for a single concept pair.  In addition to the similarity v
 
 === Similarity Multiple ===
 Similarity Multiple: Compute the similarity between multiple pairs of concepts.  Enter each concept pair on a different line, and separate concepts by a comma or whitespace.  The output can be exported to a CSV file or Excel spreadsheet.
+
+To compute similarity measures on the 'canonical' Pedersen benchmark on the demo server, simply select the SNOMED-CT concept graph, and copy and paste the following into the concept pairs box (these are the snomed concept ids, not the UMLS CUIs):
+<pre>
+42399005	42399005
+70317007	17369002
+80891009	74281007
+230690007	55641003
+48500005	58214004
+125369001	415582006
+128462008	443961001
+42343007	19242006
+51615001	126713003
+373421000	51197009
+79619009	49436004
+254935002	1386000
+255631004	106190000
+59282003	22298006
+57406009	396275006
+69896004	200936003
+11381005	61968008
+73211009	38341003
+32498003	179344006
+70179006	73761001
+128863005	126692004
+74400008	64859006
+35489007	128045006
+55822004	363346000
+24700007	69322001
+13200003	57190000
+39772007	15825003
+12856003	244568009
+87715008	420054005
+</pre>
+
+To compute similarities on the SNOMED-CT derived from the UMLS, select the SNOMED-CT from UMLS 2011AB concept graph, and enter the following concept pairs: 
+<pre>
+C0035078	C0035078
+C0156543	C0000786
+C0018787	C0027061
+C0038454	C0021308
+C0011253	C0036341
+C1265880	C0009814
+C0006826	C0001418
+C0018802	C0034063
+C0034069	C0242379
+C0011991	C0344375
+C0026269	C0004238
+C0006118	C0151699
+C0003232	C0020517
+C0034065	C0027051
+C0007286	C0029408
+C0003873	C0409974
+C0702166	C0039142
+C0011849	C0020538
+C0010137	C0086511
+C0206698	C0009378
+C0333997	C0007107
+C0003615	C0029456
+C0011581	C0007642
+C0020473	C0006826
+C0026769	C0033975
+C0030920	C0027092
+C0034887	C0003483
+C0042345	C0224701
+C0043352	C0023891
+</pre>
 
 == Similarity Web/RESTful Services ==
 As with the web application, you can specify the concept graph, concept pairs, and measures for which similarities should be computed.  Both methods accept a list of measures; these are:
@@ -52,7 +118,7 @@ As with the web application, you can specify the concept graph, concept pairs, a
 
 === RESTful interface ===
 To get the similarity between a pair of concepts using the concept graph `sct-umls`, and the LCH and Intrinsic LCH measures:
-http://sim.ytex-nlp.org/ytex.web/services/rest/similarity?conceptGraph=sct-umls&concept1=C0018787&concept2=C0024109&metrics=LCH,INTRINSIC_LCH&lcs=true
+http://www.ytex-nlp.org/ytex.web/services/rest/similarity?conceptGraph=sct-umls&concept1=C0018787&concept2=C0024109&metrics=LCH,INTRINSIC_LCH&lcs=true
 
 The parameters are:
   * concept1/concept2 the concept ids
@@ -62,12 +128,12 @@ The parameters are:
 Will return XML with a list of similarities corresponding to the list of metrics.  See the WSDL for the corresponding web service for the schema.
 
 To get a list of concept graphs: 
-http://sim.ytex-nlp.org/ytex.web/services/rest/getConceptGraphs
+http://www.ytex-nlp.org/ytex.web/services/rest/getConceptGraphs
 
 To get the 'default' concept graph: http://sim.ytex-nlp.org/ytex.web/services/rest/getDefaultConceptGraph
 
 === Web Services interface ===
-The Web Services interface is analogous to the restful interface, but allows the computation of similarities fro multiple concept pairs.  See http://sim.ytex-nlp.org/ytex.web/services/conceptSimilarityWebService?wsdl
+The Web Services interface is analogous to the restful interface, but allows the computation of similarities fro multiple concept pairs.  See http://www.ytex-nlp.org/ytex.web/services/conceptSimilarityWebService?wsdl
 
 == Command-Line Interface ==
 The `ConceptSimilarityServiceImpl` java program accepts a list of concept pairs, and outputs their similarities in a tab-delimited format.  It accepts the following arguments:
