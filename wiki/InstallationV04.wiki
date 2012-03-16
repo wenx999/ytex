@@ -48,7 +48,7 @@ c:\java\clinicalnlp
      * UMLS Database Export (Required if you do not have UMLS installed in your DB)
     UMLS is used for Named Entity Recognition.  The YTEX distribution includes a tiny subset of the UMLS for demonstration purposes.  For production use, [http://www.nlm.nih.gov/research/umls/implementation_resources/scripts/README_RRF_MySQL_Output_Stream.html we suggest that you install UMLS locally].  If you cannot/don't want to install UMLS, you can get a subset of the UMLS 2010AB that contains SNOMED-CT and RXNORM from us:
       ** If you have not done so already, obtain a UMLS License and create a UMLS Technology Services (UTS) Account, available free of charge: [https://uts.nlm.nih.gov/home.html]
-      ** Download the YTEX UMLS Database Archive from [http://umlsdownload.ytex-nlp.org/secure/index.jsp].  A valid UTS Login is required. 
+      ** Download the YTEX UMLS Database Archive from [http://www.ytex-nlp.org/umls.download/secure/index.html].  A valid UTS Login is required. 
       ** Place the archive (`umls-<platform>.zip`) in the installation directory as well
   # Extract `ytex-with-dependencies-vX.Y.zip` to the installation directory; this will create a ytex subdirectory, e.g. windows `c:\java\clinicalnlp\ytex` / linux `${HOME}/clinicalnlp/ytex`, referred to subsequently as YTEX_HOME.
   # Edit environment batch/shell script, and Fix the path references to match your environment
