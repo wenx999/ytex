@@ -1,7 +1,7 @@
-#summary Using YTEX v0.5
+#summary Using YTEX v0.6
 <wiki:toc max_depth="2" />
 
-=Using YTEX v0.5=
+=Using YTEX v0.6=
 This document presumes familiarity with [http://uima.apache.org/index.html UIMA] and [http://ohnlp.sourceforge.net/cTAKES/ cTAKES].
 
 =Annotating Documents=
