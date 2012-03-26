@@ -1,4 +1,5 @@
 #summary WEKA Integration v0.3
+#labels Deprecated
 
 = Introduction =
 WEKA is a powerful, open-source, java-based data mining toolkit.  It implements a wide variety of clustering, classification, and regression algorithms, and is very easy to use.  This article describes using YTEX with WEKA.
