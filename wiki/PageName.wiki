@@ -76,7 +76,7 @@ mkdir ${HOME}/clinicalnlp
 
 Windows:
 {{{
-mkdir c:\java\clinicalnlp
+c:\clinicalnlp
 }}}
 
   # Download the following archives to the installation directory:
