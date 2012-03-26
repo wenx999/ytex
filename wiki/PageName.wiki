@@ -84,10 +84,10 @@ c:\clinicalnlp
     * YTEX Archive: `ytex-with-dependencies-v0.6.zip`
     Download from this site 
 
-    * LVG 2011 Archive: `[http://lexsrv3.nlm.nih.gov/LexSysGroup/Projects/lvg/2011/release/lvg2011lite.tgz lvg2011lite.tgz]` (optional) 
+    * LVG 2011 Archive: [http://lexsrv3.nlm.nih.gov/LexSysGroup/Projects/lvg/2011/release/lvg2011lite.tgz lvg2011lite.tgz](optional) 
     Make sure you save this file as `lvg2011lite.tgz` (your browser may decompress or expand this file). The lvg is required for stemming; if you do not download this file, stemming will not be performed (and you will get ugly warnings that you can ignore if you really don't care about stemming).
 
-    * YTEX UMLS Archive: `[http://www.ytex-nlp.org/umls.download/secure/0.6/umls.zip umls.zip]` (optional, UTS login required)
+    * YTEX UMLS Archive: [http://www.ytex-nlp.org/umls.download/secure/0.6/umls.zip umls.zip] (optional, UTS login required)
     This archive contains 'concept graphs' used to compute semantic similarity measures, and UMLS 2011AB data for named entity recognition.  If you don't download this archive, WSD will be disabled.  If you neither have the UMLS installed nor download this archive, the installation will load a tiny subset of the UMLS for demonstration purposes.  For production use, [http://www.nlm.nih.gov/research/umls/implementation_resources/scripts/README_RRF_MySQL_Output_Stream.html we suggest that you install UMLS in your database].  If you cannot/don't want to install UMLS, you can get use the subset of the UMLS that we provide in this archive: the 2011AB SNOMED-CT and RXNORM source vocabularies.
       ** If you have not done so already, obtain a UMLS License and create a UMLS Technology Services (UTS) Account, available free of charge: [https://uts.nlm.nih.gov/home.html]
       ** Download the [http://www.ytex-nlp.org/umls.download/secure/0.6/umls.zip umls.zip YTEX UMLS Archive].  A valid UTS Login is required. 
