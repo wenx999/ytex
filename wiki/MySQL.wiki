@@ -1,4 +1,5 @@
 #summary YTEX v0.3 w/ MySQL
+#labels Deprecated
 
 = Introduction =
 
