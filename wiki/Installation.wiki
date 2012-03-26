@@ -1,5 +1,5 @@
 #summary Installation details v0.3
-#labels Phase-Deploy
+#labels Phase-Deploy,Deprecated
 #sidebar TableOfContents
 <wiki:toc max_depth="2" />
 
