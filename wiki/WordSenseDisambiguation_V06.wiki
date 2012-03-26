@@ -21,3 +21,6 @@ The `SenseDisambiguatorAnnotator` is configured via `YTEX_HOME/config/desc/ytex.
 The optimal measure and concept graph depends on the application.  These defaults achieved the best score on the MSH WSD data set; you might want to experiment with the `INTRINSIC_LCH` measure and `umls` concept graph: this configuration achieved the best performance on the NLM WSD data set.
 
 = Reproducing results on benchmarks =
+
+Download the following:
+  * 
