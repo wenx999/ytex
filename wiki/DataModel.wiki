@@ -1,4 +1,5 @@
 #summary YTEX Data Model
+#labels Deprecated
 
 =YTEX Data Model=
 Details on the way, but for now:
