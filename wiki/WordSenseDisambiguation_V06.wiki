@@ -21,6 +21,57 @@ The `SenseDisambiguatorAnnotator` is configured via `YTEX_HOME/config/desc/ytex.
 The optimal measure and concept graph depends on the application.  These defaults achieved the best score on the MSH WSD data set; you might want to experiment with the `INTRINSIC_LCH` measure and `umls` concept graph: this configuration achieved the best performance on the NLM WSD data set.
 
 = Reproducing results on benchmarks =
+== Prerequisites ==
+  * MySQL Database Server
+  * CRAN R Used for statistical analysis.  Install the Plyr package
+  * UMLS installed in MySQL: We used 2011AB with SNOMED-CT + all Level 0 source vocabularies
+  * [Installation_V06 YTEX installation]: configured to use the UMLS
+  * [Installation_V06 YTEX UMLS Archive]: this contains the concept graphs used by similarity measures.  If this file was present during the YTEX installation, there will be a directory `YTEX_HOME/conceptGraph` with the needed files.  You can also generate these concept graphs from scracth (see  [SemanticSim_V06])
+  * [http://code.google.com/p/ytex/downloads/list nlm.wsd-v0.6.zip] benchmark code and scripts.
+  * NLM WSD Dataset: Download the [http://wsd.nlm.nih.gov/Restricted/downloads/basic_reviewed_results.tar.gz Basic Test Collection] and [http://wsd.nlm.nih.gov/Collaborations/NLM-WSD.target_word.choices_v0.3.tar.gz WSD Choices]
+  * MSH WSD Dataset: Download the [http://wsd.nlm.nih.gov/Collaborations/MSHCorpus.zip Full MSH WSD Dataset]
 
-Download the following:
-  * 
+
+== Configuration ==
+Unpack WSD Datasets, specify paths in `YTEX_HOME/config/desc/ytex.properties`:
+  * nlm.wsd.home: path to the `Basic_Reviewed_Results` directory from the unpacked `basic_reviewed_results.tar.gz`.  This directory contains a subdirectory for each word (e.g. adjustment ...).
+  * choices.home: path to the `2007` directory from the unpacked `NLM-WSD.target_word.choices_v0.3.tar.gz`.  This directory contains a file for each word (e.g. adjustment.choices)
+  * msh.wsd.home: path to the `MSHCorpus` directory from the unpacked `MSHCorpus.zip` file; contains a file for each word (e.g. `AA_pmids_tagged.arff`).
+  * set R.bin to directory that contains R executable
+
+For example: 
+{{{
+nlm.wsd.home=c:/temp/Basic_Reviewed_Results
+msh.wsd.home=c:/temp/MSHCorpus
+choices.home=c:/temp/NLM-WSD.target_word.choices_v0.3/choices/2007
+R.bin=C:/Program Files/R/R-2.13.1/bin/x64
+}}}
+
+== Run Ant Script ==
+Unpack nlm.wsd-vX.Y.zip in your `<YTEX_HOME>` and run the ant script
+Linux:
+{{{
+. ${HOME}/ytex.profile
+cd ${YTEX_HOME}
+unzip nlm.wsd-v0.6.zip
+cd nlm.wsd
+nohup ant -Dytex.home=${YTEX_HOME} all > wsd.out 2>&1 &  
+}}}
+Windows:
+{{{
+cd ${YTEX_HOME}
+setenv.cmd
+cd nlm.wsd
+ant -Dytex.home=${YTEX_HOME} all > wsd.out 2>&1 
+}}}
+
+What this does:
+  * compiles source
+  * creates tables, loads NLM WSD and MSH WSD data sets into `nlm_wsd` and `msh_wsd` tables
+  * annotates all abstracts with ytex
+  * disambiguates concepts, outputs results to `eval/<concept graph>-10` and  `msh/eval/<concept graph>-10/`
+  * computes accuracy and p-values with R, stores results in the `eval` directory
+
+
+
+  
