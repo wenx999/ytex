@@ -1,5 +1,5 @@
 #summary Dictionary Lookup configuration for v0.4
-#labels Phase-Deploy
+#labels Phase-Deploy,Deprecated
 
 = Introduction =
 
