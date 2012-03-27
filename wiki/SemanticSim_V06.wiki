@@ -159,29 +159,18 @@ ytex.corpusName=wsd
 Running the similarity benchmark.
 == Prerequisities ==
 Tested on windows and linux using the 64-bit jdk.
-
-=== MySQL ===
-We test with version 5.1.  The UMLS-only part of the benchmark scripts will work with Oracle & SQL Server.  We load SNOMED-CT and MeSH into the datbase; this has only been tested on MySQL
-
-=== UMLS Install ===
-Install UMLS in MySQL As documented in [http://www.nlm.nih.gov/research/umls/implementation_resources/metamorphosys/help.html MetamorphoSys Help], 
-and in [http://www.nlm.nih.gov/research/umls/implementation_resources/scripts/index.html Load Scripts].  We used UMLS 2011AB with the default 'SNOMED-CT + Level 0 vocabularies' option.
-
-=== YTEX Install ===
-Obviously.
-
-=== CRAN R ===
-Used for statistical analysis (computing spearman correlation).  Install Plyr.
-
-=== SNOMED-CT download ===
-Download and extract SNOMED-CT from http://www.nlm.nih.gov/research/umls/licensedcontent/snomedctfiles.html (we used 20110731, available from http://download.nlm.nih.gov/umls/kss/IHTSDO20110731/SnomedCT_RF2Release_INT_20110731.zip)
-  
-=== MeSH download ===
-Download following files, and extract the zip files to ${mesh.home}:
-  * [http://www.nlm.nih.gov/mesh/termscon.html desc2012.zip]  (extract desc2012.xml from this file) 
-  * [http://www.nlm.nih.gov/mesh/termscon.html supp2012.zip]  (extract supp2012.xml from this file) 
-  * [http://www.nlm.nih.gov/mesh/2012/download/desc2012.dtd desc2012.dtd]
-  * [http://www.nlm.nih.gov/mesh/2012/download/supp2012.dtd supp2012.dtd]
+  * MySQL Database Server:   We test with version 5.1.  The UMLS-only part of the benchmark scripts will work with Oracle & SQL Server.  We load SNOMED-CT and MeSH into the datbase; this has only been tested on MySQL
+  * CRAN R: Used for statistical analysis. Install the Plyr package
+  * UMLS installed in MySQL: We used 2011AB with SNOMED-CT + all Level 0 source vocabularies 
+  * [Installation_V06 YTEX installation]: configured to use the UMLS
+  * [Installation_V06 YTEX UMLS Archive] (Optional): this contains the `umls` and `sct-msh-csp-aod` concept graphs.  The YTEX installation unpacks these files to `YTEX_HOME/conceptGraph`.  If the concept graphs are not present, they will be created (but this is memory intensive).
+  * SNOMED-CT download: Download and extract SNOMED-CT from http://www.nlm.nih.gov/research/umls/licensedcontent/snomedctfiles.html (we used 20110731, available from http://download.nlm.nih.gov/umls/kss/IHTSDO20110731/SnomedCT_RF2Release_INT_20110731.zip)
+  * MeSH download: 
+  Download following files, and extract the zip files to ${mesh.home}:
+    ** [http://www.nlm.nih.gov/mesh/termscon.html desc2012.zip]  (extract desc2012.xml from this file) 
+    ** [http://www.nlm.nih.gov/mesh/termscon.html supp2012.zip]  (extract supp2012.xml from this file) 
+    ** [http://www.nlm.nih.gov/mesh/2012/download/desc2012.dtd desc2012.dtd]
+    ** [http://www.nlm.nih.gov/mesh/2012/download/supp2012.dtd supp2012.dtd]
 
 == Running the Benchmark ==
 Setup some properties in ytex, run a couple scripts, and you're done.
@@ -213,25 +202,10 @@ cd %YTEX_HOME%\data
 ant -Dytex.home=%YTEX_HOME% sct.all > sct.out 2>&1 &
 }}}
 
-=== Install the precomputed concept graphs ===
-TODO move to install instructions.
-
-Linux:
-{{{
-. ${HOME}/ytex.profile
-cd ${YTEX_HOME}/data
-ant -Dytex.home=${YTEX_HOME} ic.all > sct.out 2>&1 &
-}}}
-
-Windows
-{{{
-cd %YTEX_HOME%\data
-..\setenv.cmd
-ant -Dytex.home=%YTEX_HOME% ic.all > ic.out 2>&1 &
-}}}
 
 === Run the benchmark === 
-Unpack simbenchmark-vX.Y.zip in your `<YTEX_HOME>` and run the ant script
+Download and unpack [http://code.google.com/p/ytex/downloads/detail?name=simbenchmark-v0.6.zip&can=2&q= simbenchmark-v0.6.zip] in your `<YTEX_HOME>` and run the ant script
+
 Linux:
 {{{
 cd ${YTEX_HOME}
