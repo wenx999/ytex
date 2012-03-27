@@ -14,6 +14,7 @@ YTEX is based on UIMA, and standard UIMA Tools can be used to annotate documents
   * `NegexAnnotator`: this replaces the cTAKES NegationAnnotator.  The NegexAnnotator is based on the Negex negation detection algorithm.
   * `DBConsumer`: Stores annotatations and the XML CAS representation in the database
 You are of course welcome to modify/add/remove annotators to the analysis engine and modify configuration parameters.
+YTEX also comes with the `YTEXPipelineWSD.xml` pipeline, which is the `YTEXPipeline.xml` + the `SenseDisambiguatorAnnotator` that performs word sense disambiguation.  Refer to the [Word Sense Disambiguation] page for more information.
 
 ==UIMA Document Analyzer==
  * start the documentAnalyzer.  windows: double-click/execute `YTEX_HOME\ytexDocumentAnalyzer.bat`, linux: from a shell run the following commands:
@@ -179,8 +180,12 @@ Take a look at the `ref_uima_type` table for a list of types stored in the datab
   This query retrieves the document using a key.  
   Key parameters are specified using `:`.
   The column names returned from the document key query must match the parameter names exactly (case sensitive).  Oracle users: oracle will return all column names as uppercase, unless you rename them using a quoted string (as in the uid column in the example above). 
+  
+  * DB Driver / DB URL: By default the DBCollectionReader queries the YTEX database (leave these fields empty).  You can use these fields configure the DBCollectionReader to query a different database to read documents (annotations will continue to be stored in the YTEX database).  Note that most JDBC URLs support a format that allows the specification of a database username and password in the URL.
+
   * Key to document column mapping
   We match key values to columns in the `document` table by column name (case-insensitive) and data type.  We have tested this with non-decimal numeric types (short, int, bigint ...) and character types (char, varchar, ...).  Problems may arise with illegal column names that require escaping.
+
 
 =Retrieving Documents=
 
