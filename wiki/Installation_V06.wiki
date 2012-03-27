@@ -1,4 +1,5 @@
 #summary Installation for YTEX v0.6
+#labels Featured
 
 = Introduction =
 
