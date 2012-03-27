@@ -1,5 +1,5 @@
 #summary Semantic Similarity Tools for V0.6 and above
-#labels Phase-Deploy
+#labels Phase-Deploy,Featured
 
 = Introduction =
 
