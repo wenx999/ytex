@@ -287,7 +287,11 @@ ${HOME}/ytex.profile
 ../../../ytexTools.sh SparseDataExporter -Dprop=export.[platform].xml -Dtype=[type]
 }}}
 `export.[platform].xml` contains the queries for the respective datatabase platform.
-`[type]` is either `weka` or `sparsematrix` (for R or matlab)
+`[type]` is one of:
+  * `weka` to generate an arff file
+  * `sparsematrix`  sparse matrix format for R/matlab/SAS
+  * `libsvm` libsvm format
+  * `svmlight` svmlight format (we assume transductive learning - if not just use the libsvm format)
 
 ==== Weka ====
 After executing this you should see 2 arff files in this directory corresponding to the training and test sets.
