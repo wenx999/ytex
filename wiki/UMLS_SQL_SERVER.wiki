@@ -1,4 +1,5 @@
 #summary Import umls tables into MS SQL Server.
+#labels Deprecated
 
 = Introduction =
 NLM does not provide scripts/utilities for importing tables into SQL Server.
