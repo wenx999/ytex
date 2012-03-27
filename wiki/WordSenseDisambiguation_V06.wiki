@@ -5,7 +5,9 @@
 
 YTEX includes a word sense disambiguation (WSD) annotator. Terms in a natural language may be ambiguous, i.e. can be mapped to multiple distinct concepts. For example, the word ‘cold’ can refer to the viral infection ‘common cold’ or the ‘sensation of cold’. YTEX implements the 'adapted lesk' method that uses semantic similarity measures to quantify how well a concept ‘fits’ in a given context.  This page describes the WSD algorithm, the configuration for the `SenseDisambiguatorAnnotator`, and describes how to reproduce the results of our evaluation on the NLM WSD and MSH WSD data sets.
 
-The adapted Lesk algorithm works as follows: for each term to be disambiguated (target term) it finds all possible senses; it selects all words within a window surrounding the target term and maps them to concepts (context concepts); and it scores senses by summing the semantic relatedness between each sense and all context concepts; and finally it selects the sense with the highest score.  In its original formulation, the adapted Lesk calculates the relatedness of concepts using the cosine of their profile vectors; however, this can be replaced with a [SemanticSim_V06 semantic similarity measure].  
+The adapted Lesk algorithm works as follows: for each term to be disambiguated (target term) it finds all possible senses; it selects all words within a window surrounding the target term and maps them to concepts (context concepts); and it scores senses by summing the semantic relatedness between each sense and all context concepts; and finally it selects the sense with the highest score.  In its original formulation, the adapted Lesk calculates the relatedness of concepts using the cosine of their profile vectors; however, this can be replaced with a [SemanticSim_V06 semantic similarity measure].
+
+For a high-level overview of the WSD method we've implemented, refer to our paper: Garla, V and Brandt, C. Semantic similarity in the biomedical domain: an evaluation across ontologies and application to word sense disambiguation (submitted).
 
 = SenseDisambiguatorAnnotator =
 
@@ -39,6 +41,7 @@ Unpack WSD Datasets, specify paths in `YTEX_HOME/config/desc/ytex.properties`:
   * choices.home: path to the `2007` directory from the unpacked `NLM-WSD.target_word.choices_v0.3.tar.gz`.  This directory contains a file for each word (e.g. adjustment.choices)
   * msh.wsd.home: path to the `MSHCorpus` directory from the unpacked `MSHCorpus.zip` file; contains a file for each word (e.g. `AA_pmids_tagged.arff`).
   * set R.bin to directory that contains R executable
+  * Optional: configure threads.  Annotating the corpora is the most time consuming step, and can be parallelized.  Specify the number of threads to use (n), and provide a comma separated list from 1-n (see example below).  Each thread actually starts a java process, each of which will require about 1GB of memory.
 
 For example: 
 {{{
@@ -46,6 +49,9 @@ nlm.wsd.home=c:/temp/Basic_Reviewed_Results
 msh.wsd.home=c:/temp/MSHCorpus
 choices.home=c:/temp/NLM-WSD.target_word.choices_v0.3/choices/2007
 R.bin=C:/Program Files/R/R-2.13.1/bin/x64
+# use 8 threads to annotate corpus
+kernel.threads=8
+kernel.slices=1,2,3,4,5,6,7,8
 }}}
 
 == Run Ant Script ==
