@@ -1,4 +1,5 @@
 #summary Word Sense Disambiguation for YTEX V0.6
+#labels Featured
 
 = Introduction =
 
