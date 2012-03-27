@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<entry key="ytex.freqQuery"><![CDATA[
+select oc.code, count(*)
+from document d
+inner join anno_base ak on ak.document_id = d.document_id
+inner join anno_segment k on ak.anno_base_id = k.anno_base_id
+inner join anno_contain c on c.parent_anno_base_id = k.anno_base_id
+inner join anno_ontology_concept oc on oc.anno_base_id = c.child_anno_base_id
+where d.analysis_batch = 'cmc.2007'
+group by code
+	]]></entry>
+	<entry key="ytex.corpusName">cmc.2007</entry>
+	<entry key="instanceClassQuery"><![CDATA[
+select doc.instance_id, l.class, 1, l.label
+from corpus_label  l
+/* limit to training set */
+inner join corpus_doc doc 
+    on doc.instance_id = l.instance_id
+    and doc.corpus_name = l.corpus_name
+    and doc.doc_group = 'train'
+where doc.corpus_name = 'cmc.2007'
+]]></entry>
+</properties>
