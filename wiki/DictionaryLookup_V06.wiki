@@ -1,4 +1,5 @@
-#summary Dictionary Lookup configuration for v0.5 and higher
+#summary Dictionary Lookup configuration for v0.6 and higher
+#labels Featured
 
 = Introduction =
 
