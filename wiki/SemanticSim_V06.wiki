@@ -8,14 +8,14 @@ YTEX provides a generalizable framework for the computation of path finding, cor
 Semantic similarity measures include path finding measures based purely on path distances, and information-content based measures based on taxonomic relationships and information content (IC) of concepts, a measure of concept frequency.  Semantic similarity measures utilize a concept graph where vertices represent concepts and edges represent taxonomical relationships.  The similarity between concepts is computed from the length of the path between concepts and their nearest common ‘parent’.   Previous studies that took advantage of a large, annotated medical corpus to estimate concept frequencies showed that IC based measures of semantic similarity outperform path finding measures.  Unfortunately, large annotated corpora are not typically available for many applications.  To overcome this limitation, methods that estimate IC from the structure of the concept graph have been developed and their accuracy [http://www.sciencedirect.com/science/article/pii/S1532046411000645 shown to rival that of corpus-based measures].
 
 = Usage =
-YTEX provides a web application client, web services interface, RESTful interface, and command-line interface to compute similarity measures.  The demo similarity web app is available under [http://jupiter.yu.yale.edu/ytex.web]; if you plan to use this application extensively, please install ytex locally.  Please refer to [http://www.sciencedirect.com/science/article/pii/S1532046411000645 Sanchez & Batet] for an excellent overview of similarity measures in general, and intrinsic information content (IC) based measures in particular.  We scale all measures to the unit interval.
+YTEX provides a web application client, web services interface, RESTful interface, and command-line interface to compute similarity measures.  The demo similarity web app is available under [http://informatics.med.yale.edu/ytex.web]; if you plan to use this application extensively, please install ytex locally.  Please refer to [http://www.sciencedirect.com/science/article/pii/S1532046411000645 Sanchez & Batet] for an excellent overview of similarity measures in general, and intrinsic information content (IC) based measures in particular.  We scale all measures to the unit interval.
 
 YTEX allows the declarative definition of concept graphs in which nodes represent concepts and edges taxonomical relationships, and can compute the similarity between nodes in these graphs.  YTEX comes with two concept graphs derived from the UMLS (version 2011AB)
   * sct-msh-csp-aod: concepts from the SNOMED-CT, MeSH, CRISP, and Alcohol and Drug thesaurus
   * umls: concepts from all restriction free (level 0) UMLS source vocabularies and SNOMED-CT
 You can configure additional concept graphs (see below).
 
-The YTEX demo application ([http://jupiter.yu.yale.edu/ytex.web/]) has 3 concept graphs configured: 
+The YTEX demo application ([http://informatics.med.yale.edu/ytex.web/]) has 3 concept graphs configured: 
   * umls: see above
   * sct: Concept graph dervied from the SNOMED-CT 2011-07 international release
   * msh: Concept graph derived from the MeSH 2012
@@ -53,7 +53,7 @@ As with the web application, you can specify the concept graph, concept pairs, a
 
 === RESTful interface ===
 To get the similarity between a pair of concepts using the concept graph `sct-umls`, and the LCH and Intrinsic LCH measures:
-http://jupiter.yu.yale.edu/ytex.web/services/rest/similarity?conceptGraph=sct-umls&concept1=C0018787&concept2=C0024109&metrics=LCH,INTRINSIC_LCH&lcs=true
+http://informatics.med.yale.edu/ytex.web/services/rest/similarity?conceptGraph=sct-umls&concept1=C0018787&concept2=C0024109&metrics=LCH,INTRINSIC_LCH&lcs=true
 
 The parameters are:
   * concept1/concept2 the concept ids
@@ -63,12 +63,12 @@ The parameters are:
 Will return XML with a list of similarities corresponding to the list of metrics.  See the WSDL for the corresponding web service for the schema.
 
 To get a list of concept graphs: 
-[http://jupiter.yu.yale.edu/ytex.web/services/rest/getConceptGraphs]
+[http://informatics.med.yale.edu/ytex.web/services/rest/getConceptGraphs]
 
-To get the 'default' concept graph: [http://jupiter.yu.yale.edu/ytex.web/services/rest/getDefaultConceptGraph]
+To get the 'default' concept graph: [http://informatics.med.yale.edu/ytex.web/services/rest/getDefaultConceptGraph]
 
 === Web Services interface ===
-The Web Services interface is analogous to the restful interface, but allows the computation of similarities fro multiple concept pairs.  See [http://jupiter.yu.yale.edu/ytex.web/services/conceptSimilarityWebService?wsdl]
+The Web Services interface is analogous to the restful interface, but allows the computation of similarities fro multiple concept pairs.  See [http://informatics.med.yale.edu/ytex.web/services/conceptSimilarityWebService?wsdl]
 
 == Command-Line Interface ==
 The `ConceptSimilarityServiceImpl` java program accepts a list of concept pairs, and outputs their similarities in a tab-delimited format.  It accepts the following arguments:
