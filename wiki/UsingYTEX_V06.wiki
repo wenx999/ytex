@@ -14,7 +14,8 @@ YTEX is based on UIMA, and standard UIMA Tools can be used to annotate documents
   * `NegexAnnotator`: this replaces the cTAKES NegationAnnotator.  The NegexAnnotator is based on the Negex negation detection algorithm.
   * `DBConsumer`: Stores annotatations and the XML CAS representation in the database
 You are of course welcome to modify/add/remove annotators to the analysis engine and modify configuration parameters.
-YTEX also comes with the `YTEXPipelineWSD.xml` pipeline, which is the `YTEXPipeline.xml` + the `SenseDisambiguatorAnnotator` that performs word sense disambiguation.  Refer to the [Word Sense Disambiguation] page for more information.
+
+YTEX also comes with the `YTEXPipelineWSD.xml` pipeline, which is the `YTEXPipeline.xml` + the `SenseDisambiguatorAnnotator` that performs word sense disambiguation.  Refer to the [WordSenseDisambiguation_V06 Word Sense Disambiguation] page for more information.
 
 ==UIMA Document Analyzer==
  * start the documentAnalyzer.  windows: double-click/execute `YTEX_HOME\ytexDocumentAnalyzer.bat`, linux: from a shell run the following commands:
