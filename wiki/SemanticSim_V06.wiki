@@ -53,7 +53,7 @@ As with the web application, you can specify the concept graph, concept pairs, a
 
 === RESTful interface ===
 To get the similarity between a pair of concepts using the concept graph `sct-umls`, and the LCH and Intrinsic LCH measures:
-http://informatics.med.yale.edu/ytex.web/services/rest/similarity?conceptGraph=sct-umls&concept1=C0018787&concept2=C0024109&metrics=LCH,INTRINSIC_LCH&lcs=true
+http://informatics.med.yale.edu/ytex.web/services/rest/similarity?conceptGraph=umls&concept1=C0018787&concept2=C0024109&metrics=LCH,INTRINSIC_LCH&lcs=true
 
 The parameters are:
   * concept1/concept2 the concept ids
