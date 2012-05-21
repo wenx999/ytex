@@ -2,7 +2,7 @@
 <wiki:toc max_depth="2" />
 
 =Introduction=
-For a high-level overview of the feature engineering methods we've developed, refer to our paper: Garla, V and Brandt, C. Ontology-Guided Feature Engineering for Clinical Text Classification (submitted).
+For a high-level overview of the feature engineering methods we've developed, refer to our paper: Garla, V and Brandt, C. [http://www.sciencedirect.com/science/article/pii/S1532046412000639 Ontology-Guided Feature Engineering for Clinical Text Classification] J Biomed Inform. 2012 May 9.
 
 We developed a feature ranking method that utilizes the taxonomical structure of the UMLS to improve upon univariate feature ranking methods.  We developed a context-dependent semantic similarity measure and implemented a semantic kernel.  We improved the performance of the top-ranked machine learning-based system from the [https://www.i2b2.org/NLP/Obesity/ I2B2 2008 challenge] with these methods.  
 
