@@ -6,13 +6,7 @@ This page discusses the YTEX data model.  The figure below provides an overview 
 
 http://ytex.googlecode.com/svn/trunk/workspace/doc/images/dbdiagram.jpg
 
-YTEX maps UIMA annotations to a relational database using a table per annotation class.  The main entities are Documents, Annotations, and Feature Structures.  
-
-Basically, a table exists for each UIMA annotation class.  Primitive annotation attributes are mapped directly to table columns.  
-
-All UIMA annotations are subclasses of the `Annotation` class, which is mapped to the `anno_base` table.  To get all the attributes of a `WordToken` annotation, simply join the `anno_base`, `anno_base_token`, and `anno_word_token` tables.  
-
-Our strategy for mapping annotations to the database was to perform a 1-to-1 mapping: what you see in the database should correspond exactly to what you see in the UIMA CAS viewer.
+YTEX maps UIMA annotations to a relational database using a table per annotation class.  Basically, a table exists for each UIMA annotation class.  Primitive annotation attributes are mapped directly to table columns.  Our strategy for mapping annotations to the database was to perform a 1-to-1 mapping: what you see in the database should correspond exactly to what you see in the UIMA CAS viewer.
 
 == `document` ==
 The `document` table represents a single note/document.  The columns are
@@ -86,7 +80,34 @@ This table represents containment relationships between annotations, i.e. that a
   * `child_uima_type_id` - foreign key to `ref_uima_type`, the class of the child annotation.
 
 = Configuration =
+Mapping of Annotations is purely configurative.  To map a new annotation do the following:
+  # Create a table in your database to store the annotation's attributes.
+  # Tell YTEX to map the annotation class to your table (add a row to the `ref_uima_type` table.
+
+To illustrate this, say for example we would like to map the cTAKES `FrequencyUnitAnnotation` (produced by the DrugNer annotation engine).  This annotation has the float attribute `period`.  We would create a table for this annotation, e.g. for mysql:
+{{{
+create table anno_frequencyunit (
+  anno_base_id int not null primary key, /* foreign key to anno_base */
+  period double
+);
+}}}
+Note: the column names must match the UIMA annotation's attribute names (case insensitive).
+
+And we need to tell YTEX to map `FrequencyUnitAnnotation`s to this table:
+{{{
+insert into ref_uima_type (uima_type_id, uima_type_name, table_name)
+values (55, 'edu.mayo.bmi.uima.drugner.type.FrequencyUnitAnnotation', 'anno_frequencyunit');
+}}}
+
+And now, run the DrugNer CPE on some documents:
+  * run the `YTEX_HOME/config/desc/ytex/drugnerdesc/collection_processing_engine/DrugNER_PlainText_CPE.xml`
+  * see what was created: `select * from anno_frequencyunit`
 
 == `ref_uima_type` ==
+This table tells YTEX what annotations to map, and the tables to map them to:
+  * `uima_type_id`: unique, manually assigned id
+  * `uima_type_name`: the fully qualified class name for the annotation
+  * `table_name`: the table to which the annotation should be mapped.  If null, only a row in the `anno_base` table will be created for this annotation (many annotations do not have any additional properties).
 
 == `config/desc/ytex/beans-uima-mapper.xml` ==
+This is a spring bean configuration file that allows more mapping customization, e.g. mapping attributes to columns with different names.
