@@ -1,10 +1,10 @@
-#summary Data Model v0.6
+#summary Data Model v0.7
 #labels Phase-Deploy
 
 =YTEX Data Model=
 This page discusses the YTEX data model.  The figure below provides an overview of the YTEX data model:
 
-http://ytex.googlecode.com/svn/trunk/workspace/doc/images/dbdiagram.jpg
+http://ytex.googlecode.com/svn/trunk/workspace/doc/images/dbdiagram_v07.jpg
 
 YTEX maps UIMA annotations to a relational database using a table per annotation class.  Basically, a table exists for each UIMA annotation class.  Primitive annotation attributes are mapped directly to table columns.  Our strategy for mapping annotations to the database was to perform a 1-to-1 mapping: what you see in the database should correspond exactly to what you see in the UIMA CAS viewer.
 
