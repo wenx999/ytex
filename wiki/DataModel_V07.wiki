@@ -1,0 +1,92 @@
+#summary Data Model v0.6
+#labels Phase-Deploy
+
+=YTEX Data Model=
+This page discusses the YTEX data model.  The figure below provides an overview of the YTEX data model:
+
+http://ytex.googlecode.com/svn/trunk/workspace/doc/images/dbdiagram.jpg
+
+YTEX maps UIMA annotations to a relational database using a table per annotation class.  The main entities are Documents, Annotations, and Feature Structures.  
+
+Basically, a table exists for each UIMA annotation class.  Primitive annotation attributes are mapped directly to table columns.  
+
+All UIMA annotations are subclasses of the `Annotation` class, which is mapped to the `anno_base` table.  To get all the attributes of a `WordToken` annotation, simply join the `anno_base`, `anno_base_token`, and `anno_word_token` tables.  
+
+Our strategy for mapping annotations to the database was to perform a 1-to-1 mapping: what you see in the database should correspond exactly to what you see in the UIMA CAS viewer.
+
+== `document` ==
+The `document` table represents a single note/document.  The columns are
+  * `document_id` - unique generated id
+  * `instance_id` - user defined id - i.e. a numeric reference to the document in your system.  
+  * `instance_key` - user defined id - a string reference to a document in your system.  When using a CollectionReader that retrieves files from the file system, this will correspond to the file name.
+  * `analysis_batch` - a user-defined 'document group'
+  * `cas` - the xml representation of the cas, gzipped 
+  * `doc_text` - the text of the document
+Refer to the [UsingYTEX_V05#YTEX_Pipeline_Configuration_Parameters UserGuide] for details on how to configure the YTEX Pipeline to update the document table.For each document processed, a `document` row is created.
+
+
+== `anno_base` ==
+An `anno_base` record represents an UIMA `Annotation`; there is a one-to-many relationship between `document` and `anno_base`.  The columns are:
+  * `anno_base_id` - unique generated id
+  * `document_id` - foreign key to `document` table
+  * `span_begin` - corresponds to [http://uima.apache.org/downloads/releaseDocs/2.3.0-incubating/docs/api/org/apache/uima/jcas/tcas/Annotation.html#getBegin%28%29 Annotation.begin] attribute
+  * `span_end` - `Annotation.end` attribute
+  * `uima_type_id` - Foreign key to `ref_uima_type`, which contains the fully class name of the `Annotation` to which this record is mapped.
+
+== `anno_[subclass]` ==
+Annotation subclasses may have additional attributes; these attributes are stored in additional tables prefixed with `anno_`.  E.g. additional attributes of the `Sentence` annotation are stored in the `anno_sentence` table.  The primary key of these annotation subclass tables corresponds to the primary key of the `anno_base` table (i.e. it is also a foreign key).
+
+
+=== `anno_token` ===
+This is mapped to the `edu.mayo.bmi.uima.core.type.NumToken`, `edu.mayo.bmi.uima.core.type.WordToken`, and `ytex.uima.types.WordToken` annotations.
+  * `anno_base_id` - foreign key to `anno_base`, also primary key for this table
+  * `tokenNumber` - from `BaseToken`
+  * `normalizedForm` - from `BaseToken`
+  * `partOfSpeech` - from `BaseToken`
+  * `coveredText` - the text spanned by this token
+  * `capitalization` - 0 - no caps, 1 - 1 cap letter in word, 2 - 2 cap letters in word, 3 - 3 or more cap letters in word
+  * `numPosition` - 1st position of number within word
+  * `canonicalForm` - uninflected lower case word form, set by LVGAnnotator
+  * `negated` - 1 - word is negated, 0 - word is not negated  (based on negex)
+  * `possible` - 1 - possible (from negex)
+
+=== `anno_named_entity` ===
+This is mapped to the cTAKES `NamedEntity` annotation.  Most of the attributes of this annotation are always empty/set to the same value and are thus useless.  However, we map attributes from the annotation to the database, even if it doesn't make sense (we want to model as closely as possible, even if the data is meaningless).  One useful attribute is the certainty which represents the negation status:
+  * `anno_base_id` - foreign key to `anno_base`, also primary key for this table
+  * `discoveryTechnique` - always 1
+  * `status` - always 0
+  * `certainty` - -1 - negated (via negex), 0 - not negated
+  * `typeId` - always 0
+  * `confidence` - always 0
+  * `segmentID` - the section in which the annotation is found
+
+== Feature Structures ==
+In addition to Annotations, UIMA defines `FeatureStruct`s; these are typically not 'free standing' annotations - they usually are 'inside'  an Annotation.  e.g. the `NamedEntity` annotation has an array of `OntologyConcept`s.  `FeatureStruct`s are also mapped to `anno_[subclass]` tables, e.g. `OntologyConcept`s are mapped to the `anno_ontology_concept` table, and have a foreign key to the annotation 'within which' they reside (one-to-many relationship).
+
+=== `anno_ontology_concept` ===
+This is mapped to the cTAKES `OntologyConceptArr` of the `NamedEntity` annotation; these are the concepts (CUIs) of a Named Entity:
+  * `anno_ontology_concept_id` - unique system generated id
+  * `anno_base_id` - foreign key to `named_entity`
+  * `code` - CUI
+  * `disambiguated` - used by SenseDisambiguatorAnnotator.  Set to 1 if this concept is the best sense or only sense for the given named entity.  Set to 0 (default) otherwise, or if the annotator is not used.
+
+== Annotation Links ==
+UIMA annotations can also have references to other UIMA annotations, e.g. the `TreeBankNode` annotation represents a node in a parse tree.  This annotation has reference to a parent and children `TreeBankNode` annotations.  Rows in the `anno_link` represent Annotation links
+
+  * `anno_link_id`: Synthetic primary key
+  * `parent_anno_base_id`: foreign key to the anno_base table.  This is the parent (source) of the link
+  * `child_anno_base_id`: foreign key to the anno_base table.  This is the child (target) of the link
+  * `feature`: the attribute on the parent object that corresponds to this link
+
+== `anno_contain` ==
+This table represents containment relationships between annotations, i.e. that a word/named entity is contained in a sentence.  This has no direct equivalent in any UIMA object; these relationships can be inferred from the begin/end of UIMA annotations, but 'precomputing' these relationships has many practical applications; e.g. it simplfies writing queries of the sort give me all named entities in the Impression section.
+  * `parent_anno_base_id` - foreign key to `anno_base` table.  Represents the parent or containing concept.
+  * `parent_uima_type_id` - foreign key to `ref_uima_type`, the class of the parent annotation.
+  * `child_anno_base_id` - foreign key to `anno_base` table.  Represents the child or contained concept.
+  * `child_uima_type_id` - foreign key to `ref_uima_type`, the class of the child annotation.
+
+= Configuration =
+
+== `ref_uima_type` ==
+
+== `config/desc/ytex/beans-uima-mapper.xml` ==
