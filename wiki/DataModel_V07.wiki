@@ -89,7 +89,7 @@ To illustrate this, say for example we would like to map the cTAKES `FrequencyUn
 create table anno_frequencyunit (
   anno_base_id int not null primary key, /* foreign key to anno_base */
   period double
-);
+) engine=myisam;
 }}}
 Note: the column names must match the UIMA annotation's attribute names (case insensitive).
 
@@ -101,7 +101,13 @@ values (55, 'edu.mayo.bmi.uima.drugner.type.FrequencyUnitAnnotation', 'anno_freq
 
 And now, run the DrugNer CPE on some documents:
   * run the `YTEX_HOME/config/desc/ytex/drugnerdesc/collection_processing_engine/DrugNER_PlainText_CPE.xml`
-  * see what was created: `select * from anno_frequencyunit`
+  * view the annotations:
+{{{
+select f.*, substring(d.doc_text, b.span_begin+1, b.span_end-b.span_begin) anno_text
+from document d
+inner join anno_base b on d.document_id = b.document_id
+inner join anno_frequencyunit f on f.anno_base_id = b.anno_base_id
+}}}
 
 == `ref_uima_type` ==
 This table tells YTEX what annotations to map, and the tables to map them to:
