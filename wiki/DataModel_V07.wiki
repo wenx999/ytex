@@ -82,7 +82,7 @@ This table represents containment relationships between annotations, i.e. that a
 = Configuration =
 Mapping of Annotations is purely configurative.  To map a new annotation do the following:
   # Create a table in your database to store the annotation's attributes.
-  # Tell YTEX to map the annotation class to your table (add a row to the `ref_uima_type` table.
+  # Tell YTEX to map the annotation class to your table (i.e. add a row to the `ref_uima_type` table).
 
 To illustrate this, say for example we would like to map the cTAKES `FrequencyUnitAnnotation` (produced by the DrugNer annotation engine).  This annotation has the float attribute `period`.  We would create a table for this annotation, e.g. for mysql:
 {{{
