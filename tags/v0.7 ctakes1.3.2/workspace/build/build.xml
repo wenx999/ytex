@@ -1,0 +1,227 @@
+<project name="build" xmlns:artifact="antlib:org.apache.maven.artifact.ant">
+	<include file="${ytex.home}/libs.system/build-classpath.xml" />
+	<property name="dist.home" value="../dist" />
+	<property name="ytex.version" value="0.7" />
+	<property name="ytex.dist.home" value="${dist.home}/ytex-${ytex.version}" />
+	<property name="ytex.lib.home" value="../ytex.web/WebContent/WEB-INF/lib" />
+	<property name="nlp.home" value="c:/java" />
+	<property name="tomcat.dir" value="apache-tomcat-7.0.25" />
+	<property name="ant.dir" value="apache-ant-1.8.0" />
+	<path id="maven-ant-tasks.classpath" path="${ytex.home}/libs.system/ant-dependencies/maven-ant-tasks-2.1.3.jar" />
+	<typedef resource="org/apache/maven/artifact/ant/antlib.xml" uri="antlib:org.apache.maven.artifact.ant" classpathref="maven-ant-tasks.classpath" />
+	<target name="clean.dist">
+		<delete dir="${dist.home}" quiet="yes" />
+		<mkdir dir="${ytex.dist.home}/config/desc" />
+		<mkdir dir="${ytex.dist.home}/web" />
+	</target>
+	<target name="init">
+		<path id="cp.ytex">
+			<fileset dir="${ytex.lib.home}" includes="*.jar" />
+		</path>
+		<path id="cp.all">
+			<path refid="cp.ytex" />
+			<pathelement location="${ictakes.home}/cTAKES.jar" />
+		</path>
+	</target>
+	<target name="build.jdl" depends="init">
+		<antcall target="compile" inheritRefs="true">
+			<param name="project.name" value="jdl" />
+		</antcall>
+	</target>
+	<target name="build.ytex.uima" depends="init">
+		<path id="cp.ytex.uima">
+			<path refid="cp.all" />
+			<fileset dir="${ytex.dist.home}/libs.system" includes="ytex.model.jar,ytex.kernel.jar" />
+		</path>
+		<antcall target="compile" inheritRefs="true">
+			<param name="project.name" value="ytex.uima" />
+			<param name="project.classpathref" value="cp.ytex.uima" />
+		</antcall>
+	</target>
+	<target name="build.ytex.negex" depends="init">
+		<antcall target="compile">
+			<param name="project.name" value="ytex.negex" />
+		</antcall>
+	</target>
+	<target name="build.ytex.kernel" depends="init">
+		<path id="cp.ytex.kernel">
+			<path refid="cp.all" />
+			<fileset dir="${ytex.dist.home}/libs.system" includes="ytex.model.jar" />
+		</path>
+		<antcall target="compile" inheritRefs="true">
+			<param name="project.name" value="ytex.kernel" />
+			<param name="project.classpathref" value="cp.ytex.kernel" />
+		</antcall>
+	</target>
+	<target name="build.ytex.model" depends="init">
+		<antcall target="compile">
+			<param name="project.name" value="ytex.model" />
+		</antcall>
+	</target>
+	<target name="build.ctakes-patches" depends="init">
+		<path id="cp.ytex.patches">
+			<path refid="cp.all" />
+			<fileset dir="${ytex.dist.home}/libs.system" includes="ytex.model.jar,ytex.uima.jar" />
+		</path>
+		<antcall target="compile" inheritRefs="true">
+			<param name="project.name" value="ctakes-patches" />
+			<param name="project.classpathref" value="cp.ytex.patches" />
+		</antcall>
+	</target>
+	<target name="copy.config">
+		<copy todir="${ytex.dist.home}/config">
+			<fileset dir="../config">
+				<include name="desc/**/*.*" />
+				<exclude name="desc/ytex.properties" />
+				<exclude name="**/.svn/**/*.* " />
+			</fileset>
+		</copy>
+	</target>
+	<target name="copy.data">
+		<copy todir="${ytex.dist.home}">
+			<fileset dir="../">
+				<include name="data/**/*.*" />
+				<exclude name="**/.classpath" />
+				<exclude name="**/.project" />
+				<exclude name="**/.svn/**/*.*" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="copy.scripts">
+		<copy todir="${ytex.dist.home}">
+			<fileset dir=".">
+				<include name="*.txt" />
+				<include name="*.cmd" />
+				<include name="*.sh" />
+				<include name="*.profile" />
+				<include name="*.xml" />
+				<exclude name="build.xml" />
+			</fileset>
+			<fileset dir="../" includes="ytex.kernel/scripts/*.*" />
+		</copy>
+		<copy todir="${ytex.dist.home}/">
+			<fileset dir=".." includes="libs.system/**/*.*" excludes="**/.svn/**/*.*,*.*,.settings/**/*.*" />
+		</copy>
+	</target>
+	<target name="copy.examples">
+		<copy todir="${ytex.dist.home}">
+			<fileset dir="../">
+				<include name="examples/**/*.*" />
+				<exclude name="**/.classpath" />
+				<exclude name="**/.project" />
+				<exclude name="**/.svn/**/*.*" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="compile" depends="init">
+		<property name="project.home" value="../${project.name}" />
+		<property name="project.bin.home" value="${project.home}/bin" />
+		<property name="project.src.home" value="${project.home}/src/main/java" />
+		<property name="project.jar.name" value="${project.home}.jar" />
+		<property name="project.classpathref" value="cp.all" />
+		<delete dir="${project.bin.home}" quiet="yes" />
+		<mkdir dir="${project.bin.home}" />
+		<mkdir dir="${ytex.dist.home}/libs.system" />
+		<javac srcdir="${project.src.home}" destdir="${project.bin.home}" classpathref="${project.classpathref}" debug="yes" source="1.6" target="1.6" />
+		<copy todir="${project.bin.home}">
+			<fileset dir="${project.src.home}">
+				<exclude name="**/*.java" />
+				<exclude name="**/.svn/**/*.*" />
+			</fileset>
+		</copy>
+		<jar destfile="${ytex.dist.home}/libs.system/${project.name}.jar" basedir="${project.bin.home}" excludes="**/.svn/**/*.*">
+			<manifest>
+				<attribute name="Implementation-Version" value="${ytex.version}" />
+			</manifest>
+		</jar>
+	</target>
+	<target name="build.ytex.web" depends="init">
+		<property name="ytex.web.dir" value="${ytex.dist.home}/web/webapps/ytex.web" />
+		<property name="ytex.web.classes.dir" value="${ytex.dist.home}/web/webapps/ytex.web/WEB-INF/classes" />
+
+		<delete dir="${ytex.dist.home}/web" quiet="yes" />
+		<copy todir="${ytex.dist.home}/web">
+			<fileset dir="../ytex.web/catalina">
+				<exclude name="**/.svn/**/*.*" />
+			</fileset>
+		</copy>
+		<mkdir dir="${ytex.web.classes.dir}" />
+		<javac srcdir="../ytex.web/src/main/java" destdir="${ytex.web.classes.dir}" debug="yes" source="1.6" target="1.6">
+			<classpath>
+				<fileset dir="${ytex.dist.home}/libs.system">
+					<include name="ytex.model.jar" />
+					<include name="ytex.kernel.jar" />
+				</fileset>
+				<path refid="cp.ytex" />
+			</classpath>
+		</javac>
+		<copy todir="${ytex.web.classes.dir}">
+			<fileset dir="../ytex.web/src/main/java">
+				<exclude name="**/*.java" />
+				<exclude name="**/.svn/**/*.*" />
+			</fileset>
+		</copy>
+		<copy todir="${ytex.web.dir}">
+			<fileset dir="../ytex.web/WebContent">
+				<exclude name="**/.svn/**/*.*" />
+			</fileset>
+		</copy>
+		<copy todir="${ytex.web.dir}/WEB-INF/lib">
+			<fileset dir="${ytex.dist.home}/libs.system">
+				<include name="ytex.model.jar" />
+				<include name="ytex.kernel.jar" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="build.ytex.jar" depends="init">
+		<delete file="${ytex.dist.home}/libs.system/ytex.jar" quiet="yes" />
+		<manifestclasspath property="ytex.kernel.classpath" jarfile="${ytex.dist.home}/libs.system/ytex.jar">
+			<classpath>
+				<fileset dir="${ytex.dist.home}/libs.system" includes="ctakes-patches.jar" />
+				<fileset dir="${ytex.dist.home}/libs.system" includes="**/*.jar" excludes="ctakes-patches.jar,ant-dependencies/**/*.*" />
+				<pathelement location="${ytex.dist.home}/config/desc" />
+				<fileset dir="${ytex.dist.home}/web/webapps/ytex.web/WEB-INF/lib" includes="*.jar" />
+			</classpath>
+		</manifestclasspath>
+		<manifest file="${dist.home}/MANIFEST.MF">
+			<attribute name="Implementation-Version" value="${ytex.version}" />
+			<attribute name="Class-Path" value="${ytex.kernel.classpath}" />
+		</manifest>
+		<jar destfile="${ytex.dist.home}/libs.system/ytex.jar" update="no" manifest="${dist.home}/MANIFEST.MF" />
+	</target>
+	<target name="zip.dist">
+		<delete dir="${dist.home}" includes="ytex*.zip" />
+		<zip destfile="${dist.home}/ytex-v${ytex.version}.zip" update="no">
+			<fileset dir="${dist.home}">
+				<include name="ytex-${ytex.version}/**/*.*" />
+				<exclude name="ytex-${ytex.version}/libs.system/ytex.model.jar" />
+				<exclude name="ytex-${ytex.version}/libs.system/ytex.kernel.jar" />
+			</fileset>
+		</zip>
+		<zip destfile="${dist.home}/ytex-with-dependencies-v${ytex.version}.zip" update="no">
+			<fileset dir="${dist.home}">
+				<include name="ytex-${ytex.version}/**/*.*" />
+				<exclude name="ytex-${ytex.version}/libs.system/ytex.model.jar" />
+				<exclude name="ytex-${ytex.version}/libs.system/ytex.kernel.jar" />
+			</fileset>
+			<zipfileset dir="${nlp.home}" includes="${tomcat.dir}/**/*.*" excludes="${tomcat.dir}/webapps/**/*.*" />
+			<zipfileset dir="${nlp.home}" includes="${ant.dir}/**/*,${ant.dir}/**/*.*" excludes="${ant.dir}/docs/**/*.*" />
+		</zip>
+	</target>
+	<target name="copy.dependencies">
+		<delete quiet="yes">
+			<fileset dir="../ytex.web/WebContent/WEB-INF/lib" includes="*.*" />
+		</delete>
+		<artifact:dependencies filesetId="dependency.fileset" useScope="compile">
+			<pom file="../ytex.web/pom.xml" />
+		</artifact:dependencies>
+		<copy todir="../ytex.web/WebContent/WEB-INF/lib">
+			<fileset refid="dependency.fileset" />
+			<mapper type="flatten" />
+		</copy>
+		<delete quiet="yes">
+			<fileset dir="../ytex.web/WebContent/WEB-INF/lib" includes="geronimo-servlet_2.5_spec-1.1.2.jar" />
+		</delete>
+	</target>
+	<target name="build.all" depends="copy.dependencies,clean.dist,build.jdl,build.ytex.model,build.ytex.kernel,build.ytex.uima,build.ytex.negex,build.ctakes-patches,copy.config,copy.scripts,copy.data,copy.examples,build.ytex.web,build.ytex.jar,zip.dist" />
+</project>
