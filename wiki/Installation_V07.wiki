@@ -4,8 +4,8 @@
 = Introduction =
 
 In YTEX v0.7 we've implemented the following features:
-  * Upgraded to icTAKES 1.3.2
-  Previous versions of YTEX were based on the cTAKES distributed with Maveric Arc 1.0.  With this version, we use icTAKES 1.3.2, and removed all dependencies on ARC.
+  * Upgraded to cTAKES 2.5.0
+  Previous versions of YTEX were based on the cTAKES distributed with Maveric Arc 1.0.  With this version, we use cTAKES 2.5.0, and removed all dependencies on ARC.
 
   * Ability to map any UIMA annotation to the database
   Previous versions of YTEX required coding to map new UIMA annotations to the database.  With this version of YTEX, mapping of UIMA annotations is done entirely via configuration.  We have preconfigured mappings for many of the cTAKES annotations.  You can configure the mapping of additional cTAKES annotations other UIMA analysis engines.
@@ -87,10 +87,10 @@ c:\clinicalnlp
     * LVG 2008 (optional) and icTAKES 1.3.2: If the machine you are installing on does not have an internet connection, you will have to download these files manually.  If they are not found in the installation directory, the YTEX installation script will attempt to download these files.  If you already have icTAKES 1.3.2 installed, configure YTEX to use your installation (see below); in this case YTEX will not download and install icTAKES.  
       ** LVG 2008 Archive: [http://lexsrv3.nlm.nih.gov/LexSysGroup/Projects/lvg/2008/release/lvg2008lite.tgz lvg2008lite.tgz](optional) 
       Make sure you save this file as `lvg2008.tgz` (your browser may decompress or expand this file). The lvg is required for stemming; if you do not download this file, stemming will not be performed.
-      ** icTAKES 1.3.2: Download [http://sourceforge.net/projects/ohnlp/files/icTAKES/v1.3.2/icTAKES-1.3.2.zip/download icTAKES-1.3.2.zip]
+      ** cTAKES 2.5.0: Download [http://sourceforge.net/projects/ohnlp/files/cTAKES/v2.5/cTAKES-2.5.0.zip/download cTAKES-2.5.0.zip]
 
   # Extract `ytex-with-dependencies-0.7.zip` to the installation directory; this will create a ytex subdirectory, e.g. windows `c:\java\clinicalnlp\ytex-0.7` / linux `${HOME}/clinicalnlp/ytex-0.7`, referred to subsequently as YTEX_HOME.  This will also extract ant and tomcat; if you already have these installed, you may want to extract just the `ytex-0.7` directory from the archive, and configure ytex to use your existing ant & tomcat installation (set in `setenv.bat`/`ytex.profile`).
-  # Edit environment batch/shell script, and Fix the path references to match your environment.  If you have icTAKES 1.3.2 installed already, set the <tt>ICTAKES_HOME</tt> variable in this script.
+  # Edit environment batch/shell script, and Fix the path references to match your environment.  If you have cTAKES 2.5.0 installed already, set the <tt>CTAKES_HOME</tt> variable in this script.
     * windows edit <tt>YTEX_HOME\setenv.cmd</tt>
     * linux move <tt>YTEX_HOME/ytex.profile</tt> to <tt>${HOME}/ytex.profile</tt>
   # Create `YTEX_HOME\config\desc\ytex.properties`: In this file, you specify the database connection parameters. Use `YTEX_HOME\config\desc\ytex.properties.<db type>.example` as a template.  If you have UMLS installed on your database, specify the `umls.schema` and `umls.catalog` properties (see the properties file for an explanation of what these are).  
@@ -107,7 +107,7 @@ cd ${HOME}/clinicalnlp/ytex-0.7
 chmod u+x ../apache-ant-1.8.0/bin/ant
 chmod u+x *.sh
 . ${HOME}/ytex.profile
-ant -buildfile build-setup.xml -Dytex.home=${YTEX_HOME} all > setup.out 2>&1 &
+nohup ant -buildfile build-setup.xml -Dytex.home=${YTEX_HOME} all > setup.out 2>&1 &
 tail -f setup.out
 }}}
 
