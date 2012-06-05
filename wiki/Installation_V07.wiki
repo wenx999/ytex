@@ -60,7 +60,7 @@ The `document` table uses the `text` and `blob` datatypes for the doc_text colum
 === SQL Server ===
 We have only tested YTEX with integrated authentication.  You must have the permission to create database objects in the YTEX database and schema.  If you don't have these permissions, ask your DBA to add you to the `db_ddladmin` & `db_datawriter` roles for the YTEX database.
 
-If you want to install the UMLS in your SQL Server, you may want to use a different database/schema from the YTEX database.  If that is the case, you need permissions on the UMLS database/schema as well.
+If you want to install the UMLS in your SQL Server, you may want to use a different database/schema from the YTEX database.  If that is the case, you need permissions on the UMLS database/schema as well.  
 
 == Installation ==
   # Create a directory where ytex will be installed (hereafter referred to as the 'installation directory'), e.g
