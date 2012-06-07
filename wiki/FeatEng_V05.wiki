@@ -20,7 +20,7 @@ All tools are pure java and hence platform independent.  The tools currently req
 
 These tools are plain old java programs; the I2B2 example shows how to call these programs.  We are currently developing tools and scripts to simplify the application of these methods to arbitrary user-defined corpora.
 
-In our discussion, we refer to the I2B2 2008 challenge dataset; you may want to reproduce our results on this dataset before getting into details.  Reproducing our results requires a tiny bit of configuration, and will just run overnight. *Note: we will soon (by June 1, 2012) release YTEX V0.7, and provide an updated i2b2 2008 example with that release.*
+In our discussion, we refer to the I2B2 2008 challenge dataset; you may want to reproduce our results on this dataset before getting into details.  Reproducing our results requires a tiny bit of configuration, and will just run overnight. *Note: we will soon (by June 10, 2012) release YTEX V0.7, and provide an updated i2b2 2008 example with that release.*
 
 == `ConceptDaoImpl` ==
 We generate a graph that represents the umls taxonomy, and store this concept graph for subsequent use.  The YTEX `ConceptDaoImpl` takes as input a properties file that specifies a query that retrieves all edges that will be used in the taxonomy, generates a graph, and removes cycles.  For the i2b2 corpus, we select edges using the following query: 
