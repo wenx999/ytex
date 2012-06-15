@@ -15,6 +15,7 @@ All the Pipelines in the YTEX_HOME/config/desc directory use the following
   * `NamedEntityRegexAnnotator`: annotate named entities based on regular expressions.
   * `NegexAnnotator`: this replaces the cTAKES NegationAnnotator.  The NegexAnnotator is based on the Negex negation detection algorithm.
   * `MetaMapToCTakesAnnotator`: This converts Metamap concept annotations into cTAKES named entity annotations.  This allows you to use metamap in addition to, or instead of the cTAKES Dictionary lookup.
+  * `SenseDisambiguatorAnnotator`: Ambiguous text can be mapped to multiple UMLS CUIs.  The SenseDisambiguatorAnnotator select the CUI that best matches the context.
   * `DBConsumer`: Stores annotatations and the XML CAS representation in the database
 
 === `YTEXPipeline.xml` ===
