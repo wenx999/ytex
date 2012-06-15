@@ -17,24 +17,38 @@ The Dictionary Lookup algorithm searches text that lies within a configured anno
 == Default YTEX Dictionary Lookup Table ==
 During installation YTEX creates a table `umls_aui_fword` with the first word of every term from the UMLS `MRCONSO` table, the tokenized text of the term, and the stemmed text of the term.  It creates a table `v_snomed_fword_lookup` that joins the `umls_aui_fword` and `MRCONSO` tables.  The SQL for this table is:
 {{{
-select mrc.cui, c.fword, c.fstem, c.tok_str, c.stem_str
+insert into v_snomed_fword_lookup (cui, tui, fword, fstem, tok_str, stem_str)
+select mrc.cui, t.tui, c.fword, c.fstem, c.tok_str, c.stem_str
 from umls_aui_fword c
-inner join umls.MRCONSO mrc on c.aui = mrc.aui
-where mrc.SAB in ( 'SNOMEDCT','RXNORM' )
-and exists
+inner join umls.MRCONSO mrc on c.aui = mrc.aui and mrc.SAB in ( 'SNOMEDCT', 'RXNORM')
+inner join 
 (
-	select *
+	select cui, min(tui) tui
 	from umls.MRSTY sty
-	where mrc.cui = sty.cui
-	and sty.tui in
+	where sty.tui in
 	(
-	'T017' /* Anatomical Structure */,
-	'T021','T022','T023','T024','T025','T026','T029','T030','T031',
-	'T059','T060','T061',
-	'T019','T020','T037','T046','T047','T048','T049','T050','T190','T191',
-	'T033','T034','T040','T041','T042','T043','T044','T045','T046','T056','T057','T184','T121'
+    /* diseasesAndDisordersTuis */
+    'T019', 'T020', 'T037', 'T046', 'T047', 'T048', 'T049', 'T050', 
+      'T190', 'T191', 'T033',
+    /* signAndSymptomTuis */
+    'T184',
+    /* anatomicalSitesTuis */
+    'T017', 'T029', 'T023', 'T030', 'T031', 'T022', 'T025', 'T026',
+        'T018', 'T021', 'T024',
+    /* medicationsAndDrugsTuis */
+     'T116', 'T195', 'T123', 'T122', 'T118', 'T103', 'T120', 'T104',
+        'T200', 'T111', 'T196', 'T126', 'T131', 'T125', 'T129', 'T130',
+        'T197', 'T119', 'T124', 'T114', 'T109', 'T115', 'T121', 'T192',
+        'T110', 'T127',
+	/* proceduresTuis */
+    'T060', 'T065', 'T058', 'T059', 'T063', 'T062', 'T061',
+    /* deviceTuis */
+    'T074', 'T075',
+    /* laboratoryTuis */
+    'T059'
 	)
-)
+	group by cui
+) t on t.cui = mrc.cui
 }}}
 
 This tableincludes only the SNOMED and RXNORM vocabularies, and limits the semantic types (T0XX...).  You are free to modify this table to include other UMLS source vocabularies, and other semantic types.
@@ -42,7 +56,7 @@ This tableincludes only the SNOMED and RXNORM vocabularies, and limits the seman
 == Using your own dictionary ==
 You can create your own dictionary: you just need to create a table with the 3 fields (first word, tokenized concept text, and concept id) and point the dictionary lookup annotator at it.  The table that is queried is configured in `YTEX_HOME/config/desc/ytex/uima/annotators/LookupDesc_SNOMED.xml`.
 
-Care must be taken with concepts that include punctuation characters: the tokens that comprise the concept must be separated according to the cTAKES tokenizer.  This splits words on all punctuation characters, with the exception of hyphens and apostrophes.  In a future release, we will provide a utility to generate dictionaries from user-defined concepts.
+Care must be taken with concepts that include punctuation characters: the tokens that comprise the concept must be separated according to the cTAKES tokenizer.  This splits text according to Penn Treebank rules.
 
 == Dictionary lookup with stemmed words ==
 To perform dictionary lookup with stemmed words, replace `YTEX_HOME/config/desc/ytex/uima/annotators/LookupDesc_SNOMED.xml` with `YTEX_HOME/config/desc/ytex/uima/annotators/LookupDesc_stem_SNOMED.xml`.
