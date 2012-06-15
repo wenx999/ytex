@@ -4,8 +4,8 @@
 =Using YTEX v0.7=
 This document presumes familiarity with [http://uima.apache.org/index.html UIMA] and [http://ohnlp.sourceforge.net/cTAKES/ cTAKES].
 
-=Annotating Documents=
-YTEX is based on UIMA, and standard UIMA Tools can be used to annotate documents with YTEX: you can annotate documents using the standard UIMA Document Analyzer and Collection Processing Engine.  YTEX builds on top of cTAKES, and adds/enhances cTAKES analysis engines.  You can use as much or as little of YTEX as you like, and mix and match analysis engines as you please.
+=YTEX Annotators=
+YTEX builds on top of cTAKES, and adds/enhances cTAKES analysis engines.  You can use as much or as little of YTEX as you like, and mix and match analysis engines as you please.
 
 === YTEX annotators ===
 All the Pipelines in the YTEX_HOME/config/desc directory use the following 
@@ -23,7 +23,7 @@ The YTEXPipeline, located under YTEX_HOME/config/desc/ytex/uima/YTEXPipeline.xml
 === `YTEXMetamapPipeline.xml` ===
 The YTEXMetamapPipeline, located under `YTEX_HOME/config/desc/ytex/uima/YTEXMetamapPipeline.xml`, uses the Metamap uima annotator for named entity recognition in place of cTAKES's dictionary lookup algorithm.  Metamap annotations are translated into cTAKES annotations, so the rest of cTAKES never knows the difference.  This has been tested with the metamap 2011 version.
 
-== CTakes Pipelines ==
+=== CTakes Pipelines ===
 We provide several pipelines based on out-of-the box cTAKES pipelines.  These pipelines differ from cTAKES in the following ways:
   * Use YTEX SegmentRegexAnnotator instead of SimpleSegmentAnnotator
   * Use YTEX NegexAnnotator instead of cTAKES NegationDetector
@@ -35,12 +35,16 @@ We have adapted the following cTAKES pipelines
   * CoReference Pipeline (`YTEX_HOME/config/desc/ytex/corefdesc/analysis_engine/CorefProcessor.xml`) 
   * Drug Named Entity Recogntion Pipeline (`YTEX_HOME/config/desc/ytex/drugnerdesc/analysis_engine/DrugAggregatePlaintextProcessor.xml`) 
 
+
+=Annotating Documents=
+YTEX is based on UIMA, and standard UIMA Tools can be used to annotate documents with YTEX: you can annotate documents using the standard UIMA Document Analyzer and Collection Processing Engine. 
+
 ==UIMA Document Analyzer==
  * start the documentAnalyzer.  windows: double-click/execute `YTEX_HOME\ytexDocumentAnalyzer.bat`, linux: from a shell run the following commands:
 {{{
 . ${HOME}/ytex.profile
 cd ${YTEX_HOME}
-./ytexTools.sh DocumentAnalyzer
+java ${JAVA_OPTS} org.apache.uima.tools.docanalyzer.DocumentAnalyzer
 }}}
  * Set the following options:
    ** Input Directory: `YTEX_HOME\examples\pubmed\abstracts`
@@ -56,43 +60,48 @@ Clinical Documents from an EMR are typically stored in a database.  We developed
 
 Documents in a database typically are given a Unique ID, and are cross-referenced with other information (e.g. patient id, document type, document date, etc.).  This unique id can be stored in the database along with other document annotations.  This allows you to cross-reference annotation data with other document data.
 
-By default, YTEX supports an integer document unique identifier; YTEX can be configured to support additional/different document identifiers (see [DocKey_v0_4 Document Key Example]).  
+By default, YTEX supports an integer document identifier (INSTANCE_ID); and a string document identifier (INSTANCE_KEY).  When using the FileSystemCollection reader, the file name is stored in the INSTANCE_KEY.  
 
 The YTEX DBCollection reader is parameterized by 2 queries: a key query and a document query.  The key query  loads document unique ids from a database, and the document query loads a document for a given unique id.  For more information, refer to the example below.
 
 === CPE DBCollectionReader Example ===
 To illustrate this, we can simply retrieve sample documents stored in the `fracture_demo` table.  To configure and execute the CPE, do the following:
   * Start CPE Configuration Tool
-  Windows: run `YTEX_HOME\ytexCPE.bat`, Linux: from YTEX_HOME run `./ytexTools.sh CPE`
+  Windows: run `YTEX_HOME\ytexCPE.bat`, Linux: 
+{{{
+. ${HOME}/ytex.profile
+cd ${YTEX_HOME}
+java ${JAVA_OPTS} org.apache.uima.tools.cpm.CpmFrame
+}}}
   * Clear the CPE Configuration: File->Clear
   * Configure the Collection Reader: In the Collection Reader section click the Browse Button.  For the Descriptor, specify `YTEX_HOME\config\desc\ytex\uima\DBCollectionReader.xml`.
-  * Configure Queries: The 'Query Document Keys' and 'Query Get Document' parameters will appear.  Specify queries to retrieve keys and documents.  The key query returns a integer key, named `uid`.  The document query has a `uid` parameter.  The `uid` is stored in the ytex document table, allowing you to link annotations to the source document.  Here are the queries for the fracture demo:
+  * Configure Queries: The 'Query Document Keys' and 'Query Get Document' parameters will appear.  Specify queries to retrieve keys and documents.  The key query returns a integer key, named `INSTANCE_ID`.  The document query has a `INSTANCE_ID` parameter.  The `INSTANCE_ID` is stored in the ytex document table, allowing you to link annotations to the source document.  Here are the queries for the fracture demo:
      ** MS SQL Server
 Document Key Query (replace schema to match your configuration)
 {{{
-    select note_id uid from <schema>.fracture_demo
+    select note_id INSTANCE_ID from <schema>.fracture_demo
 }}}
 Document Query
 {{{
-    select note_text from <schema>.fracture_demo where note_id = :uid
+    select note_text from <schema>.fracture_demo where note_id = :INSTANCE_ID
 }}}
      ** MySQL
 Document Key Query
 {{{
-    select note_id uid from  fracture_demo
+    select note_id INSTANCE_ID from  fracture_demo
 }}}
 Document Query
 {{{
-    select note_text from fracture_demo where note_id = :uid
+    select note_text from fracture_demo where note_id = :INSTANCE_ID
 }}}
      ** Oracle
 Document Key Query
 {{{
-    select note_id "uid" from fracture_demo
+    select note_id INSTANCE_ID from fracture_demo
 }}}
 Document Query
 {{{
-    select note_text from fracture_demo where note_id = :uid
+    select note_text from fracture_demo where note_id = :INSTANCE_ID
 }}}
   * Configure Analysis Engine
   Click on the 'Add' button in the 'Analysis Engine' section, and select `YTEX_HOME\config\desc\ytex\uima\YTEXPipeline.xml`
@@ -104,10 +113,10 @@ Document Query
   select * from 
   v_document where analysis_batch = 'test2'
   }}}
-  Notice that the uid column is set, and refers to the `fracture_demo.note_id`.
+  Notice that the instance_id column is set, and refers to the `fracture_demo.note_id`.
 
 === Example - Custom Key Mapping ===
-This example demonstrates how to use custom document keys.  Let's assume that clinical documents have a unique identifier that comprises 2 fields - `note_id` (integer) and `site_id` (character) - and that these documents are stored in the `fracture_demo` table.  We would like to link our annotations to the original document, so we need to store both the `note_id` and `site_id` in the ytex `document` table.  In this example, we map these columns to the `uid` and `site_id` columns in the `document` table.
+This example demonstrates how to use custom document keys.  Let's assume that clinical documents have a unique identifier that comprises 2 fields - `note_id` (integer) and `site_id` (character) - and that these documents are stored in the `fracture_demo` table.  We would like to link our annotations to the original document, so we need to store both the `note_id` and `site_id` in the ytex `document` table.  In this example, we map these columns to the `instance_id` and `site_id` columns in the `document` table. (We could map the site_id to INSTANCE_KEY, but that would be no fun.)
 
 To run this example, do the following:
   * modify the ytex document table and add a site_id column. e.g. for MS SQL Server:
@@ -121,23 +130,23 @@ alter table document add site_id varchar(20)
 {{{
 . ${HOME}/ytex.profile
 cd ${YTEX_HOME}
-./ytexTools.sh CPE 
+java ${JAVA_OPTS} org.apache.uima.tools.cpm.CpmFrame
 }}}
   * Open the CPE Descriptor
-  Go to File->Open, and select `YTEX_HOME/examples/cpe-fracture/fracture-demo.[platform].cpe.xml`.  The query to get the keys looks like this (notice how note_id was renamed to uid):
+  Go to File->Open, and select `YTEX_HOME/examples/cpe-fracture/fracture-demo.cpe.xml`.  The query to get the keys looks like this (notice how note_id was renamed to instance_id):
 {{{
-select note_id uid, site_id from fracture_demo
+select note_id instance_id, site_id from fracture_demo
 }}}
   The query to get the document looks like this:
 {{{
-select note_text from fracture_demo where note_id = :uid and site_id = :site_id
+select note_text from fracture_demo where note_id = :instance_id and site_id = :site_id
 }}}
   The CPE config "Store Doc Text" checkbox is unchecked: we will note store the document text in the document.doc_text column, because it is already in the database - we can join the document and fracture_demo tables on the uid/site_id columns to get the corresponding text.
 
   * Run the CPE
   Press the play button
 
-  * Verify that the uid and site_id fields have been set
+  * Verify that the instance_id and site_id fields have been set
 {{{
 select * from document where analysis_batch = 'cpe-fracture'
 }}} 
@@ -159,7 +168,8 @@ To run this example, do the following:
 Unix:
 {{{
 . ${HOME}/ytex.profile
-${YTEX_HOME}/ytexTools.sh CPE
+cd ${YTEX_HOME}
+java ${JAVA_OPTS} org.apache.uima.tools.cpm.CpmFrame
 }}}
   * click the 'Play' button
 
@@ -179,17 +189,19 @@ The UIMA CPE Configurator (yes it is ugly) allows you to override parameters def
 The `analysis_batch` is a way to identify document annotation runs or groups of documents.  It is stored in the `document.analysis_batch` column.
 
   * Store CAS
-  Should the UIMA XML representation of document annotations be stored in the database?  The gzipped uima xml is stored in the `document.cas` column.
+  Should the UIMA XML representation of document annotations be stored in the database?  The gzipped uima xml is stored in the `document.cas` column.  Set to false to speed up the DBConsumer.
  
   * Store Doc Text
-  Should the document text be stored in the database?  The document text is stored in the `document.doc_text` column.
+  Should the document text be stored in the database?  The document text is stored in the `document.doc_text` column.  Set to false to speed up the DBConsumer.
 
   * XMI Output Directory
   Directory where UIMA XML representations of document annotations should be stored; if empty they will not be stored in the file system.
 
   * Types to Ignore
-  UIMA annotations that should not be stored in the database. 
-Take a look at the `ref_uima_type` table for a list of types stored in the database. The class name should give you an idea of what each annotation represents.
+  UIMA annotations that should not be stored in the database. Add annotations that you are not interested in to this list to speed up the DBConsumer.  Take a look at the `ref_uima_type` table for a list of types stored in the database. The class name should give you an idea of what each annotation represents.
+
+  * insertAnnotationContainmentLinks
+  Should anno_contain entries be created?  Set to false to speed up the DBConsumer. 
 
 == DBCollectionReader Configuration Parameters ==
   * Query Document Keys
