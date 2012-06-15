@@ -44,25 +44,21 @@ This is mapped to the `edu.mayo.bmi.uima.core.type.NumToken`, `edu.mayo.bmi.uima
   * `negated` - 1 - word is negated, 0 - word is not negated  (based on negex)
   * `possible` - 1 - possible (from negex)
 
-=== `anno_named_entity` ===
-This is mapped to the cTAKES `NamedEntity` annotation.  Most of the attributes of this annotation are always empty/set to the same value and are thus useless.  However, we map attributes from the annotation to the database, even if it doesn't make sense (we want to model as closely as possible, even if the data is meaningless).  One useful attribute is the certainty which represents the negation status:
-  * `anno_base_id` - foreign key to `anno_base`, also primary key for this table
-  * `discoveryTechnique` - always 1
-  * `status` - always 0
-  * `certainty` - -1 - negated (via negex), 0 - not negated
-  * `typeId` - always 0
-  * `confidence` - always 0
-  * `segmentID` - the section in which the annotation is found
+=== `anno_med_event` ===
+This is mapped to the cTAKES `Medicationevent` annotation.
 
 == Feature Structures ==
-In addition to Annotations, UIMA defines `FeatureStruct`s; these are typically not 'free standing' annotations - they usually are 'inside'  an Annotation.  e.g. the `NamedEntity` annotation has an array of `OntologyConcept`s.  `FeatureStruct`s are also mapped to `anno_[subclass]` tables, e.g. `OntologyConcept`s are mapped to the `anno_ontology_concept` table, and have a foreign key to the annotation 'within which' they reside (one-to-many relationship).
+In addition to Annotations, UIMA defines `FeatureStruct`s; these are typically not 'free standing' annotations - they usually are 'inside'  an Annotation.  e.g. the `Medicationevent` and `EntityMention` annotations have arrays of `OntologyConcept`s.  `FeatureStruct`s are also mapped to `anno_[subclass]` tables, e.g. `OntologyConcept`s are mapped to the `anno_ontology_concept` table, and have a foreign key to the annotation 'within which' they reside (one-to-many relationship).
 
 === `anno_ontology_concept` ===
-This is mapped to the cTAKES `OntologyConceptArr` of the `NamedEntity` annotation; these are the concepts (CUIs) of a Named Entity:
+This is mapped to the cTAKES `OntologyConceptArr` of the `Medicationevent` or `EntityMention` annotation; these are the concepts (CUIs) of a Named Entity:
   * `anno_ontology_concept_id` - unique system generated id
   * `anno_base_id` - foreign key to `named_entity`
   * `code` - CUI
   * `disambiguated` - used by SenseDisambiguatorAnnotator.  Set to 1 if this concept is the best sense or only sense for the given named entity.  Set to 0 (default) otherwise, or if the annotator is not used.
+
+=== anno_mm_candidate ===
+Metamap `Candidate` annotations are mapped to this table.
 
 == Annotation Links ==
 UIMA annotations can also have references to other UIMA annotations, e.g. the `TreeBankNode` annotation represents a node in a parse tree.  This annotation has reference to a parent and children `TreeBankNode` annotations.  Rows in the `anno_link` represent Annotation links
@@ -84,29 +80,19 @@ Mapping of Annotations is purely configurative.  To map a new annotation do the 
   # Create a table in your database to store the annotation's attributes.
   # Tell YTEX to map the annotation class to your table (i.e. add a row to the `ref_uima_type` table).
 
-To illustrate this, say for example we would like to map the cTAKES `FrequencyUnitAnnotation` (produced by the DrugNer annotation engine).  This annotation has the float attribute `period`.  We would create a table for this annotation, e.g. for mysql:
+To illustrate this, say for example we would like to map your annotation named Foo that has a 'period' has the float attribute `period`.  We would create a table for this annotation, e.g. for mysql:
 {{{
-create table anno_frequencyunit (
+create table anno_foo (
   anno_base_id int not null primary key, /* foreign key to anno_base */
   period double
 ) engine=myisam;
 }}}
 Note: the column names must match the UIMA annotation's attribute names (case insensitive).
 
-And we need to tell YTEX to map `FrequencyUnitAnnotation`s to this table:
+And we need to tell YTEX to map `Foo`s to this table:
 {{{
 insert into ref_uima_type (uima_type_id, uima_type_name, table_name)
-values (55, 'edu.mayo.bmi.uima.drugner.type.FrequencyUnitAnnotation', 'anno_frequencyunit');
-}}}
-
-And now, run the DrugNer CPE on some documents:
-  * run the `YTEX_HOME/config/desc/ytex/drugnerdesc/collection_processing_engine/DrugNER_PlainText_CPE.xml`
-  * view the annotations:
-{{{
-select f.*, substring(d.doc_text, b.span_begin+1, b.span_end-b.span_begin) anno_text
-from document d
-inner join anno_base b on d.document_id = b.document_id
-inner join anno_frequencyunit f on f.anno_base_id = b.anno_base_id
+values (201, 'org.acme.Foo', 'anno_foo');
 }}}
 
 == `ref_uima_type` ==
