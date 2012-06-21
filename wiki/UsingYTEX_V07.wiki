@@ -201,7 +201,7 @@ The `analysis_batch` is a way to identify document annotation runs or groups of 
   * Types to Ignore
   UIMA annotations that should not be stored in the database. Add annotations that you are not interested in to this list to speed up the DBConsumer.  Take a look at the `ref_uima_type` table for a list of types stored in the database. The class name should give you an idea of what each annotation represents.
 
-  * insertAnnotationContainmentLinks
+  * insert Annotation Containment Links
   Should anno_contain entries be created?  Set to false to speed up the DBConsumer. 
 
 == DBCollectionReader Configuration Parameters ==
