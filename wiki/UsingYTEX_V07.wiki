@@ -327,9 +327,9 @@ ${HOME}/ytex.profile
 ==== Weka ====
 After executing this you should see 2 arff files in this directory corresponding to the training and test sets.
 
-  * start the WEKA Gui Chooser: call startWeka.bat
+  * start the WEKA Gui Chooser: 
 {{{
-startWeka.bat
+java -Xmx1500m weka.gui.GUIChooser
 }}}
   * start Explorer: click on `Explorer`
   * open an arff file: click on 'open file' and select e.g. `fracture-word.arff`
