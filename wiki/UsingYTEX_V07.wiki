@@ -308,11 +308,13 @@ The SparseDataExporter takes a Java property file as input; the property file sp
 
 === 1. Export Bag-of-Words ===
 Start a command prompt/shell, change to the `YTEX_HOME\examples\fracture\cui` or `YTEX_HOME\examples\fracture\word` directory (for the bag-of-cuis vs. bag-of-words example respectively), and run the following commands.
+
 Windows:
 {{{
 ..\..\..\setenv.cmd
 java %JAVA_OPTS% ytex.kernel.SparseDataExporterImpl -prop export.xml -type weka
 }}}
+
 Linux:
 {{{
 . ${HOME}/ytex.profile
