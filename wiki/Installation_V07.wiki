@@ -11,7 +11,7 @@ In YTEX v0.7 we've implemented the following features:
   We have tested YTEX with MetaMap v11 and the MetaMap UIMA annotator.  We have configured a pipeline with MetaMap as a drop-in replacement for the cTAKES/YTEX dictionary lookup algorithm.
 
   * Ability to map any UIMA annotation to the database
-  Previous versions of YTEX required coding to map new UIMA annotations to the database.  With this version of YTEX, mapping of UIMA annotations is done entirely via configuration.  We have preconfigured mappings for many of the cTAKES and MetaMap annotations.  You can configure the mapping of additional cTAKES annotations other UIMA analysis engines.
+  Previous versions of YTEX required coding to map new UIMA annotations to the database.  With this version of YTEX, mapping of UIMA annotations is done entirely via configuration.  We have preconfigured mappings for many of the cTAKES and MetaMap annotations.  You can configure the mapping of additional cTAKES annotations and annotations from other UIMA analysis engines.
 
 == Prerequisites ==
   * JDK 1.6 or higher [http://java.sun.com/javase/downloads/widget/jdk6.jsp download]
