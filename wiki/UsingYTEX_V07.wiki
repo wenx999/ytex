@@ -1,4 +1,5 @@
 #summary Using YTEX v0.7
+#labels Featured
 <wiki:toc max_depth="2" />
 
 =Using YTEX v0.7=
@@ -310,19 +311,19 @@ Start a command prompt/shell, change to the `YTEX_HOME\examples\fracture\cui` or
 Windows:
 {{{
 ..\..\..\setenv.cmd
-..\..\..\ytexTools.cmd SparseDataExporter -Dprop=export.[platform].xml -Dtype=[type]
+java %JAVA_OPTS% ytex.kernel.SparseDataExporterImpl -prop export.xml -type weka
 }}}
 Linux:
 {{{
-${HOME}/ytex.profile
-../../../ytexTools.sh SparseDataExporter -Dprop=export.[platform].xml -Dtype=[type]
+. ${HOME}/ytex.profile
+java ${JAVA_OPTS} ytex.kernel.SparseDataExporterImpl -prop export.xml -type weka
 }}}
-`export.[platform].xml` contains the queries for the respective datatabase platform.
-`[type]` is one of:
-  * `weka` to generate an arff file
-  * `sparsematrix`  sparse matrix format for R/matlab/SAS
-  * `libsvm` libsvm format
-  * `svmlight` svmlight format (we assume transductive learning - if not just use the libsvm format)
+  * `-prop`: this option specifies a java xml properties file that contains the queries to retrieve document annotations.
+  * `-type`: is one of:
+    ** `weka` to generate an arff file
+    * `sparsematrix`  sparse matrix format for R/matlab/SAS
+    * `libsvm` libsvm format
+    * `svmlight` svmlight format (we assume transductive learning - if not just use the libsvm format)
 
 ==== Weka ====
 After executing this you should see 2 arff files in this directory corresponding to the training and test sets.
@@ -336,11 +337,12 @@ java -Xmx1500m weka.gui.GUIChooser
   * you should see a list of all the attributes
 
 The rest is standard WEKA usage.  
-  * Here is one suggestion: filter for the top 50 attributes ranked by mutual information
+  * Here is one suggestion: filter for the top 50 attributes ranked by information gain
   * Train the J48 decision tree on train.arff, evaluate on test.arff
   * If you are new to WEKA, refer to the [http://iweb.dl.sourceforge.net/project/weka/documentation/3.5.x/ExplorerGuide-3-5-8.pdf Explorer Guide]
 
 ==== R ====
+Execute the sparse data exporter with the `-type sparsematrix` option.
 You should see 3 files: 
   * attributes.txt contains attribute names, e.g. cui
   * instance.txt contains the instance_id (i.e. fracture_demo.note_id), the class of the note (fracture/no fracture), and an indicator if this belongs to the training or test set.
@@ -358,7 +360,7 @@ source("../classify.R")
 This will train a decision tree on the training data, print out the decision tree, run the decision tree on the test data, and print the results.
 
 == Details ==
-The `SparseDataExporter` is parameterized by java properties that contain queries that determine how data will be exported.  Refer to `export.[platform].xml` for sample queries.
+The `SparseDataExporter` is parameterized by java properties that contain queries that determine how data will be exported.  Refer to `export.xml` for sample queries.
 
 The queries return data in instance-attribute-value triples.
 
