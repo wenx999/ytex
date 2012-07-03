@@ -1,5 +1,5 @@
 #summary Installation for YTEX v0.7
-#labels Phase-Deploy
+#labels Phase-Deploy,Featured
 
 = Introduction =
 
@@ -20,7 +20,7 @@ In YTEX v0.7 we've implemented the following features:
   * Tested on Linux and Windows.  We don't test YTEX on mac; however, users have successfully installed this on mac following linux installation instructions.
 
 == Database Prerequisites ==
-YTEX supports MS SQL Server 2008, MySQL version 5.x, and Oracle versions 10gR2 and above.  The current YTEX 0.7 beta only works with MySQL & MS SQL; oracle scripts are on the way.  Create a database user (and schema) for use with ytex.  See platform specific notes below.
+YTEX supports MS SQL Server 2008, MySQL version 5.x, and Oracle versions 10gR2 and above.  Create a database user (and schema) for use with ytex.  See platform specific notes below.
 
 === Oracle ===
 As documented [http://www.nlm.nih.gov/research/umls/implementation_resources/scripts/index.html here] your database must use the UTF-8 charset.
