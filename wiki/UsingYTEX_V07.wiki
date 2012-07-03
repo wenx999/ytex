@@ -161,18 +161,16 @@ Instead of using the DBCollectionReader to load documents from the database, you
 This example demonstrates annotating documents with the Collection Processing Engine (CPE).  We annotate the contents of the `YTEX_HOME\examples\pubmed\abstracts` directory that contains a handful of pubmed abstracts.
 
 To run this example, do the following:
-  * open a command prompt / shell
-  * change to the `YTEX_HOME\examples\pubmed` directory
-  * start the UIMA CPE configurator.  Windows:
-{{{
-..\..\ytexCPE.cmd
-}}}
-Unix:
-{{{
-. ${HOME}/ytex.profile
-cd ${YTEX_HOME}
-java ${JAVA_OPTS} org.apache.uima.tools.cpm.CpmFrame
-}}}
+  * start the CPE
+  Windows: double click `YTEX_HOME\ytexCPE.cmd`
+
+  Linux:
+  {{{
+  . ${HOME}/ytex.profile
+  cd ${YTEX_HOME}
+  java ${JAVA_OPTS} org.apache.uima.tools.cpm.CpmFrame
+  }}}
+  * File -> Open CPE Descriptor -> `YTEX_HOME\examples\pubmed\pubmed.cpe.xml`
   * click the 'Play' button
 
 YTEX will annotate the documents and store them in the database.  
@@ -184,11 +182,8 @@ select * from v_document_cui_sent where analysis_batch = 'pubmed'
 == YTEX Pipeline Configuration Parameters ==
 The UIMA CPE Configurator (yes it is ugly) allows you to override parameters defined in the UIMA Pipeline.  Some of these properties are:
 
-  * Patterns
-  Regex used by the paragraph annotator to split paragraphs.
-
-  * analysis_batch
-The `analysis_batch` is a way to identify document annotation runs or groups of documents.  It is stored in the `document.analysis_batch` column.
+  * Analysis Batch
+Typically, you will want to annotate different document collections, or you may want to annotate the same document collection with different pipelines/configurations.  The `analysis_batch` is a way to identify document annotation runs or document collections.  It is stored in the `document.analysis_batch` column.
 
   * Store CAS
   Should the UIMA XML representation of document annotations be stored in the database?  The gzipped uima xml is stored in the `document.cas` column.  Set to false to speed up the DBConsumer.
@@ -203,7 +198,7 @@ The `analysis_batch` is a way to identify document annotation runs or groups of 
   UIMA annotations that should not be stored in the database. Add annotations that you are not interested in to this list to speed up the DBConsumer.  Take a look at the `ref_uima_type` table for a list of types stored in the database. The class name should give you an idea of what each annotation represents.
 
   * insert Annotation Containment Links
-  Should anno_contain entries be created?  Set to false to speed up the DBConsumer. 
+  Should anno_contain entries be created?  Set to false to speed up the DBConsumer. See [http://code.google.com/p/ytex/wiki/DataModel_V07#anno_contain anno_contain] for information on what this is.
 
 == DBCollectionReader Configuration Parameters ==
   * Query Document Keys
