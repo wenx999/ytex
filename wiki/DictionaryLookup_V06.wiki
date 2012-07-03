@@ -1,5 +1,5 @@
 #summary Dictionary Lookup configuration for v0.6 and higher
-#labels Featured
+#labels Deprecated
 
 = Introduction =
 
