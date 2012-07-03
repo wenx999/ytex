@@ -1,5 +1,5 @@
 #summary Data Model v0.7
-#labels Phase-Deploy
+#labels Phase-Deploy,Featured
 
 =YTEX Data Model=
 This page discusses the YTEX data model.  The figure below provides an overview of the YTEX data model:
@@ -69,7 +69,7 @@ UIMA annotations can also have references to other UIMA annotations, e.g. the `T
   * `feature`: the attribute on the parent object that corresponds to this link
 
 == `anno_contain` ==
-This table represents containment relationships between annotations, i.e. that a word/named entity is contained in a sentence.  This has no direct equivalent in any UIMA object; these relationships can be inferred from the begin/end of UIMA annotations, but 'precomputing' these relationships has many practical applications; e.g. it simplfies writing queries of the sort give me all named entities in the Impression section.
+This table represents containment relationships between annotations, e.g. that a word/named entity is contained in a sentence.  This has no direct equivalent in any UIMA object; these relationships can be inferred from the begin/end of UIMA annotations, but 'precomputing' these relationships has many practical applications; e.g. it simplfies writing queries of the sort 'give me all named entities in the Impression section'.
   * `parent_anno_base_id` - foreign key to `anno_base` table.  Represents the parent or containing concept.
   * `parent_uima_type_id` - foreign key to `ref_uima_type`, the class of the parent annotation.
   * `child_anno_base_id` - foreign key to `anno_base` table.  Represents the child or contained concept.
