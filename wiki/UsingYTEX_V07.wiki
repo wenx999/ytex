@@ -3,7 +3,7 @@
 <wiki:toc max_depth="2" />
 
 =Using YTEX v0.7=
-This document presumes familiarity with [http://uima.apache.org/index.html UIMA] and [http://ohnlp.sourceforge.net/cTAKES/ cTAKES].
+This document presumes familiarity with [http://uima.apache.org/index.html UIMA] and [http://ohnlp.sourceforge.net/cTAKES/ cTAKES].  For help, please search or post to the [http://groups.google.com/group/ytex-users ytex-users google group].
 
 =YTEX Annotators=
 YTEX builds on top of cTAKES, and adds/enhances cTAKES analysis engines.  You can use as much or as little of YTEX as you like, and mix and match analysis engines as you please.
