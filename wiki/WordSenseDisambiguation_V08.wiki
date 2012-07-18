@@ -91,7 +91,7 @@ Run the following ant target to generate MetaMap scripts and configuration files
 ant mm.copy.all 
 }}}
 
-This will generate scripts 1_xxx to _n__xxx in your `public_mm/bin` directory (n = kernel.threads from your ytex.proprites) that start the MetaMap server on port 80_m_1 and the MetaMap tagger server on port 80_m_5 (m = 1...n).
+This will generate scripts 1_mmserver to n_mmserver in your `public_mm/bin` directory (n = kernel.threads from your ytex.properties) that start the MetaMap server on port 80_m_1 and the MetaMap tagger server on port 80_m_5 (m = 1...n).
 
 Run the following ant target to start all _n_ MetaMap servers
 Windows:
