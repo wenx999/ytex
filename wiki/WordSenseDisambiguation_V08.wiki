@@ -1,4 +1,4 @@
-#summary Word Sense Disambiguation for V0.6 and above
+#summary Word Sense Disambiguation for V0.8 and above
 
 = Introduction =
 
@@ -107,4 +107,3 @@ Run the following ant target to annotate and disambiguate the NLM WSD and MSH WS
 {{{
 ant eval.metamap.all
 }}}
-
