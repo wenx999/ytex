@@ -28,8 +28,8 @@ The optimal measure and concept graph depends on the application.  These default
   * CRAN R Used for statistical analysis.  Install the Plyr package
   * UMLS installed in MySQL: We used 2011AB with SNOMED-CT + all Level 0 source vocabularies
   * [http://metamap.nlm.nih.gov/ MetaMap] Optional - needed only if you want to reproduce our results with MetaMap.  We tested MetaMap version 2011 with the USABase Strict model (the default).  You will also have to install the [http://metamap.nlm.nih.gov/#MetaMapJavaApi MetaMap Java API] and the [http://metamap.nlm.nih.gov/#MetaMapUIMA MetaMap UIMA Annotator].
-  * [Installation_V06 YTEX installation]: configured to use the UMLS
-  * [Installation_V06 YTEX UMLS Archive]: this contains the concept graphs used by similarity measures.  If this file was present during the YTEX installation, there will be a directory `YTEX_HOME/conceptGraph` with the needed files.  You can also generate these concept graphs from scracth (see  [SemanticSim_V06])
+  * [Installation_V07 YTEX installation]: configured to use the UMLS
+  * [Installation_V07 YTEX UMLS Archive]: this contains the `UMLS` concept graphs used by similarity measures.  If this file was present during the YTEX installation, there will be a file `YTEX_HOME/conceptGraph/umls.gz`.  If the `UMLS` concept graph is not present, it will be created, but this is memory intensive and time consuming.
   * [http://code.google.com/p/ytex/downloads/list nlm.wsd-v0.6.zip] benchmark code and scripts.
   * NLM WSD Dataset: Download the [http://wsd.nlm.nih.gov/Restricted/downloads/basic_reviewed_results.tar.gz Basic Test Collection] and [http://wsd.nlm.nih.gov/Collaborations/NLM-WSD.target_word.choices_v0.3.tar.gz WSD Choices]
   * MSH WSD Dataset: Download the [http://wsd.nlm.nih.gov/Collaborations/MSHCorpus.zip Full MSH WSD Dataset]
@@ -83,6 +83,12 @@ What this does:
   * disambiguates concepts, outputs results to `eval/nlm/<concept graph>/<window size>` and  `msh/eval/<concept graph>/<window size>` for the NLM WSD and MSH datasets respectively
   * computes accuracy and p-values with R, stores results in these directories as .csv files
 
+If you did not install the `UMLS` concept graph (see above), then it will be created.  Creating this concept graph is very memory intensive; you should give the script all the memory you can spare by specifying the `maxMemory` option.  E.g. to give the concept graph setup 8gb:
+{{{
+ant -DmaxMemory=8g setup.all eval.ctakes.all > wsd.out 2>&1 
+}}}
+
+
 === MetaMap evaluation ===
 In order to annotate the NLM WSD and MSH WSD with MetaMap in a reasonable amount of time, you must have atleast 4 cores and 10 GB of memory.  The MetaMap UIMA annotator relies on the MetaMap server which is single-threaded.  We start _n_ instances of the MetaMap server to enable multi-threaded processing, with _n_ set to the number of cores (see `ytex.properties` above).  Each MetaMap server instance will need at least 2GB of memory.
 
@@ -106,4 +112,12 @@ ant mm.start.all.linux
 Run the following ant target to annotate and disambiguate the NLM WSD and MSH WSD datasets:
 {{{
 ant eval.metamap.all
+}}}
+
+=== Producing Summary Results ===
+The `summary.R` script does the following
+  * consolidates results from all datasets and parameter combinations, outputs `all-wsd-results.csv`
+  * fits a linear model to quantify the effect of each parameter; outputs model coefficients and their p-values to `nlm-model.csv` and `msh-model.csv`
+{{{
+ant summary.R
 }}}
