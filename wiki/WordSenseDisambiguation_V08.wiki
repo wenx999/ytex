@@ -6,7 +6,7 @@ YTEX includes a word sense disambiguation (WSD) annotator. Terms in a natural la
 
 The adapted Lesk algorithm works as follows: for each term to be disambiguated (target term) it finds all possible senses; it selects all words within a window surrounding the target term and maps them to concepts (context concepts); and it scores senses by summing the semantic relatedness between each sense and all context concepts; and finally it selects the sense with the highest score.  In its original formulation, the adapted Lesk calculates the relatedness of concepts using the cosine of their profile vectors; however, this can be replaced with a [SemanticSim_V06 semantic similarity measure].
 
-For a high-level overview of the WSD method we've implemented, refer to our paper: Garla, V and Brandt, C. Semantic similarity in the biomedical domain: an evaluation across ontologies and application to word sense disambiguation (submitted).
+For a high-level overview of the WSD method we've implemented, refer to our paper: Garla V, Brandt C, Knowledge-based biomedical word sense disambiguation: an evaluation and application to clinical document classification (submitted).
 
 = SenseDisambiguatorAnnotator =
 
