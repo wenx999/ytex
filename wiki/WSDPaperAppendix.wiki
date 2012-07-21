@@ -7,7 +7,7 @@ This page provides links to the supplementary data for our paper: Garla V, Brand
 Refer to [http://ytex.googlecode.com/svn/trunk/projects/nlm.wsd/doc/YTEX%20Semantic%20Similarity%20Measures.pdf YTEX Semantic Similarity Measures] for a description of the measures used in this study.  Note that the 'Intrinsic Path' similarity measure is another name for 'Jiang & Conrath'.
 
 = Reproducing our results on WSD datasets =
-Refer to the [WordSenseDisambiguation_V08 Word Sense Disambiguation Wiki Page] for a detailed description of how to reproduce our results.
+Refer to the [WordSenseDisambiguation_V08#Reproducing_results_on_WSD_datasets Word Sense Disambiguation Wiki Page] for a detailed description of how to reproduce our results.
 
 = Reproducing our results on CMC 2007 challenge =
 Refer to the [WordSenseDisambiguation_V08#Reproducing_results_on_CMC_2007_challenge CMC section of the WSD Wiki Page] for a detailed description of how to reproduce our results.
@@ -18,4 +18,3 @@ The [http://ytex.googlecode.com/svn/trunk/projects/nlm.wsd/doc/results.xlsx resu
   * nlm-model: coefficients & p-values for their significance for the model of WSD accuracy as a linear function of parameters on the NLM WSD dataset
   * msh-model: coefficients & p-values for their significance for the model of WSD accuracy as a linear function of parameters on the MSH WSD dataset
 Other worksheets correspond to tables/figures in the main paper.
-
