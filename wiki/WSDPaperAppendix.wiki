@@ -10,7 +10,7 @@ Refer to [http://ytex.googlecode.com/svn/trunk/projects/nlm.wsd/doc/YTEX%20Seman
 Refer to the [WordSenseDisambiguation_V08 Word Sense Disambiguation Wiki Page] for a detailed description of how to reproduce our results.
 
 = Reproducing our results on CMC 2007 challenge =
-Refer to the [WordSenseDisambiguation_V08 CMC Wiki Page] for a detailed description of how to reproduce our results.
+Refer to the [WordSenseDisambiguation_V08#Reproducing_results_on_CMC_2007_challenge CMC section of the WSD Wiki Page] for a detailed description of how to reproduce our results.
 
 = Supplementary data =
 The [http://ytex.googlecode.com/svn/trunk/projects/nlm.wsd/doc/results.xlsx results.xlsx] file contains the following worksheets:
@@ -18,6 +18,4 @@ The [http://ytex.googlecode.com/svn/trunk/projects/nlm.wsd/doc/results.xlsx resu
   * nlm-model: coefficients & p-values for their significance for the model of WSD accuracy as a linear function of parameters on the NLM WSD dataset
   * msh-model: coefficients & p-values for their significance for the model of WSD accuracy as a linear function of parameters on the MSH WSD dataset
 Other worksheets correspond to tables/figures in the main paper.
-
-
 
