@@ -1,5 +1,5 @@
 #summary Word Sense Disambiguation for V0.6 and above
-#labels Featured
+#labels Deprecated
 
 = Introduction =
 
