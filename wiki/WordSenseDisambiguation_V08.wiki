@@ -32,7 +32,7 @@ This section describes the steps to reproduce our results on the NLM WSD and MSH
   * [http://metamap.nlm.nih.gov/ MetaMap] Optional - needed only if you want to reproduce our results with MetaMap.  We tested MetaMap version 2011 with the USABase Strict model (the default).  You will also have to install the [http://metamap.nlm.nih.gov/#MetaMapJavaApi MetaMap Java API] and the [http://metamap.nlm.nih.gov/#MetaMapUIMA MetaMap UIMA Annotator].
   * [Installation_V07 YTEX installation]: configured to use the UMLS
   * [Installation_V07 YTEX UMLS Archive]: this contains the `UMLS` concept graphs used by similarity measures.  If this file was present during the YTEX installation, there will be a file `YTEX_HOME/conceptGraph/umls.gz`.  If the `UMLS` concept graph is not present, it will be created, but this is memory intensive and time consuming.
-  * [http://code.google.com/p/ytex/downloads/list nlm.wsd-v0.6.zip] benchmark code and scripts.
+  * [http://ytex.googlecode.com/files/nlm.wsd-v0.8.zip nlm.wsd-v0.8.zip] benchmark code and scripts.
   * NLM WSD Dataset: Download the [http://wsd.nlm.nih.gov/Restricted/downloads/basic_reviewed_results.tar.gz Basic Test Collection] and [http://wsd.nlm.nih.gov/Collaborations/NLM-WSD.target_word.choices_v0.3.tar.gz WSD Choices]
   * MSH WSD Dataset: Download the [http://wsd.nlm.nih.gov/Collaborations/MSHCorpus.zip Full MSH WSD Dataset]
 
@@ -61,12 +61,12 @@ Annotating and disambiguating the NLM WSD and MSH WSD datasets with cTAKES on a 
 == Run Ant Script ==
 
 === cTAKES evaluation ===
-Unpack nlm.wsd-vX.Y.zip in your `<YTEX_HOME>` and run the ant script
+Unpack nlm.wsd-v0.8.zip in your `<YTEX_HOME>` and run the ant script
 Linux:
 {{{
 . ${HOME}/ytex.profile
 cd ${YTEX_HOME}
-unzip nlm.wsd-v0.6.zip
+unzip nlm.wsd-v0.8.zip
 cd nlm.wsd
 nohup ant setup.all eval.ctakes.all > wsd.out 2>&1 &  
 }}}
@@ -138,6 +138,7 @@ This section describes the steps to reproducing our results on the CMC 2007 chal
 Download and extract the following files to a directory, which we refer to as `cmc.dir`
   * [http://computationalmedicine.org/catalog/downloads/2007-challenge-training-data 2007 Challenge Training Data]
   * [http://computationalmedicine.org/catalog/downloads/2007-challenge-testing-data-codes 2007 Challenge Testing Data WITH Codes]
+  * [http://ytex.googlecode.com/files/cmc.2007-v0.8.zip cmc.2007-v0.8.zip] benchmark code and scripts.
 
 `cmc.dir` should have the following subdirectories:
   * `training`
@@ -153,7 +154,7 @@ The CMC evaluation depends on the following from the WSD dataset evaluation:
 To set these up, if you have not done so already, run the `setup.all` target from the WSD evaluation.
 
 === cTAKES evaluation ===
-Unpack cmc.2007-vX.Y.zip in your `<YTEX_HOME>` and run the ant script
+Unpack cmc.2007-v0.8.zip in your `<YTEX_HOME>` and run the ant script
 Linux:
 {{{
 . ${HOME}/ytex.profile
