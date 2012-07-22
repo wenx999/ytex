@@ -10,15 +10,15 @@ For a high-level overview of the WSD method we've implemented, refer to our pape
 
 = SenseDisambiguatorAnnotator =
 
-The `SenseDisambiguatorAnnotator` is a UIMA annotator integrated with YTEX.  YTEX identifed named entities (NamedEntityAnnotation), which in turn can contain multiple concepts (OntologyConcept).  The `SenseDisambiguatorAnnotator` disambiguates each ambiguous term (i.e. NamedEntity with multiple candidate concepts) in a document as follows:
-  * Takes all NamedEntities within a window around the ambiguous term
+The `SenseDisambiguatorAnnotator` is an UIMA annotator integrated with YTEX.  YTEX identifed named entities (`EntityMention` Annotations), which in turn can contain multiple concepts (`OntologyConcept` Feature Structures).  The `SenseDisambiguatorAnnotator` disambiguates each ambiguous term (i.e. `EntityMention` with multiple `OntologyConcept`s) in a document as follows:
+  * Takes all `EntityMention`s within a window around the ambiguous term
   * Scores candidate concepts using the semantic similarity with context concepts; the score is stored in the `score` attribute of the `OntologyConcept`.
   * Picks the candidate concept with the highest score: sets the `OntologyConcept.disambiguated` attribute to true for the best concept, and false for others.
 
 The `SenseDisambiguatorAnnotator` is configured via `YTEX_HOME/config/desc/ytex.properties`:
- * ytex.sense.windowSize - context window size. concepts from named entities +- windowSize around the target named entity are used for disambiguation. defaults to 10
+ * ytex.sense.windowSize - context window size. concepts from named entities +- windowSize around the target named entity are used for disambiguation. defaults to 50
  * ytex.sense.metric - measure to use. defaults to INTRINSIC_PATH.  See [SemanticSim_V06] for valid values.
- * ytex.conceptGraph - concept graph to use.  Defaults to sct-msh-csp-aod (SNOMED-CT, MeSH, CRISP thesaurus, Alcohol & Other Drug Thesaurus).
+ * ytex.conceptGraph - concept graph to use.  Defaults to `sct-msh-csp-aod` (SNOMED-CT, MeSH, CRISP thesaurus, Alcohol & Other Drug Thesaurus).
 
 The optimal measure and concept graph depends on the application.  These defaults achieved the best score on the MSH WSD data set; you might want to experiment with the `LCH` measure and `umls` concept graph: this configuration achieved the best performance on the NLM WSD data set.
 
