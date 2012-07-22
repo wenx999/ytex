@@ -1,4 +1,4 @@
-#summary Installation for YTEX v0.7
+#summary Installation for YTEX v0.7 & v0.8
 #labels Phase-Deploy,Featured
 
 = Introduction =
@@ -7,11 +7,13 @@ In YTEX v0.7 we've implemented the following features:
   * Upgraded to cTAKES 2.5.0
   Previous versions of YTEX were based on the cTAKES distributed with Maveric Arc 1.0.  With this version, we use cTAKES 2.5.0, and removed all dependencies on ARC.
 
-  * Tested with MetaMap v11
-  We have tested YTEX with MetaMap v11 and the MetaMap UIMA annotator.  We have configured a pipeline with MetaMap as a drop-in replacement for the cTAKES/YTEX dictionary lookup algorithm.
+  * Tested with MetaMap 2011
+  We have tested YTEX with MetaMap 2011 and the MetaMap UIMA annotator.  We have configured a pipeline with MetaMap as a drop-in replacement for the cTAKES/YTEX dictionary lookup algorithm.
 
   * Ability to map any UIMA annotation to the database
   Previous versions of YTEX required coding to map new UIMA annotations to the database.  With this version of YTEX, mapping of UIMA annotations is done entirely via configuration.  We have preconfigured mappings for many of the cTAKES and MetaMap annotations.  You can configure the mapping of additional cTAKES annotations and annotations from other UIMA analysis engines.
+
+In YTEX v0.8 we've added some bug fixes and enhancements for the MetaMap integration.
 
 == Prerequisites ==
   * JDK 1.6 or higher [http://java.sun.com/javase/downloads/widget/jdk6.jsp download]
@@ -66,6 +68,8 @@ We have only tested YTEX with integrated authentication.  You must have the perm
 If you want to install the UMLS in your SQL Server, you may want to use a different database/schema from the YTEX database.  If that is the case, you need permissions on the UMLS database/schema as well.  
 
 == Installation ==
+These installation instructions apply to both YTEX v0.7 and v0.8; simply replace references to `0.7` with `0.8` for the v0.8 installation.
+
   # Create a directory where ytex will be installed (hereafter referred to as the 'installation directory'), e.g
 
 Linux:
@@ -87,7 +91,7 @@ c:\clinicalnlp
     This archive contains 'concept graphs' used to compute semantic similarity measures, and UMLS 2011AB data for named entity recognition.  If you don't download this archive, WSD will be disabled.  If you neither have the UMLS installed nor download this archive, the installation will load a tiny subset of the UMLS for demonstration purposes.  For production use, [http://www.nlm.nih.gov/research/umls/implementation_resources/scripts/README_RRF_MySQL_Output_Stream.html we suggest that you install UMLS in your database].  If you cannot/don't want to install UMLS, you can use the subset of the UMLS that we provide in this archive: the 2011AB SNOMED-CT and RXNORM source vocabularies.
       ** If you have not done so already, obtain a UMLS License and create a UMLS Technology Services (UTS) Account, available free of charge: [https://uts.nlm.nih.gov/home.html]
       ** Download the YTEX UMLS Archive: [http://www.ytex-nlp.org/umls.download/secure/0.6/umls.zip umls.zip].  A valid UTS Login is required. and place it in the installation directory.
-    * LVG 2008 (optional) and cTAKES 2.50: If the machine you are installing on does not have an internet connection, you will have to download these files manually.  If they are not found in the installation directory, the YTEX installation script will attempt to download these files.  If you already have cTAKES 2.5.0 installed, configure YTEX to use your installation (see below); in this case YTEX will not download and install cTAKES.  
+    * LVG 2008 (optional) and cTAKES 2.5.0: If the machine you are installing on does not have an internet connection, you will have to download these files manually.  If they are not found in the installation directory, the YTEX installation script will attempt to download these files.  If you already have cTAKES 2.5.0 installed, configure YTEX to use your installation (see below); in this case YTEX will not download and install cTAKES.  
       ** LVG 2008 Archive: [http://lexsrv3.nlm.nih.gov/LexSysGroup/Projects/lvg/2008/release/lvg2008lite.tgz lvg2008lite.tgz](optional) 
       Make sure you save this file as `lvg2008.tgz` (your browser may decompress or expand this file). The lvg is required for stemming; if you do not download this file, stemming will not be performed.
       ** cTAKES 2.5.0: Download [http://sourceforge.net/projects/ohnlp/files/cTAKES/v2.5/cTAKES-2.5.0.zip/download cTAKES-2.5.0.zip]
