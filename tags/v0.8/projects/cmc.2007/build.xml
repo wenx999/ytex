@@ -1,0 +1,190 @@
+<project name="cmc">
+	<property environment="env" />
+	<condition property="ytex.home" value="${env.YTEX_HOME}" else="..">
+		<isset property="env.YTEX_HOME" />
+	</condition>
+	<include file="${ytex.home}/libs.system/build-classpath.xml" />
+	<property name="ytex.mx.cpe" value="1g" />
+	<property name="cmc.kernel.name" value="cmc.2007" />
+
+	<target name="jdbc.sqlcmd">
+		<property name="sql.onerror" value="abort" />
+		<property name="sql.delimiter" value=";" />
+		<sql driver="${db.driver}" url="${db.url}" userid="${db.username}" password="${db.password}" src="${sql.src}" onerror="${sql.onerror}" classpathref="${kernel.cp}" delimiter="${sql.delimiter}" />
+	</target>
+	<target name="all" depends="setup.all,ctakes.all,metamap.all" description="setup, run ctakes, run metamap" />
+	<target name="setup.all" depends="setup.build,setup.load.corpus,setup.generateFolds" />
+	<target name="setup.build">
+		<mkdir dir="${basedir}/bin" />
+		<javac srcdir="${basedir}/src" destdir="${basedir}/bin" classpathref="${kernel.cp}" />
+	</target>
+	<target name="setup.load.corpus" description="load cmc corpus into corpus_doc and corpus_label tables">
+		<antcall target="jdbc.sqlcmd">
+			<param name="sql.src" value="${basedir}/data/delete_corpus.sql" />
+		</antcall>
+		<java classname="ytex.cmc.DocumentLoaderImpl" fork="yes">
+			<classpath>
+				<dirset dir="${basedir}">
+					<include name="bin" />
+				</dirset>
+				<path refid="${kernel.cp}" />
+			</classpath>
+			<jvmarg value="${log4j.arg}" />
+			<jvmarg value="${java.log.arg}" />
+			<arg value="${cmc.dir}" />
+		</java>
+		<antcall target="jdbc.sqlcmd">
+			<param name="sql.src" value="${basedir}/data/insert_corpus_label.sql" />
+		</antcall>
+	</target>
+	<target name="setup.generateFolds" description="generate folds, store in cv_fold">
+		<java classname="ytex.kernel.FoldGeneratorImpl" classpathref="${kernel.cp}" fork="yes" dir="${basedir}/data" failonerror="yes">
+			<arg value="-prop" />
+			<arg value="corpus.properties.xml" />
+			<jvmarg value="-Xmx1g" />
+			<syspropertyset>
+				<propertyset refid="ytex.jvm.props" />
+			</syspropertyset>
+		</java>
+	</target>
+	<target name="RunCPE" description="annotate cmc 2007 corpus">
+		<property name="analysisBatch" value="cmc.2007-metamap" />
+		<java classname="ytex.tools.RunCPE" fork="yes" dir="${basedir}/desc">
+			<classpath>
+				<dirset dir="${basedir}">
+					<include name="${basedir}/desc" />
+				</dirset>
+				<path refid="${kernel.cp}" />
+			</classpath>
+			<arg value="${analysisBatch}.xml" />
+			<jvmarg value="-Xmx${ytex.mx.cpe}" />
+			<jvmarg value="${log4j.arg}" />
+			<jvmarg value="${java.log.arg}" />
+			<jvmarg value="-Dytex.conceptGraphName=sct-msh-csp-aod" />
+		</java>
+	</target>
+	<target name="ctakes.all" description="ctakes evaluation">
+		<antcall target="RunCPE">
+			<param name="analysisBatch" value="cmc.2007-ctakes" />
+		</antcall>
+		<antcall target="bow.all">
+			<param name="cmc.kernel.experiment" value="bow-ctakes" />
+		</antcall>
+		<antcall target="bow.all">
+			<param name="cmc.kernel.experiment" value="bow-ctakes-wsd" />
+		</antcall>
+	</target>
+	<target name="metamap.all" description="metamap evaluation">
+		<antcall target="RunCPE">
+			<param name="analysisBatch" value="cmc.2007-metamap" />
+		</antcall>
+		<antcall target="bow.all">
+			<param name="cmc.kernel.experiment" value="bow-metamap" />
+		</antcall>
+		<antcall target="bow.all">
+			<param name="cmc.kernel.experiment" value="bow-metamap-wsd" />
+		</antcall>
+	</target>
+	<target name="bow.all" depends="export.bow-libsvm.cv,cv.eval,cv.bestParams,export.bow-libsvm.test,test.genLibsvmParams,test.eval,test.results" description="do everything for a given experiment" />
+
+	<target name="cv.init">
+		<property name="export.dir" value="${basedir}/libsvm/${cmc.kernel.experiment}" />
+		<filterset id="export.filterset">
+			<filter token="kernel.experiment" value="${cmc.kernel.experiment}" />
+			<filter token="kernel.name" value="${cmc.kernel.name}" />
+		</filterset>
+	</target>
+	<target name="cv.eval" depends="cv.init" description="run libsvm cross-validation on directory">
+		<ant antfile="build.xml" dir="${ytex.home}/ytex.kernel/scripts" target="process.dir" inheritall="true">
+			<property name="ytex.home" value="${ytex.home}" />
+			<property name="kernel.data" value="${export.dir}" />
+			<property name="kernel.name" value="${cmc.kernel.name}" />
+			<property name="kernel.experiment" value="${cmc.kernel.experiment}" />
+		</ant>
+	</target>
+	<target name="cv.bestParams" depends="cv.init" description="get best params for experiment">
+		<mkdir dir="${export.dir}" />
+		<copy file="${basedir}/data/best_params.sql" todir="${export.dir}" overwrite="yes">
+			<filterset refid="export.filterset" />
+		</copy>
+		<sql driver="${db.driver}" url="${db.url}" userid="${db.username}" password="${db.password}" src="${export.dir}/best_params.sql" classpathref="${kernel.cp}" />
+	</target>
+	<target name="export.bow-libsvm.cv" depends="cv.init">
+		<delete dir="${export.dir}" quiet="yes" />
+		<mkdir dir="${export.dir}" />
+		<copy file="exp/${cmc.kernel.experiment}/export-bow.xml" todir="${export.dir}" />
+		<java classname="ytex.kernel.SparseDataExporterImpl" fork="yes" classpathref="${kernel.cp}" dir="${export.dir}" failonerror="yes">
+			<arg value="-prop" />
+			<arg value="export-bow.xml" />
+			<arg value="-type" />
+			<arg value="libsvm" />
+			<jvmarg value="-Xmx1g" />
+			<jvmarg value="${log4j.arg}" />
+			<jvmarg value="${java.log.arg}" />
+		</java>
+	</target>
+	<target name="export.bow-libsvm.test" depends="test.init">
+		<delete dir="${test.export.dir}" quiet="yes" />
+		<mkdir dir="${test.export.dir}" />
+		<copy file="exp/${cmc.kernel.experiment}-test/export-bow.xml" todir="${test.export.dir}" />
+		<java classname="ytex.kernel.SparseDataExporterImpl" fork="yes" classpathref="${kernel.cp}" dir="${test.export.dir}" failonerror="yes">
+			<arg value="-prop" />
+			<arg value="export-bow.xml" />
+			<arg value="-type" />
+			<arg value="libsvm" />
+			<jvmarg value="-Xmx1g" />
+			<jvmarg value="${log4j.arg}" />
+			<jvmarg value="${java.log.arg}" />
+		</java>
+	</target>
+	<target name="test.init" description="initialize variables for exporting test results">
+		<property name="test.export.dir" value="${basedir}/libsvm/${cmc.kernel.experiment}-test" />
+		<filterset id="export.filterset">
+			<filter token="kernel.experiment" value="${cmc.kernel.experiment}" />
+			<filter token="kernel.name" value="${cmc.kernel.name}" />
+		</filterset>
+	</target>
+	<target name="test.genLibsvmParams" depends="test.init" description="generate libsvm parameters.properties for test">
+		<echo>export optimal params</echo>
+		<mkdir dir="${test.export.dir}" />
+		<copy file="${basedir}/data/genLibsvmParams.sql" todir="${test.export.dir}" overwrite="yes">
+			<filterset refid="export.filterset" />
+		</copy>
+		<sql driver="${db.driver}" url="${db.url}" userid="${db.username}" password="${db.password}" src="${test.export.dir}/genLibsvmParams.sql" classpathref="${kernel.cp}" output="${test.export.dir}/parameters.properties" print="yes" showheaders="no" showtrailers="no" />
+	</target>
+	<target name="test.eval" depends="test.init" description="run libsvm">
+		<echo>run libsvm on directory ${test.export.dir}</echo>
+		<ant antfile="build.xml" dir="${ytex.home}/ytex.kernel/scripts" target="process.dir" inheritall="true">
+			<property name="ytex.home" value="${ytex.home}" />
+			<property name="no.genParams" value="yes" />
+			<property name="kernel.data" value="${test.export.dir}" />
+			<property name="kernel.experiment" value="${cmc.kernel.experiment}-test" />
+			<property name="kernel.name" value="${cmc.kernel.name}" />
+		</ant>
+	</target>
+	<target name="test.results" depends="test.init" description="get macro and micro-f1">
+		<mkdir dir="${test.export.dir}" />
+		<copy file="${basedir}/data/test_results.sql" todir="${test.export.dir}" overwrite="yes">
+			<filterset refid="export.filterset" />
+		</copy>
+		<sql driver="${db.driver}" url="${db.url}" userid="${db.username}" password="${db.password}" src="${test.export.dir}/test_results.sql" classpathref="${kernel.cp}" output="${test.export.dir}/results.csv" print="yes" showheaders="yes" showtrailers="no" />
+	</target>
+	<target name="package">
+		<zip file="../cmc.2007.zip">
+			<zipfileset dir="${basedir}" prefix="cmc.2007">
+				<include name="build.xml" />
+				<include name="readme.txt" />
+				<include name="desc/**/*.*" />
+				<include name="src/**/*.*" />
+				<include name="data/genLibsvmParams.sql" />
+				<include name="data/delete_corpus.sql" />
+				<include name="data/insert_corpus_label.sql" />
+				<include name="data/best_params.sql" />
+				<include name="data/test_results.sql" />
+				<include name="data/corpus.properties.xml" />
+				<include name="exp/bow*/*.*" />
+				<exclude name="**/.svn/**/*.*" />
+			</zipfileset>
+		</zip>
+	</target>
+</project>

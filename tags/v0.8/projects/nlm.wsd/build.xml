@@ -1,0 +1,436 @@
+<project name="nlm.wsd">
+	<property environment="env" />
+	<condition property="ytex.home" value="${env.YTEX_HOME}" else="..">
+		<isset property="env.YTEX_HOME" />
+	</condition>
+	<include file="${ytex.home}/libs.system/build-classpath.xml" />
+	<import file="${ytex.home}/data/build.xml" />
+	<property name="ytex.mx" value="1500m" />
+	<property name="mm.version" value="11" />
+	<property name="maxMemory" value="${ytex.mx}" />
+
+	<path id="wsd.cp">
+		<dirset dir="${basedir}">
+			<include name="bin" />
+			<include name="${basedir}/desc" />
+		</dirset>
+		<path refid="${kernel.cp}" />
+	</path>
+
+	<target name="all" depends="setup.all,eval.ctakes.all,eval.metamap.all,summary.R" description="do it all - load wsd tables, annotate abstracts, perform wsd" />
+	<target name="setup.all" depends="build,load.all,cg.setup.all" description="call build,load.all,cg.setup.all" />
+	<target name="build" description="compile java source">
+		<mkdir dir="${basedir}/bin" />
+		<javac srcdir="${basedir}/main/java/src" destdir="${basedir}/bin" classpathref="${kernel.cp}" />
+	</target>
+	<target name="load.all" depends="load.create,load.nlm.all,load.msh,load.lookup" />
+	<target name="load.create">
+		<sql driver="${db.driver}" url="${db.url}" userid="${db.username}" password="${db.password}" src="${basedir}/data/create_table.sql" onerror="abort" classpathref="${kernel.cp}" delimiter=";" />
+	</target>
+	<target name="load.nlm.all" description="load nlm.wsd data" depends="load.nlm.abstract,load.nlm.choices.all,load.nlm.word" />
+	<target name="load.nlm.abstract" description="load nlm_wsd table">
+		<java classname="ytex.wsd.nlm.WSDLoader" fork="yes" failonerror="yes">
+			<classpath>
+				<dirset dir="${basedir}">
+					<include name="bin" />
+				</dirset>
+				<path refid="${kernel.cp}" />
+			</classpath>
+			<syspropertyset>
+				<propertyset refid="ytex.jvm.props" />
+			</syspropertyset>
+			<arg value="${nlm.wsd.home}" />
+		</java>
+	</target>
+	<target name="load.nlm.word" description="load nlm_wsd_word table">
+		<copy file="${basedir}/data/select_words.template.sql" tofile="${basedir}/data/select_words.sql" overwrite="yes">
+			<filterset>
+				<filter token="UMLS_SCHEMA" value="${umls.schema}" />
+			</filterset>
+		</copy>
+		<sql driver="${db.driver}" url="${db.url}" userid="${db.username}" password="${db.password}" src="${basedir}/data/select_words.sql" onerror="abort" classpathref="${kernel.cp}" delimiter=";" />
+	</target>
+	<target name="load.lookup" description="create v_wsd_fword_lookup table">
+		<copy file="${basedir}/data/v_wsd_fword_lookup.template.sql" tofile="${basedir}/data/v_wsd_fword_lookup.sql" overwrite="yes">
+			<filterset>
+				<filter token="UMLS_SCHEMA" value="${umls.schema}" />
+			</filterset>
+		</copy>
+		<sql driver="${db.driver}" url="${db.url}" userid="${db.username}" password="${db.password}" src="${basedir}/data/v_wsd_fword_lookup.sql" onerror="abort" classpathref="${kernel.cp}" delimiter=";" />
+	</target>
+	<target name="load.nlm.choices.all" description="load choices into nlm_wsd_cui table">
+		<antcall target="init.conn">
+			<param name="basedir" value="${ytex.home}/data" />
+		</antcall>
+		<for param="jdl.data">
+			<fileset dir="${choices.home}" includes="*.choices" />
+			<sequential>
+				<antcall target="choices.jdl">
+					<param name="jdl.data" value="@{jdl.data}" />
+				</antcall>
+			</sequential>
+		</for>
+	</target>
+	<target name="choices.jdl" description="load choices data with java data loader">
+		<property name="jdl.data" value="${choices.home}/adjustment.choices" />
+		<basename file="${jdl.data}" property="word" suffix=".choices" />
+		<echo>jdl.data ${jdl.data}</echo>
+		<echo>word ${word}</echo>
+		<tempfile property="jdl.format.file" suffix=".xml" deleteonexit="true" />
+		<copy file="${basedir}/data/choices.xml" tofile="${jdl.format.file}" overwrite="true">
+			<filterset>
+				<filter token="word" value="${word}" />
+			</filterset>
+		</copy>
+		<java classpathref="${kernel.cp}" classname="my.mas.AppMain" fork="yes" failonerror="yes">
+			<jvmarg value="-Dfile.encoding=UTF-8" />
+			<arg value="-c" />
+			<arg value="${ytex.home}/data/conn.xml" />
+			<arg value="-d" />
+			<arg value="${jdl.data}" />
+			<arg value="-l" />
+			<arg value="${jdl.format.file}" />
+		</java>
+	</target>
+	<target name="load.msh" description="load msh_wsd table">
+		<java classname="ytex.wsd.msh.MshWSDLoader" fork="yes" failonerror="yes">
+			<classpath>
+				<dirset dir="${basedir}">
+					<include name="bin" />
+				</dirset>
+				<path refid="${kernel.cp}" />
+			</classpath>
+			<syspropertyset>
+				<propertyset refid="ytex.jvm.props" />
+			</syspropertyset>
+			<arg value="${msh.wsd.home}" />
+		</java>
+	</target>
+	<target name="cg.setup.all" description="generate all concept graphs">
+		<for param="cg.name" list="msh-umls,sct-msh-csp-aod,umls">
+			<sequential>
+				<antcall target="cg.setup">
+					<param name="cg.name" value="@{cg.name}" />
+				</antcall>
+			</sequential>
+		</for>
+	</target>
+	<target name="cg.setup" description="setup concept graph ${cg}, compute intrinsic info content">
+		<property name="cg.name" value="${ytex.conceptGraphName}" />
+		<echo>${cg.name}</echo>
+		<copy file="${basedir}/desc/${cg.name}.template.xml" tofile="${basedir}/desc/${cg.name}.xml" overwrite="yes">
+			<filterset>
+				<filter token="umls.schema" value="${umls.prefix}" />
+			</filterset>
+		</copy>
+		<java classname="ytex.kernel.dao.ConceptDaoImpl" classpathref="${kernel.cp}" fork="yes" failonerror="yes">
+			<syspropertyset>
+				<propertyset refid="ytex.jvm.props" />
+			</syspropertyset>
+			<jvmarg value="-Xms${maxMemory}" />
+			<jvmarg value="-Xmx${maxMemory}" />
+			<arg value="-prop" />
+			<arg value="${basedir}/desc/${cg.name}.xml" />
+		</java>
+	</target>
+	<target name="eval.ctakes.all" description="all ctakes wsd">
+		<antcall target="eval.analysisBatch">
+			<param name="analysisBatch" value="nlm-ctakes" />
+			<param name="eval.target" value="eval.nlm.wsd.all" />
+		</antcall>
+		<antcall target="eval.analysisBatch">
+			<param name="analysisBatch" value="msh-ctakes" />
+			<param name="eval.target" value="eval.msh.wsd.all" />
+		</antcall>
+	</target>
+	<target name="eval.metamap.all" description="all metamap wsd">
+		<antcall target="eval.analysisBatch">
+			<param name="analysisBatch" value="nlm-metamap-default" />
+			<param name="eval.target" value="eval.nlm.wsd.all" />
+			<param name="ytex.mx.cpe" value="500m" />
+		</antcall>
+		<antcall target="eval.analysisBatch">
+			<param name="analysisBatch" value="msh-metamap-default" />
+			<param name="eval.target" value="eval.msh.wsd.all" />
+			<param name="ytex.mx.cpe" value="500m" />
+		</antcall>
+	</target>
+	<target name="eval.analysisBatch" description="annotate dataset, do wsd">
+		<antcall target="RunCPE.threads">
+			<param name="analysisBatch" value="${analysisBatch}" />
+		</antcall>
+		<antcall target="${eval.target}">
+			<param name="analysisBatch" value="${analysisBatch}" />
+		</antcall>
+	</target>
+	<target name="RunCPE.threads" description="annotate corpus in parallel">
+		<for list="${kernel.slices}" param="kernel.slice" parallel="yes" threadCount="${kernel.threads}">
+			<sequential>
+				<antcall target="RunCPE.slice">
+					<param name="kernel.slice" value="@{kernel.slice}" />
+				</antcall>
+			</sequential>
+		</for>
+	</target>
+	<target name="RunCPE.slice">
+		<property name="kernel.slice" value="1" />
+		<property name="analysisBatch" value="nlm-ctakes" />
+		<property name="ytex.mx.cpe" value="500m" />
+		<echo>kernel.slice ${kernel.slice}</echo>
+		<makeurl property="collectionreader.url" file="${ytex.home}/config/desc/ytex/uima/DBCollectionReader.xml" />
+		<makeurl property="pipeline.url" file="${ytex.home}/config/desc/ytex/uima/YTEXPipeline.xml" />
+		<copy file="desc/${analysisBatch}-cpe.template.xml" tofile="desc/${analysisBatch}-cpe.xml.${kernel.slice}" overwrite="yes">
+			<filterset id="exp.filter">
+				<filter token="collectionreader.url" value="${collectionreader.url}" />
+				<filter token="pipeline.url" value="${pipeline.url}" />
+				<filter token="kernel.slice" value="${kernel.slice}" />
+				<filter token="kernel.threads" value="${kernel.threads}" />
+			</filterset>
+		</copy>
+		<java classname="ytex.tools.RunCPE" fork="yes" dir="${basedir}/desc" classpathref="wsd.cp">
+			<arg value="${analysisBatch}-cpe.xml.${kernel.slice}" />
+			<jvmarg value="-Xmx${ytex.mx.cpe}" />
+			<jvmarg value="${log4j.arg}" />
+			<jvmarg value="${java.log.arg}" />
+		</java>
+	</target>
+	<target name="eval.msh.wsd.all" description="perform wsd for all concept graphs">
+		<property name="windows" value="10,30,50,70" />
+		<for param="window" list="${windows}" parallel="yes" threadCount="${kernel.threads}">
+			<sequential>
+				<antcall target="eval.msh.wsd.cg.all">
+					<param name="window" value="@{window}" />
+				</antcall>
+			</sequential>
+		</for>
+	</target>
+	<target name="eval.msh.wsd.cg.all" description="perform wsd for all concept graphs">
+		<for param="cg" list="msh-umls,sct-msh-csp-aod,umls">
+			<sequential>
+				<antcall target="eval.msh.wsd">
+					<param name="cg.name" value="@{cg}" />
+				</antcall>
+				<antcall target="eval.msh.R">
+					<param name="cg.name" value="@{cg}" />
+				</antcall>
+			</sequential>
+		</for>
+	</target>
+	<target name="eval.nlm.wsd.all" description="nlm wsd for all windows and concept graphs">
+		<property name="windows" value="10,30,50,70" />
+		<for param="window" list="${windows}" parallel="yes" threadCount="${kernel.threads}">
+			<sequential>
+				<antcall target="eval.nlm.wsd.cg.all">
+					<param name="window" value="@{window}" />
+				</antcall>
+			</sequential>
+		</for>
+	</target>
+	<target name="eval.nlm.wsd.cg.all" description="nlm wsd for all concept graphs">
+		<property name="eval.nlm.wsd.cg.target" value="eval.nlm.all" />
+		<property name="cg.list" value="sct-msh-csp-aod,umls" />
+		<for param="cg" list="${cg.list}">
+			<sequential>
+				<antcall target="${eval.nlm.wsd.cg.target}">
+					<param name="cg.name" value="@{cg}" />
+				</antcall>
+			</sequential>
+		</for>
+	</target>
+	<target name="eval.nlm.all" description="nlm wsd for specified concept graph and window">
+		<antcall target="eval.nlm.wsd">
+			<param name="cg.name" value="${cg.name}" />
+		</antcall>
+		<antcall target="eval.nlm.R">
+			<param name="cg.name" value="${cg.name}" />
+		</antcall>
+	</target>
+	<target name="eval.nlm.wsd" description="perform wsd">
+		<property name="analysisBatch" value="nlm.wsd" />
+		<property name="window" value="10" />
+		<property name="cg.name" value="sct-msh-csp-aod" />
+		<property name="metrics" value="WUPALMER,LCH,INTRINSIC_LCH,INTRINSIC_LIN,PATH,INTRINSIC_PATH,JACCARD,SOKAL" />
+		<mkdir dir="${basedir}/eval/${analysisBatch}/${cg.name}/${window}" />
+		<java classname="ytex.wsd.nlm.WSDDisambiguator" fork="yes" dir="${basedir}/eval/${analysisBatch}/${cg.name}/${window}">
+			<classpath>
+				<dirset dir="${basedir}">
+					<include name="bin" />
+				</dirset>
+				<path refid="${kernel.cp}" />
+			</classpath>
+			<jvmarg value="-Xmx${ytex.mx}" />
+			<jvmarg value="${log4j.arg}" />
+			<jvmarg value="${java.log.arg}" />
+			<jvmarg value="-Dytex.conceptGraphName=${cg.name}" />
+			<arg value="${metrics}" />
+			<arg value="${window}" />
+			<arg value="${analysisBatch}" />
+		</java>
+	</target>
+	<target name="eval.msh.wsd" description="perform wsd">
+		<property name="analysisBatch" value="msh-wsd-metamap" />
+		<property name="window" value="10" />
+		<property name="metrics" value="WUPALMER,LCH,INTRINSIC_LCH,INTRINSIC_LIN,PATH,INTRINSIC_PATH,JACCARD,SOKAL" />
+		<property name="cg.name" value="sct-msh-csp-aod" />
+		<delete dir="${basedir}/eval/${analysisBatch}/${cg.name}/${window}" quiet="yes" />
+		<mkdir dir="${basedir}/eval/${analysisBatch}/${cg.name}/${window}" />
+		<java classname="ytex.wsd.msh.MshWSDDisambiguator" fork="yes" dir="${basedir}/eval/${analysisBatch}/${cg.name}/${window}">
+			<classpath>
+				<dirset dir="${basedir}">
+					<include name="bin" />
+				</dirset>
+				<path refid="${kernel.cp}" />
+			</classpath>
+			<jvmarg value="-Xmx${ytex.mx}" />
+			<jvmarg value="${log4j.arg}" />
+			<jvmarg value="${java.log.arg}" />
+			<jvmarg value="-Dytex.conceptGraphName=${cg.name}" />
+			<arg value="${metrics}" />
+			<arg value="${window}" />
+			<arg value="${analysisBatch}" />
+		</java>
+	</target>
+	<target name="eval.nlm.R" description="compute accuracy">
+		<property name="analysisBatch" value="nlm.wsd" />
+		<property name="window" value="10" />
+		<property name="cg.name" value="sct-msh-csp-aod" />
+		<exec executable="${R.bin}/R" dir="${basedir}/eval/${analysisBatch}/${cg.name}/${window}">
+			<arg line="--slave --file=${basedir}/eval.R" />
+		</exec>
+	</target>
+	<target name="eval.msh.R" description="compute accuracy">
+		<property name="analysisBatch" value="nlm.wsd" />
+		<property name="window" value="10" />
+		<property name="cg.name" value="sct-msh-csp-aod" />
+		<exec executable="${R.bin}/R" dir="${basedir}/eval/${analysisBatch}/${cg.name}/${window}">
+			<arg line="--slave --file=${basedir}/eval-msh.R" />
+		</exec>
+	</target>
+	<target name="package" description="pack up nlm wsd for distribution">
+		<zip destfile="../nlm.wsd.zip">
+			<zipfileset dir="${basedir}" prefix="nlm.wsd">
+				<include name="build.xml" />
+				<include name="*.R" />
+				<include name="README.txt" />
+				<include name="desc/*.template.xml" />
+				<include name="desc/ytex/**/*.*" />
+				<include name="main/java/**/*.*" />
+				<include name="data/*.*" />
+				<exclude name="**/.svn/**/*.*" />
+			</zipfileset>
+		</zip>
+	</target>
+	<target name="mm.copy.all" description="create scripts for starting multiple metamap servers">
+		<for list="${kernel.slices}" param="kernel.slice">
+			<sequential>
+				<antcall target="mm.copy.port">
+					<param name="port.index" value="@{kernel.slice}" />
+				</antcall>
+			</sequential>
+		</for>
+	</target>
+	<target name="mm.copy.port" description="create scripts for starting a metamap server instance">
+		<property name="port.index" value="1" />
+		<property name="port.prefix" value="80${port.index}" />
+		<property name="port.mmserver" value="${port.prefix}1" />
+		<property name="port.skr" value="${port.prefix}5" />
+		<property name="port.wsd" value="${port.prefix}4" />
+		<property name="port.jd" value="${port.prefix}7" />
+
+		<copy todir="${mm.home}/bin" overwrite="yes">
+			<fileset dir="${mm.home}/bin">
+				<include name="SKRrun.${mm.version}" />
+				<include name="mmserver${mm.version}" />
+				<include name="mmserver${mm.version}.bat" />
+				<include name="skrmedpostctl" />
+				<include name="skrmedpostctl_start.bat" />
+				<include name="wsdserverctl" />
+				<include name="wsdserverctl_start.bat" />
+			</fileset>
+			<globmapper from="*" to="${port.index}_*" />
+		</copy>
+		<replace dir="${mm.home}/bin" includes="${port.index}_*">
+			<replacefilter token="8066" value="${port.mmserver}" />
+			<replacefilter token="5554" value="${port.wsd}" />
+			<replacefilter token="1795" value="${port.skr}" />
+			<replacefilter token="6767" value="${port.jd}" />
+			<replacefilter token="SKRrun.${mm.version}" value="${port.index}_SKRrun.${mm.version}" />
+			<replacefilter token="bin\mmserver${mm.version}" value="bin\${port.index}_mmserver${mm.version}" />
+			<replacefilter token="/log/" value="/log/${port.index}_" />
+			<replacefilter token="\log\" value="\log\${port.index}_" />
+			<replacefilter token="/disambServer.cfg" value="/${port.index}_disambServer.cfg" />
+		</replace>
+		<copy file="${mm.home}/WSD_Server/config/disambServer.cfg" tofile="${mm.home}/WSD_Server/config/${port.index}_disambServer.cfg" overwrite="yes">
+			<filterchain>
+				<tokenfilter>
+					<replacestring from="5554" to="${port.wsd}" />
+					<replacestring from="6767" to="${port.jd}" />
+				</tokenfilter>
+			</filterchain>
+		</copy>
+		<chmod dir="${mm.home}/bin" includes="${port.index}_*" perm="ug+x">
+		</chmod>
+	</target>
+	<target name="mm.start.all" description="start all metamap servers">
+		<for list="${kernel.slices}" param="kernel.slice">
+			<sequential>
+				<antcall target="mm.start.port">
+					<param name="port.index" value="@{kernel.slice}" />
+				</antcall>
+			</sequential>
+		</for>
+	</target>
+	<target name="mm.start.port" description="start a metamap server">
+		<property name="port.index" value="1" />
+		<exec executable="cmd" dir="${mm.home}/bin" spawn="yes">
+			<arg value="/c" />
+			<arg value="start" />
+			<arg value="${port.index}_skrmedpostctl_start.bat" />
+		</exec>
+		<if>
+			<isset property="mm.wsd" />
+			<then>
+				<exec executable="cmd" dir="${mm.home}/bin" spawn="yes">
+					<arg value="/c" />
+					<arg value="start" />
+					<arg value="${port.index}_wsdserverctl_start.bat" />
+				</exec>
+			</then>
+		</if>
+		<exec executable="cmd" dir="${mm.home}/bin" spawn="yes">
+			<arg value="/c" />
+			<arg value="start" />
+			<arg value="${port.index}_mmserver${mm.version}.bat" />
+		</exec>
+	</target>
+	<target name="mm.start.all.linux" description="start all metamap servers">
+		<for list="${kernel.slices}" param="kernel.slice">
+			<sequential>
+				<antcall target="mm.start.port.linux">
+					<param name="port.index" value="@{kernel.slice}" />
+				</antcall>
+			</sequential>
+		</for>
+	</target>
+	<target name="mm.start.port.linux" description="start a metamap server">
+		<property name="port.index" value="1" />
+		<exec executable="${mm.home}/bin/${port.index}_skrmedpostctl" dir="${mm.home}/bin">
+			<arg value="start" />
+		</exec>
+		<if>
+			<isset property="mm.wsd" />
+			<then>
+				<exec executable="${mm.home}/bin/${port.index}_wsdserverctl" dir="${mm.home}/bin">
+					<arg value="start" />
+				</exec>
+			</then>
+		</if>
+		<exec executable="${mm.home}/bin/${port.index}_mmserver${mm.version}" dir="${mm.home}/bin" spawn="yes">
+		</exec>
+	</target>
+	<target name="summary.R" description="fit linear models to wsd accuracy, consolidate results">
+		<exec executable="${R.bin}/R" dir="${basedir}">
+			<arg line="--slave --file=${basedir}/summary.R" />
+		</exec>
+	</target>
+</project>
