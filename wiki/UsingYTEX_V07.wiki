@@ -2,7 +2,7 @@
 #labels Featured
 <wiki:toc max_depth="2" />
 
-=Using YTEX v0.7=
+=Using YTEX v0.7 & v0.8=
 This document presumes familiarity with [http://uima.apache.org/index.html UIMA] and [http://ohnlp.sourceforge.net/cTAKES/ cTAKES].  For help, please search or post to the [http://groups.google.com/group/ytex-users ytex-users google group].
 
 =YTEX Annotators=
