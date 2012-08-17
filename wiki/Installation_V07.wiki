@@ -97,9 +97,10 @@ c:\clinicalnlp
       ** cTAKES 2.5.0: Download [http://sourceforge.net/projects/ohnlp/files/cTAKES/v2.5/cTAKES-2.5.0.zip/download cTAKES-2.5.0.zip]
 
   # Extract `ytex-with-dependencies-0.7.zip` to the installation directory; this will create a ytex subdirectory, e.g. windows `c:\java\clinicalnlp\ytex-0.7` / linux `${HOME}/clinicalnlp/ytex-0.7`, referred to subsequently as YTEX_HOME.  This will also extract ant and tomcat; if you already have these installed, you may want to extract just the `ytex-0.7` directory from the archive, and configure ytex to use your existing ant & tomcat installation (set in `setenv.bat`/`ytex.profile`).
-  # Edit environment batch/shell script, and Fix the path references to match your environment.  If you have cTAKES 2.5.0 installed already, set the <tt>CTAKES_HOME</tt> variable in this script.
+  # Edit environment batch/shell script, and Fix the path references to match your environment.  If you have cTAKES 2.5.0 installed already, set the <tt>CTAKES_HOME</tt> variable in this script.  Note to linux users: there is a small bug in `ytex.profile` - You need to add `:${CTAKES_HOME}/cTAKES.jar` to the end of the `CLASSPATH` variable.
     * windows edit <tt>YTEX_HOME\setenv.cmd</tt>
     * linux move <tt>YTEX_HOME/ytex.profile</tt> to <tt>${HOME}/ytex.profile</tt>
+    
   # Create `YTEX_HOME\config\desc\ytex.properties`: In this file, you specify the database connection parameters. Use `YTEX_HOME\config\desc\ytex.properties.<db type>.example` as a template.  If you have UMLS installed on your database, specify the `umls.schema` and `umls.catalog` properties (see the properties file for an explanation of what these are).  
   # Execute the setup script.  
     * *windows*: Open a command prompt, navigate to YTEX_HOME, and execute setup script:
