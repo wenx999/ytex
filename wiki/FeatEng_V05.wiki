@@ -172,6 +172,8 @@ ant -Dytex.home=%YTEX_HOME% kernel.create
 ==Configure ytex.properties==
 Add the following to your `ytex.properties` file:
 {{{
+# the IP address/hostname of your mysql server
+db.host=localhost
 # where challenge data was extracted
 i2b2.dir=C:/downloads/text mining/i2b2 2008 challenge
 # where libsvm binaries are located
