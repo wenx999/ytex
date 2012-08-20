@@ -208,6 +208,21 @@ This is completely automated by an ant build script.  We have split this up unto
 
 Summary results (F1 scores) are stored in the `YTEX_HOME/i2b2.2008/<experiment>-test/results.txt` file, where `<experiment>` is one of word, imputed, cui, lin, superlin.  The individual document classifications are stored in the `classifier_instance_eval` table.
 
+==Configure setenv.bat/ytex.profile==
+You need to specify the directory that contains the `mysql` executable used to execute `.sql` scripts.
+
+For linux, add the following to `ytex.profile` (adjust the path to match your environment).
+{{{
+MYSQL_HOME=/usr/bin
+export MYSQL_HOME
+}}}
+
+For windows, add the following (adjust the path to match your environment - `mysql.exe` will be in that directory).
+{{{
+set MYSQL_HOME=C:\Program Files\MySQL\MySQL Server 5.1\bin
+}}}
+
+
 ===Setup===
 To load and annotate the corpus, compute hotspots, open a command prompt, and run the following from the commands.  (This will take ~4 hours w/ 4 cores):
 {{{
