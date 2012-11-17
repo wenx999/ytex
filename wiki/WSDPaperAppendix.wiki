@@ -1,4 +1,5 @@
 #summary Online Appendix for WSD Paper
+#labels Deprecated
 
 = Introduction =
 This page provides links to the supplementary data for our paper: Garla V, Brandt C, Knowledge-based biomedical word sense disambiguation: an evaluation and application to clinical document classification (submitted)
