@@ -12,6 +12,9 @@ This page describes checking YTEX out and setting up an eclipse development envi
   * Jdbc Drivers (included with ytex-with-dependencies, see [Installation])
   * LVG 2010 (see [Installation])
   * UMLS Database Export (see [Installation])
+  * Maven
+  * Ant 1.8 or higher
+  * Weka 3.6
   * SQL Server Users: add the SQL Server JDBC Driver DLLs to your path. 
     ** Control Panel -> Edit System Environment Variables -> Environment Variables. 
     ** Add/Edit the `PATH` variable in the user variable section
@@ -23,7 +26,12 @@ This page describes checking YTEX out and setting up an eclipse development envi
   * Checkout
     ** Setup Repository: https://ytex.googlecode.com/svn/
     ** Checkout the latest stable version.  The trunk is used for active development.  For a stable version, look at the svn tags.  Right click on v0.3 -> find / checkout as -> find projects in the children of the selected resource
-  * v0.4 and higher: starting with this version, we manage dependencies using maven; you must download required libraries using maven.  Run the `process-sources` goal on `ytex.web/pom.xml` file.  There is a run configuration named `ytex.web process-sources` - run this.
+  * Download dependenices via maven.
+    ** Install weka in maven:
+{{{
+mvn install:install-file -Dfile=<WEKA Install Dir>\weka.jar -DgroupId=weka -DartifactId=weka -Dversion=3.6 -Dpackaging=jar
+}}}
+    ** Copy dependencies to ytex manage dependencies using maven; you must download required libraries using maven.  Run the `process-sources` goal on `ytex.web/pom.xml` file.  There is a run configuration named `ytex.web process-sources` - run this.
   * Create config.local project
   We try to keep local configuration settings separate from checked-in code.  Create a java project named `config.local`, and create a `ytex.properties` file in the root of this project's source directory, i.e. `${workspace_loc}/config.local/src/ytex.properties`.  Use `${workspace_loc}/config/desc/ytex.properties.*.example` as a template.  Also add the following property:
 {{{
