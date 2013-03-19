@@ -14,7 +14,10 @@ This page describes checking YTEX out and setting up an eclipse development envi
   * UMLS Database Export (see [Installation])
   * Maven
   * Ant 1.8 or higher
+  * [http://sourceforge.net/projects/ant-contrib/files/ant-contrib/1.0b3/ant-contrib-1.0b3-bin.zip/download ant-contrib] - unzip `ant-contrib-1.0b3.jar` to `ANT_HOME/lib`
   * Weka 3.6
+  * cTAKES 2.5 (see [Installation])
+  * MetaMap 2011 or higher (see [Installation])
   * SQL Server Users: add the SQL Server JDBC Driver DLLs to your path. 
     ** Control Panel -> Edit System Environment Variables -> Environment Variables. 
     ** Add/Edit the `PATH` variable in the user variable section
@@ -47,9 +50,11 @@ kernel.cp=kernel.cp.dev
 || `ytex.properties` || `${workspace_loc}/config.local/src/ytex.properties` ||
 || `ytex.home` || `${workspace_loc}` ||
 || `mysql.home` || necessary only for mysql users.  location of mysql.exe, e.g. C:\Program Files\MySQL\MySQL Server 5.1\bin ||
-
 -> Add Jar, and add `ant-contrib.jar`
   * Setup config files: execute `templateToConfig` in build/build-setup.xml`
+  * Setup classpath variables: Wiindow -> Preferences -> Java Build Path -> Classpath Variables -> New
+    ** MM_HOME - metamap install dir
+    ** CTAKES_HOME - ctakes install dir
   * Setup lvg: 
     ** copy the `lvg2010.tgz` (ytex v0.3) or `lvg2011.tgz` (ytex v0.4 or higer) file to the directory that contains the workspace.  e.g. if your workspace is `c:\projects\ytex`, copy the lvg file to `c:\projects`.
     ** execute `setup.lvg` in build/build-setup.xml`
