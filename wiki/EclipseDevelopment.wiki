@@ -10,7 +10,7 @@ This page describes checking YTEX out and setting up an eclipse development envi
   * [http://tomcat.apache.org/download-60.cgi Apache Tomcat v6.x]
   * [http://sourceforge.net/projects/ant-contrib/ Ant-Contrib] (included with ytex-with-dependencies)
   * Jdbc Drivers (included with ytex-with-dependencies, see [Installation])
-  * LVG 2010 (see [Installation])
+  * LVG 2008(see [Installation])
   * UMLS Database Export (see [Installation])
   * Maven
   * Ant 1.8 or higher
@@ -56,7 +56,7 @@ kernel.cp=kernel.cp.dev
     ** MM_HOME - metamap install dir
     ** CTAKES_HOME - ctakes install dir
   * Setup lvg: 
-    ** copy the `lvg2010.tgz` (ytex v0.3) or `lvg2011.tgz` (ytex v0.4 or higer) file to the directory that contains the workspace.  e.g. if your workspace is `c:\projects\ytex`, copy the lvg file to `c:\projects`.
+    ** copy the `lvg2008.tgz` file to the directory that contains the workspace.  e.g. if your workspace is `c:\projects\ytex`, copy the lvg file to `c:\projects`.
     ** execute `setup.lvg` in build/build-setup.xml`
   * Setup Database:
     ** copy database archive (e.g. `umls-mysql.zip`) to the directory that contains the workspace.
