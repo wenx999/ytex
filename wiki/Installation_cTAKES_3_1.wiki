@@ -1,0 +1,103 @@
+#summary Installation for YTEX Apache cTAKES
+
+= Introduction =
+Work in progress, quick install notes..
+
+With the apache ctakes release we've implemented the following features:
+  * Upgraded to cTAKES 3.1.1
+
+== Prerequisites ==
+  * JDK 1.6 or higher [http://java.sun.com/javase/downloads/widget/jdk6.jsp download]
+  * Atleast 4 GB of free disk space
+  * [http://www.nlm.nih.gov/research/umls/implementation_resources/scripts/README_RRF_MySQL_Output_Stream.html we suggest that you install UMLS in your database].  NLM provides scripts for installing UMLS in MySQL and Oracle.  Refer to [UMLS_SQL_SERVER_V06 UMLS SQL Server Installation] for instructions on how to install UMLS in MS SQL Server.
+  * Tested on Linux and Windows.  We don't test YTEX on mac; however, users have successfully installed this on mac following linux installation instructions.
+
+== Database Prerequisites ==
+YTEX supports MS SQL Server 2008, MySQL version 5.x, and Oracle versions 10gR2 and above.  Create a database user (and schema) for use with ytex.  See platform specific notes below.
+
+=== Oracle ===
+As documented [http://www.nlm.nih.gov/research/umls/implementation_resources/scripts/index.html here] your database must use the UTF-8 charset.
+
+Make sure you use a tablespace with enough room; e.g. create the ytex user and schema like this:
+{{{
+create tablespace TBS_YTEX datafile 'C:/oracle/oradata/orcl/TBS_YTEX.dbf' size 1000M autoextend on online;
+create user ytex identified by ytex default tablespace TBS_YTEX;
+grant connect, resource to ytex;
+grant create materialized view to ytex;
+grant create view to ytex;
+}}}
+
+If you have installed the UMLS locally, you must also grant ytex select permissions on umls tables; e.g. assuming that umls tables are in the umls schema:
+{{{
+grant select on umls.MRCONSO to ytex;
+grant select on umls.MRSTY to ytex;
+grant select on umls.MRREL to ytex;
+}}}
+
+=== MySQL ===
+To create the mysql user and database, login to mysql as root and run the following commands (change as necessary):
+{{{
+CREATE DATABASE ytex CHARACTER SET utf8;
+CREATE USER 'ytex'@'localhost' IDENTIFIED BY 'ytex';
+GRANT ALL PRIVILEGES ON ytex.* TO 'ytex'@'localhost';
+}}}
+On mac you should use the 127.0.0.1 instead of localhost.  Note that if ytex connects to the mysql server from a different machine, you should replace localhost with the host name or ip address of the machine you will connect from, or use the wildcard ('%'):
+{{{
+CREATE USER 'ytex'@'%' IDENTIFIED BY 'ytex';
+GRANT ALL PRIVILEGES ON ytex.* TO 'ytex'@'%';
+}}}
+If you have installed UMLS in your database, you must give the ytex user select permission on these tables:
+{{{
+GRANT SELECT on umls.* to 'ytex'@'%';
+}}}
+
+The `document` table uses the `text` and `blob` datatypes for the doc_text column that holds the document text.  If you are processing large documents, you may need to use the `longtext` datatype instead.  Furthermore, you may have to increase the [http://dev.mysql.com/doc/refman/5.5/en/packet-too-large.html maximum packet size].
+
+=== SQL Server ===
+We have only tested YTEX with integrated authentication.  You must have the permission to create database objects in the YTEX database and schema.  If you don't have these permissions, ask your DBA to add you to the `db_ddladmin` & `db_datawriter` roles for the YTEX database.
+
+If you want to install the UMLS in your SQL Server, you may want to use a different database/schema from the YTEX database.  If that is the case, you need permissions on the UMLS database/schema as well.  
+
+== Installation ==
+
+  # Install ctakes 'as usual'; see https://cwiki.apache.org/confluence/display/CTAKES/cTAKES+3.1+User+Install+Guide 
+For the rest of this document, we assume ctakes is installed in [CTAKES_HOME]
+  
+  # Download and unzip the following archives 'over' your installation:
+
+    * YTEX Archive: `ytex-lib-3.1.2-SNAPSHOT.zip`
+    this contains non-asf compliant dependencies that cannot be distributed via the apache download site.  Use windows explorer to unzip the files.
+
+    * YTEX UMLS Archive: `ytex-umls-3.1.2-SNAPSHOT.zip` (optional, UTS login required)
+    This archive contains 'concept graphs' used to compute semantic similarity measures, and a UMLS 2013AA lookup table for named entity recognition.  If you don't download this archive, WSD will be disabled.  If you neither have the UMLS installed nor download this archive, the installation will load a tiny subset of the UMLS for demonstration purposes.  For production use, [http://www.nlm.nih.gov/research/umls/implementation_resources/scripts/README_RRF_MySQL_Output_Stream.html we suggest that you install UMLS in your database].
+      ** If you have not done so already, obtain a UMLS License and create a UMLS Technology Services (UTS) Account, available free of charge: [https://uts.nlm.nih.gov/home.html]
+      ** Download the YTEX UMLS Archive: `ytex-umls-3.1.2-SNAPSHOT.zip`.  A valid UTS Login is required. and unzip it in the ctakes installation directory:
+    * LVG 2008 (optional) and cTAKES 2.5.0: If the machine you are installing on does not have an internet connection, you will have to download these files manually.  If they are not found in the installation directory, the YTEX installation script will attempt to download these files.  If you already have cTAKES 2.5.0 installed, configure YTEX to use your installation (see below); in this case YTEX will not download and install cTAKES.  
+
+  # Edit environment batch/shell script, and Fix the path references to match your environment.  
+    * windows edit <tt>CTAKES_HOME\bin\setenv.cmd</tt>
+    * linux move <tt>CTAKES_HOME/bin/ctakes.profile</tt> to <tt>${HOME}/ctakes.profile</tt>
+    
+  # Create `CTAKES_HOME\resources\org\apache\ctakes\ytex\ytex.properties`: In this file, you specify the database connection parameters. Use `CTAKES_HOME\resources\org\apache\ctakes\ytex\ytex.properties.<db type>.example` as a template.  If you have UMLS installed on your database, specify the `umls.schema` and `umls.catalog` properties (see the properties file for an explanation of what these are).  
+  # Execute the setup script.  
+    * *windows*: Open a command prompt, navigate to CTAKES_HOME, and execute setup script:
+{{{
+cd /d c:\java\apache-ctakes-3.1.2-SNAPSHOT\bin\ctakes-ytex\scripts
+ant -f build-setup.xml all
+}}}
+    * *linux*: From a shell, cd to the YTEX_HOME directory, set the environment, make sure necessary scripts are executable, and execute the ant script:
+{{{
+chmod u+x ${HOME}/ctakes.profile
+. ${HOME}/ctakes.profile
+cd ${CTAKES_HOME}/bin
+chmod u+x ant
+chmod u+x *.sh
+cd ctakes-ytex/scripts
+nohup ant -f build-setup.xml all > setup.out 2>&1 &
+tail -f setup.out
+}}}
+
+This will call the ant script `build-setup.xml`, which does the following:
+    * Generates configuration files from templates
+    * Sets up YTEX Database Objects 
+    The installation executes SQL scripts located in the `CTAKES_HOME\bin\scripts\ctakes-ytex\data` directory, and imports umls tables (if they are not already in the database). All YTEX database objects will be dropped and recreated. If this is the initial installation, ignore the errors about objects not existing when they are being dropped.  If you have installed the UMLS in your database and configured YTEX to use it, YTEX will create a dictionary lookup table with all concepts from the UMLS.  The setup speed is dependent on the latency between the machine you are installing on and the database server.  This can take several hours.
