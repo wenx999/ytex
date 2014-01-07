@@ -23,7 +23,7 @@ Make sure you use a tablespace with enough room; e.g. create the ytex user and s
 {{{
 create tablespace TBS_YTEX datafile 'C:/oracle/oradata/orcl/TBS_YTEX.dbf' size 1000M autoextend on online;
 create user ytex identified by ytex default tablespace TBS_YTEX;
-alter user ytex_test quota unlimited on TBS_YTEX;
+alter user ytex quota unlimited on TBS_YTEX;
 grant connect, resource to ytex;
 grant create materialized view to ytex;
 grant create view to ytex;
