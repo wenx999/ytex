@@ -88,8 +88,11 @@ For production use, [http://www.nlm.nih.gov/research/umls/implementation_resourc
 
 === 5) Edit environment batch/shell script ===
 Fix the path references to match your environment.
-    * windows edit <tt>CTAKES_HOME\bin\setenv.cmd</tt>
-    * linux move <tt>CTAKES_HOME/bin/ctakes.profile</tt> to <tt>${HOME}/ctakes.profile</tt>
+    * windows - no changes necessary; see <tt>CTAKES_HOME\bin\setenv.cmd</tt>
+    * linux -
+      ** move <tt>CTAKES_HOME/bin/ctakes.profile</tt> to <tt>${HOME}/ctakes.profile</tt>
+      ** edit the CTAKES_HOME environment variable
+      ** make executable - `chmod u+x ${HOME}/ctakes.profile`
 
 === 6) Create `CTAKES_HOME\resources\org\apache\ctakes\ytex\ytex.properties` ===
 
