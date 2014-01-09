@@ -73,7 +73,7 @@ Download and unzip [https://ytex.googlecode.com/files/ctakes-ytex-lib-3.1.2-SNAP
  * MySQL JDBC Driver
  * MS SQL Server JDBC Driver
 
-=== 3) Unzip YTEX Resources (Optional) ===
+=== 3) Unzip YTEX Resources (Optional - UTS login required) ===
 Download and unzip [http://www.ytex-nlp.org/umls.download/secure/3.1/ctakes-ytex-resources-3.1.2-SNAPSHOT.zip ctakes-ytex-resources-3.1.2-SNAPSHOT.zip] 'over' your installation. This contains:
  * Concept Graphs derived from the UMLS2013AA used to compute semantic similarity measures
  * Dictionary Lookup table derived from UMLS2013AA for named entity recognition.
@@ -82,20 +82,20 @@ If you do not install these files, Word Sense Disambiguation will be disabled, a
 
 You can always create concept graphs for WSD from your UMLS installation.  If you have the UMLS in your DB, YTEX will create a dictionary lookup table from the UMLS during the installation.
 
-=== 3) Install the UMLS (Optional) ===
+=== 4) Install the UMLS (Optional) ===
 For production use, [http://www.nlm.nih.gov/research/umls/implementation_resources/scripts/README_RRF_MySQL_Output_Stream.html we suggest that you install UMLS in your database].
  * If you have not done so already, obtain a UMLS License and create a UMLS Technology Services (UTS) Account, available free of charge: [https://uts.nlm.nih.gov/home.html]
 
-=== 4) Edit environment batch/shell script ===
+=== 5) Edit environment batch/shell script ===
 Fix the path references to match your environment.
     * windows edit <tt>CTAKES_HOME\bin\setenv.cmd</tt>
     * linux move <tt>CTAKES_HOME/bin/ctakes.profile</tt> to <tt>${HOME}/ctakes.profile</tt>
 
-=== 5) Create `CTAKES_HOME\resources\org\apache\ctakes\ytex\ytex.properties` ===
+=== 6) Create `CTAKES_HOME\resources\org\apache\ctakes\ytex\ytex.properties` ===
 
 In this file, you specify the database connection parameters. Use `CTAKES_HOME\resources\org\apache\ctakes\ytex\ytex.properties.<db type>.example` as a template.  If you have UMLS installed on your database, specify the `umls.schema` and `umls.catalog` properties (see the properties file for an explanation of what these are).  
 
-=== 6) Execute the setup script ===
+=== 7) Execute the setup script ===
 
     * *windows*: Open a command prompt, navigate to CTAKES_HOME, and execute setup script:
 {{{
@@ -111,11 +111,11 @@ cd ${CTAKES_HOME}/bin
 chmod u+x ant
 chmod u+x *.sh
 cd ctakes-ytex/scripts
-nohup ant -f build-setup.xml all > setup.out 2>&1 &
+nohup ../../ant -f build-setup.xml all > setup.out 2>&1 &
 tail -f setup.out
 }}}
 
 This will call the ant script `build-setup.xml`, which does the following:
     * Generates configuration files from templates
     * Sets up YTEX Database Objects 
-    The installation executes SQL scripts located in the `CTAKES_HOME\bin\scripts\ctakes-ytex\data` directory, and imports umls tables (if they are not already in the database). All YTEX database objects will be dropped and recreated. If this is the initial installation, ignore the errors about objects not existing when they are being dropped.  If you have installed the UMLS in your database and configured YTEX to use it, YTEX will create a dictionary lookup table with all concepts from the UMLS.  The setup speed is dependent on the latency between the machine you are installing on and the database server.  This can take several hours.
+    The installation executes SQL scripts located in the `CTAKES_HOME\bin\scripts\ctakes-ytex\data` directory. All YTEX database objects will be dropped and recreated. If this is the initial installation, ignore the errors about objects not existing when they are being dropped.  If you have installed the UMLS in your database and configured YTEX to use it, YTEX will create a dictionary lookup table with all concepts from the UMLS.  The setup speed is dependent on the latency between the machine you are installing on and the database server.  This can take several hours.
