@@ -1,5 +1,5 @@
 #summary Import umls tables into MS SQL Server for V0.6 and above.
-#labels Phase-Deploy
+#labels Phase-Deploy,Deprecated
 
 = Introduction =
 NLM does not provide scripts/utilities for importing tables into SQL Server. To import tables into SQL Server, we have adapted the database table creation scripts from other platforms to SQL Server.  MetamorphoSys creates RRF files, which are pipe (|) delimited UTF-8 files. We load the RRF files into SQL Server Tables using jdbc.
