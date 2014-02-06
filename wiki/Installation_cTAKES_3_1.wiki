@@ -10,7 +10,7 @@ With the apache ctakes release we've implemented the following features:
 == Prerequisites ==
   * JDK 1.6 or higher [http://java.sun.com/javase/downloads/widget/jdk6.jsp download]
   * Atleast 4 GB of free disk space
-  * [http://www.nlm.nih.gov/research/umls/implementation_resources/scripts/README_RRF_MySQL_Output_Stream.html we suggest that you install UMLS in your database].  NLM provides scripts for installing UMLS in MySQL and Oracle.  Refer to [UMLS_SQL_SERVER_V06 UMLS SQL Server Installation] for instructions on how to install UMLS in MS SQL Server.
+  * [http://www.nlm.nih.gov/research/umls/implementation_resources/scripts/README_RRF_MySQL_Output_Stream.html we suggest that you install UMLS in your database].  NLM provides scripts for installing UMLS in MySQL and Oracle.  Refer to [UMLS_SQL_SERVER_3_1 UMLS SQL Server Installation] for instructions on how to install UMLS in MS SQL Server.
   * Tested on Linux and Windows.  We don't test YTEX on mac; however, users have successfully installed this on mac following linux installation instructions.
 
 == Database Prerequisites ==
