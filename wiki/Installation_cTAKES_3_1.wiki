@@ -62,9 +62,25 @@ If you want to install the UMLS in your SQL Server, you may want to use a differ
 
 == Installation ==
 
-=== 1) Install ctakes 'as usual' ===
+== 0) Build the YTEX branch ==
+All of ytex has been moved into ctakes, it is currently in a branch (https://svn.apache.org/repos/asf/ctakes/branches/ytex).  You must build a ctakes distribution (that includes ytex). 
 
-See https://cwiki.apache.org/confluence/display/CTAKES/cTAKES+3.1+User+Install+Guide.  For the rest of this document, we assume ctakes is installed in [CTAKES_HOME]
+* Open a command prompt
+* Ensure that maven, svn, and the JDK 1.7 are in your PATH variable
+* cd to some directory where you want to check stuff out (I like c:\temp)
+* run the following commands
+{{{
+rmdir /s /q ctakes
+svn co https://svn.apache.org/repos/asf/ctakes/branches/ytex ctakes
+cd ctakes
+mvn clean install -DskipTests
+}}}
+
+And you will have the ctakes (with ytex) distro in ctakes\ctakes-distribution\target\apache-ctakes-3.1.2-SNAPSHOT-bin.zip
+
+=== 1) Install ctakes+ytex distro 'as usual' ===
+
+Go through the standard ctakes installation for the distribution you just created: See https://cwiki.apache.org/confluence/display/CTAKES/cTAKES+3.1+User+Install+Guide.  For the rest of this document, we assume ctakes is installed in [CTAKES_HOME]
 
 === 2) Unzip YTEX Libraries ===
 Download and unzip [https://ytex.googlecode.com/files/ctakes-ytex-lib-3.1.2-SNAPSHOT.zip ctakes-ytex-lib-3.1.2-SNAPSHOT.zip] 'over' your installation. This contains non APACHE 2.0 license compliant libraries:
@@ -72,6 +88,8 @@ Download and unzip [https://ytex.googlecode.com/files/ctakes-ytex-lib-3.1.2-SNAP
  * Weka
  * MySQL JDBC Driver
  * MS SQL Server JDBC Driver
+
+If you are using oracle, download the oracle jdbc driver [http://www.oracle.com/technetwork/database/features/jdbc/jdbc-drivers-12c-download-1958347.html ojdbc7_g] and place it in your CTAKES_HOME\lib directory.
 
 === 3) Unzip YTEX Resources (Optional - UTS login required) ===
 Download and unzip [http://www.ytex-nlp.org/umls.download/secure/3.1/ctakes-ytex-resources-3.1.2-SNAPSHOT.zip ctakes-ytex-resources-3.1.2-SNAPSHOT.zip] 'over' your installation. This contains:
@@ -98,7 +116,10 @@ Fix the path references to match your environment.
 
 In this file, you specify the database connection parameters. Use `CTAKES_HOME\resources\org\apache\ctakes\ytex\ytex.properties.<db type>.example` as a template.  If you have UMLS installed on your database, specify the `umls.schema` and `umls.catalog` properties (see the properties file for an explanation of what these are).  
 
-=== 7) Execute the setup script ===
+=== 7) Install UMLS in MSSQL (Optional) ===
+If you are using MS SQL, and you want to create your own dictionary lookup tables/concept graphs, install the UMLS in your MSSQL Database.  Refer to [UMLS_SQL_SERVER_3_1 UMLS SQL Server Installation] for instructions on how to install UMLS in MS SQL Server.
+
+=== 8) Execute the setup script ===
 
     * *windows*: Open a command prompt, navigate to CTAKES_HOME, and execute setup script:
 {{{
