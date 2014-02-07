@@ -65,10 +65,10 @@ If you want to install the UMLS in your SQL Server, you may want to use a differ
 == 0) Build the YTEX branch ==
 All of ytex has been moved into ctakes, it is currently in a branch (https://svn.apache.org/repos/asf/ctakes/branches/ytex).  You must build a ctakes distribution (that includes ytex). 
 
-* Open a command prompt
-* Ensure that maven, svn, and the JDK 1.7 are in your PATH variable
-* cd to some directory where you want to check stuff out (I like c:\temp)
-* run the following commands
+  * Open a command prompt
+  * Ensure that maven, svn, and the JDK 1.7 are in your PATH variable
+  * cd to some directory where you want to check stuff out (I like c:\temp)
+  * run the following commands
 {{{
 rmdir /s /q ctakes
 svn co https://svn.apache.org/repos/asf/ctakes/branches/ytex ctakes
